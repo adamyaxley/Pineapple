@@ -12,7 +12,7 @@ The following are the primary goals for this project:
 
 ## Architecture
 ### Engine
-The engine consists of one or more Worlds that contain zero or more Objects (stored in a [plf::colony](http://plflib.org/colony.htm)). The World is responsible for stepping the Objects forward in time based on some Input, storing newly created Objects, and removing any Objects that were destroyed. This simulation loop is executed indefinitely until the world is manually ended.
+The engine consists of one or more Worlds that contain zero or more Objects. The World is responsible for stepping the Objects forward in time based on some Input, storing newly created Objects, and removing any Objects that were destroyed. This simulation loop is executed indefinitely until the world is manually ended.
 
 A simple but complete Hello World in Pineapple could be:
 
