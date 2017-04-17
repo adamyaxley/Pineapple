@@ -1,0 +1,40 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Documents
+*.pdf  diff=astextplain
+*.md text
+
+# Graphics
+*.png binary
+*.jpg binary
+*.gif binary
+
+# Sources
+*.c text
+*.cxx text
+*.cpp text
+*.hpp text
+*.h text
+*.inl text
+
+# Declare files that will always have CRLF line endings on checkout.
+*.sln text eol=crlf
+*.vcxproj text eol=crlf
+*.vcxproj.filters text eol=crlf
+
+# Compiled Dynamic libraries
+*.so binary
+*.dylib binary
+*.dll binary
+
+# Compiled Static libraries
+*.lai binary
+*.la binary
+*.a binary
+*.lib binary
+
+# Executables
+*.exe binary
+*.out binary
+*.app binary

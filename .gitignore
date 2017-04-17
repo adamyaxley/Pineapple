@@ -1,0 +1,26 @@
+# Visual Studio
+Bin
+*.ipch
+*.sdf
+*.opensdf
+*.suo
+*.vcxproj.user
+*.log
+*.VC.db
+
+# Clang Format
+*.TMP
+
+# Android
+Build/Android/assets
+Build/Android/bin
+Build/Android/libs
+Build/Android/obj
+Build/Android/build.xml
+Build/Android/local.properties
+
+# Python compiled
+*.pyc
+
+# Mac Xcode
+*.DS_Store
