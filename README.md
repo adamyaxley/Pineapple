@@ -71,6 +71,8 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake
 ```
 Then open the generated Pineapple.sln file.
 
+Note: To run the tests within Visual Studio you will need to install the [Google Test Adapter](https://github.com/csoltenborn/GoogleTestAdapter), which can be installed via Tools -> Extensions and Updates.
+
 Please create an issue if you experience any problems (likely!)
 
 ## Tutorial
