@@ -3,6 +3,8 @@
 
 Note: this software is ALPHA, it is not stable, it's API can and will change.
 
+[![License: Zlib](https://img.shields.io/badge/License-Zlib-brightgreen.svg)](https://opensource.org/licenses/Zlib)
+
 ## Goals
 The following are the primary goals for this project:
 * Cross-Platform
