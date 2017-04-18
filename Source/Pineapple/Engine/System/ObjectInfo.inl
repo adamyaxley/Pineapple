@@ -54,11 +54,18 @@ void pa::ObjectInfo<T>::clearDeadInstances()
 template <typename T>
 void pa::ObjectInfo<T>::stepInstances(Time deltaTime)
 {
-	for (std::size_t i = 0; i < m_instanceList.size(); i++)
+	for (std::size_t i = 0; i < m_objectListSize; i++)
 	{
 		m_instanceList[i]->step(deltaTime);
 	}
 }
+
+template <typename T>
+void pa::ObjectInfo<T>::cacheObjectListSize()
+{
+	m_objectListSize = m_instanceList.size();
+}
+
 template <typename T>
 pa::ObjectList<T>& pa::ObjectInfo<T>::getList()
 {

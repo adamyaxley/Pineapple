@@ -10,23 +10,11 @@
 pa::Object::Object(pa::World& world)
 	: m_world(world)
 {
-	// Instances that are created while the world is stepping aren't stepped
-	// until the next tick. To implement this behaviour, store a single bit
-	// indicating whether the next tick that it will step on is odd or even.
-	// This allows the instance to skip a single step if necessary.
-	if (world.isStepping() != (world.getTicks() % 2 == 0))
-	{
-		m_flags.set(Flags::StepsOnEvenTick);
-	}
 }
 
 void pa::Object::step(Time deltaTime)
 {
-	if ((m_world.getTicks() % 2 == 1) != m_flags.getBool(Flags::StepsOnEvenTick))
-	{
-		onStep(deltaTime);
-		m_flags.toggle(Flags::StepsOnEvenTick);
-	}
+	onStep(deltaTime);
 }
 
 void pa::Object::destroy()

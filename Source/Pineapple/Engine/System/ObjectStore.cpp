@@ -42,7 +42,13 @@ void pa::ObjectStore::removeDeadInstances()
 
 void pa::ObjectStore::stepInstances(Time deltaTime)
 {
-	for (auto&& id : getObjectIds())
+	auto objectIds = getObjectIds();
+	for (auto&& id : objectIds)
+	{
+		getObjectInfo(id).cacheObjectListSize();
+	}
+
+	for (auto&& id : objectIds)
 	{
 		getObjectInfo(id).stepInstances(deltaTime);
 	}

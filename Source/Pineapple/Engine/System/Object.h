@@ -59,7 +59,6 @@ namespace pa
 		enum class Flags
 		{
 			IsDead,
-			StepsOnEvenTick,
 			_PineappleBitfieldEndMarker
 		};
 

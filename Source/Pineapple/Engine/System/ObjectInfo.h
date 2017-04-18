@@ -31,6 +31,7 @@ namespace pa
 		virtual void clearAllInstances() = 0;
 		virtual void clearDeadInstances() = 0;
 		virtual void stepInstances(Time deltaTime) = 0;
+		virtual void cacheObjectListSize() = 0;
 
 	protected:
 		PA_FORCE_INLINE ObjectInfoBase();
@@ -48,6 +49,7 @@ namespace pa
 		void clearAllInstances() override;
 		void clearDeadInstances() override;
 		void stepInstances(Time deltaTime) override;
+		void cacheObjectListSize() override;
 
 		pa::ObjectList<T>& getList();
 
@@ -59,6 +61,8 @@ namespace pa
 		pa::ObjectList<T> m_instanceList;
 
 		pa::ObjectList<T> m_childList;
+
+		std::size_t m_objectListSize;
 	};
 }
 
