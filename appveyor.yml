@@ -1,0 +1,23 @@
+version: 0.1.{build}
+
+branches:
+  only:
+    - master
+
+os: Visual Studio 2015
+
+install:
+  - git clone https://github.com/Microsoft/vcpkg
+  - cd vcpkg
+  - powershell -exec bypass scripts\bootstrap.ps1
+  - vcpkg install glew
+  - vcpkg integrate install
+  - cd ..
+
+build_script:
+  - mkdir builddir
+  - cd builddir
+  - cmake --build .. --config Debug
+
+test_script:
+  - ctest -C Debug
