@@ -20,8 +20,8 @@ build_script:
   - mkdir builddir
   - cd builddir
   - cmake .. -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
-  - cmake --build .. --config Debug
-  - cmake --build .. --config Release
+  - cmake --build . --config Debug
+  - cmake --build . --config Release
 
 test_script:
   - ctest -C Debug
