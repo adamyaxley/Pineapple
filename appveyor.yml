@@ -4,14 +4,14 @@ branches:
   only:
     - master
 
-os: Visual Studio 2015
+image: Visual Studio 2015
 
 install:
-  - git clone https://github.com/Microsoft/vcpkg
+  - git clone https://github.com/Microsoft/vcpkg.git
   - cd vcpkg
-  - powershell -exec bypass scripts\bootstrap.ps1
-  - vcpkg install glew
+  - bootstrap-vcpkg.bat
   - vcpkg integrate install
+  - vcpkg install glew
   - cd ..
 
 build_script:
