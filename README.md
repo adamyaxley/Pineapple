@@ -53,23 +53,24 @@ Currently the following plugins are provided:
 * Platform
   * paWindows - Win32 application
 * Graphics
-  * paOpenGL - OpenGL rendering (uses [stb_image/stb_truetype](https://github.com/nothings/stb), [fontstash](https://github.com/memononen/fontstash) and [glm](https://github.com/g-truc/glm))
+  * paOpenGL - OpenGL rendering (uses [glew](http://glew.sourceforge.net/), [stb_image/stb_truetype](https://github.com/nothings/stb), [fontstash](https://github.com/memononen/fontstash) and [glm](https://github.com/g-truc/glm))
 * Sound
   * paFMOD - FMOD backend (requires FMOD)
 
 ## Build
 To build the source, demos and tests you will need the following:
-* CMake 3.0
+* [CMake](https://cmake.org/) 3.8
 * [vcpkg](https://github.com/Microsoft/vcpkg) (this is how you will install the glew package, required for the paOpenGL graphics plugin)
+  * [glew](http://glew.sourceforge.net/)
 * [FMOD](http://www.fmod.org/download) (required for the paFMOD sound plugin)
 
-It is recommended to do an out of source build, to avoid polluting the source tree. Do this like so:
+It is recommended to do an out of source build, to avoid polluting the source tree. Replace `{VCPKG_INSTALL_DIR}` with where you installed vcpkg and run the following:
 ```
 mkdir builddir
 cd builddir
-cmake .. -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake
+cmake .. -DCMAKE_TOOLCHAIN_FILE={VCPKG_INSTALL_DIR}\scripts\buildsystems\vcpkg.cmake
 ```
-Then open the generated Pineapple.sln file.
+Then open the generated Pineapple.sln file and hit build.
 
 Note: To run the tests within Visual Studio you will need to install the [Google Test Adapter](https://github.com/csoltenborn/GoogleTestAdapter), which can be installed via Tools -> Extensions and Updates.
 
