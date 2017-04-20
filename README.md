@@ -1,9 +1,13 @@
-# Pineapple
+# Pineapple [![License: Zlib](https://img.shields.io/badge/License-Zlib-brightgreen.svg)](https://opensource.org/licenses/Zlib)
 2D game engine utilizing modern C++ to provide an intuitive API and a decoupled plugin system.
 
 Note: this software is ALPHA, it is not stable, it's API can and will change.
 
-[![License: Zlib](https://img.shields.io/badge/License-Zlib-brightgreen.svg)](https://opensource.org/licenses/Zlib)
+|              | Win32                                                                           |
+|:------------:|:------------------------------------------------------------------------------: |
+| Build & Test | ![Build](https://ci.appveyor.com/api/projects/status/y9r29elqeg6hy7na?svg=true) |
+
+
 
 ## Goals
 The following are the primary goals for this project:
