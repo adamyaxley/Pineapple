@@ -13,6 +13,8 @@ install:
   - vcpkg integrate install
   - vcpkg install glew
   - cd ..
+  - ps: Start-FileDownload 'https://dl.dropboxusercontent.com/s/zrdqvkpjl2426cf/PineappleFMOD.7z'
+  - 7z x PineappleFMOD.7z -o"C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel"
 
 build_script:
   - mkdir builddir
@@ -20,4 +22,4 @@ build_script:
   - cmake -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake --build ..
 
 test_script:
-  - ctest -C
+  - ctest
