@@ -17,7 +17,7 @@ install:
 build_script:
   - mkdir builddir
   - cd builddir
-  - cmake --build .. --config Debug -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
+  - cmake -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake --build .. --config Debug
 
 test_script:
   - ctest -C Debug
