@@ -19,7 +19,7 @@ namespace pa
 		Object& operator=(const Object&) = delete;
 
 	protected:
-		Object(World& world);
+		PA_FORCE_INLINE Object(World& world);
 
 	public:
 		virtual ~Object()
@@ -38,19 +38,19 @@ namespace pa
 		}
 
 		// Steps the instance
-		void step(Time deltaTime);
+		PA_FORCE_INLINE void step(Time deltaTime);
 
 		// Destroys the instance
-		void destroy();
+		PA_FORCE_INLINE void destroy();
 
 		// Destroys the instance without calling onDestroy
-		void kill();
+		PA_FORCE_INLINE void kill();
 
 		// Is this instance dead?
-		bool isDead();
+		PA_FORCE_INLINE bool isDead();
 
 		// Retrieve the world that the instance is in
-		World& getWorld();
+		PA_FORCE_INLINE World& getWorld();
 
 	private:
 		// A pointer to the world
@@ -66,3 +66,5 @@ namespace pa
 		Bitfield<Flags> m_flags;
 	};
 }
+
+#include <Pineapple/Engine/System/Object.inl>
