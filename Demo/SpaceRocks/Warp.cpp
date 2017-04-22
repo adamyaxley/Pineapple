@@ -11,8 +11,8 @@ void Warp::onStep(pa::Time deltaTime)
 
 	auto& graphicsSize = getWorld().getPlatform()->getGraphics()->getSize();
 	getPosition() += graphicsSize;
-	getPosition().x = fmod(getPosition().x, graphicsSize.x);
-	getPosition().y = fmod(getPosition().y, graphicsSize.y);
+	getPosition().x = (float)fmod(getPosition().x, graphicsSize.x);
+	getPosition().y = (float)fmod(getPosition().y, graphicsSize.y);
 
 	updateSprite();
 }

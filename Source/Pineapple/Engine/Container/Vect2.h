@@ -98,8 +98,8 @@ namespace pa
 		Vect2<T>& operator=(const Vect2<U>& rhs)
 		{
 			// dependency issue... PA_ASSERTF(this != &rhs, "Cannot assign to self");
-			x = rhs.x;
-			y = rhs.y;
+			x = static_cast<T>(rhs.x);
+			y = static_cast<T>(rhs.y);
 			return *this;
 		}
 
@@ -107,8 +107,8 @@ namespace pa
 		template <typename U>
 		Vect2<T>& operator+=(const Vect2<U>& rhs)
 		{
-			x += rhs.x;
-			y += rhs.y;
+			x += static_cast<T>(rhs.x);
+			y += static_cast<T>(rhs.y);
 			return *this;
 		}
 
@@ -116,8 +116,8 @@ namespace pa
 		template <typename U>
 		Vect2<T>& operator-=(const Vect2<U>& rhs)
 		{
-			x -= rhs.x;
-			y -= rhs.y;
+			x -= static_cast<T>(rhs.x);
+			y -= static_cast<T>(rhs.y);
 			return *this;
 		}
 
@@ -125,8 +125,8 @@ namespace pa
 		template <typename U>
 		Vect2<T>& operator*=(const U& rhs)
 		{
-			x *= rhs;
-			y *= rhs;
+			x *= static_cast<T>(rhs);
+			y *= static_cast<T>(rhs);
 			return *this;
 		}
 
@@ -134,8 +134,8 @@ namespace pa
 		template <typename U>
 		Vect2<T>& operator/=(const U& rhs)
 		{
-			x /= rhs;
-			y /= rhs;
+			x /= static_cast<T>(rhs);
+			y /= static_cast<T>(rhs);
 			return *this;
 		}
 
@@ -190,10 +190,7 @@ namespace pa
 		template <typename U>
 		operator Vect2<U>() const
 		{
-			Vect2<U> temp;
-			temp.x = x;
-			temp.y = y;
-
+			Vect2<U> temp(static_cast<U>(x), static_cast<U>(y));
 			return temp;
 		}
 	};

@@ -33,15 +33,15 @@ void pa::TextGL::render()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		unsigned int colour =
-			gl3fonsRGBA(getColour().R * 255, getColour().G * 255, getColour().B * 255, getColour().A * 255);
-		unsigned int outlineColour = gl3fonsRGBA(getOutlineColour().R * 255, getOutlineColour().G * 255,
-												 getOutlineColour().B * 255, getOutlineColour().A * 255);
+			gl3fonsRGBA(unsigned char(getColour().R * 255), unsigned char(getColour().G * 255), unsigned char(getColour().B * 255), unsigned char(getColour().A * 255));
+		unsigned int outlineColour = gl3fonsRGBA(unsigned char(getOutlineColour().R * 255), unsigned char(getOutlineColour().G * 255),
+												 unsigned char(getOutlineColour().B * 255), unsigned char(getOutlineColour().A * 255));
 
 		auto fs = m_font.getFonsContext();
 
 		fonsClearState(fs);
 		fonsSetFont(fs, m_font.getFonsFont());
-		fonsSetSize(fs, m_font.getSize());
+		fonsSetSize(fs, (float)m_font.getSize());
 		fonsSetAlign(fs, FONS_ALIGN_TOP);
 
 		// Set the projection matrix
@@ -92,7 +92,7 @@ void pa::TextGL::onTextChange()
 	auto fs = m_font.getFonsContext();
 	fonsClearState(fs);
 	fonsSetFont(fs, m_font.getFonsFont());
-	fonsSetSize(fs, m_font.getSize());
+	fonsSetSize(fs, (float)m_font.getSize());
 
 	float bounds[4];
 	fonsTextBounds(fs, 0, 0, getText(), nullptr, bounds);
