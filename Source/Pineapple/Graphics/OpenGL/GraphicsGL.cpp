@@ -100,7 +100,7 @@ pa::GraphicsGL::GraphicsGL(const pa::Vect2<int>& size)
 	if (GLEW_OK != err)
 	{
 		pa::Log::info("Failed to init GLEW (error: {})", err);
-		throw std::exception("Failed to init GLEW");
+		throw std::exception();
 	}
 	else
 	{

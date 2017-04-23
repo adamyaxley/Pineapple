@@ -7,7 +7,7 @@
 
 #include <algorithm>
 
-namespace
+namespace paStd
 {
 	template <class InputIt, class T, class BinaryOperation>
 	T accumulate(InputIt first, InputIt last, T init, BinaryOperation op)
@@ -42,13 +42,13 @@ pa::DynamicPool::~DynamicPool()
 int pa::DynamicPool::getSize() const noexcept
 {
 	// use std::reduce() when C++17 comes out
-	return accumulate(m_pools.begin(), m_pools.end(), 0,
+	return paStd::accumulate(m_pools.begin(), m_pools.end(), 0,
 					  [](int sum, const pa::Pool& pool) { return sum + pool.getSize(); });
 }
 
 int pa::DynamicPool::getCapacity() const noexcept
 {
-	return accumulate(m_pools.begin(), m_pools.end(), 0,
+	return paStd::accumulate(m_pools.begin(), m_pools.end(), 0,
 					  [](int sum, const pa::Pool& pool) { return sum + pool.getCapacity(); });
 }
 
@@ -66,7 +66,7 @@ void pa::DynamicPool::reserve(std::size_t size)
 pa::Pool& pa::DynamicPool::getFreePool()
 {
 	// Find the first free pool <todo> use reverse iterator
-	auto& freePool =
+	auto freePool =
 		std::find_if(m_pools.rbegin(), m_pools.rend(), [this](const pa::Pool& pool) { return pool.getSize() > 0; });
 
 	if (freePool != m_pools.rend())

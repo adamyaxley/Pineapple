@@ -30,21 +30,21 @@ pa::ListIterator<T, B>::ListIterator(pa::NodeBase<B>* node) noexcept
 template <typename T, typename B>
 pa::ListIterator<T, B>& pa::ListIterator<T, B>::operator++()
 {
-	m_node = m_node->next.get();
+	this->m_node = this->m_node->next.get();
 	return *this;
 }
 
 template <typename T, typename B>
 pa::ListIterator<T, B>& pa::ListIterator<T, B>::operator--()
 {
-	m_node = m_node->prev;
+	this->m_node = this->m_node->prev;
 	return *this;
 }
 
 template <typename T, typename B>
 T& pa::ListIterator<T, B>::operator*()
 {
-	return static_cast<pa::List<T, B>::Node*>(m_node)->data;
+	return static_cast<typename pa::List<T, B>::Node*>(this->m_node)->data;
 }
 
 template <typename T, typename B>
@@ -54,7 +54,7 @@ pa::List<T, B>::Node::Node(Args&&... args)
 {
 	// Assign the base B pointer to the derived T. This must be done after data has been
 	// constructed if T has a virtual base.
-	dataPtr = &data;
+	this->dataPtr = &data;
 }
 
 template <typename T, typename B>
@@ -147,7 +147,7 @@ pa::ListIterator<T, B> pa::List<T, B>::end() const noexcept
 }
 
 template <typename T, typename B>
-void pa::List<T, B>::erase(pa::ListIterator<T, B>& position) const
+pa::ListIterator<T, B> pa::List<T, B>::erase(pa::ListIterator<T, B> position) const
 {
 	// Verify that we are not erasing the begin or end node,
 	PA_ASSERTF(position.m_node->next != m_begin.next, "Cannot erase the begin node marker");
@@ -158,6 +158,8 @@ void pa::List<T, B>::erase(pa::ListIterator<T, B>& position) const
 
 	node->next->prev = node->prev;
 	node->prev->next = std::move(node->next);
+
+	return position;
 }
 
 template <typename T, typename B>

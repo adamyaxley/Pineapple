@@ -33,7 +33,7 @@ namespace pa
 
 		AnimatedSprite(RenderSystem& renderSystem, bool recurring);
 
-		std::vector<Sprite*> m_frameList;
+		std::vector<std::unique_ptr<Sprite>> m_frameList;
 
 		unsigned int m_frame;
 		unsigned int m_current;

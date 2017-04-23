@@ -3,24 +3,29 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
+namespace
+{
+	pa::World g_emptyWorld;
+}
+
 struct TestObject1 : public pa::Object
 {
 	TestObject1()
-		: pa::Object(pa::World())
+		: pa::Object(g_emptyWorld)
 	{
 	}
 };
 struct TestObject2 : public pa::Object
 {
 	TestObject2()
-		: pa::Object(pa::World())
+		: pa::Object(g_emptyWorld)
 	{
 	}
 };
 struct TestObject3 : public pa::Object
 {
 	TestObject3()
-		: pa::Object(pa::World())
+		: pa::Object(g_emptyWorld)
 	{
 	}
 };
