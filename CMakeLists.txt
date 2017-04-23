@@ -78,7 +78,7 @@ function(add_pineapple_app _TARGET _SOURCES)
     target_link_libraries(${_TARGET} paEngine paFMOD paOpenGL ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${FMOD_LIBRARIES})
 
     if (WIN32)
-        target_link_libraries($_TARGET} paWindows)
+        target_link_libraries(${_TARGET} paWindows)
     endif()
     
     add_custom_command(
