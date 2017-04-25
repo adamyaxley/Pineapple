@@ -45,6 +45,10 @@ find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(FMOD REQUIRED)
 
+if(UNIX)
+    find_package(X11 REQUIRED)
+endif()
+
 # Header only libs checked into Ext
 set(EXT_INCLUDE_DIRS ${PA_ROOT}/Ext)
 
@@ -73,13 +77,19 @@ endfunction()
 
 function(add_pineapple_app _TARGET _SOURCES)
     set( _SOURCES_LIST ${_SOURCES} ${ARGN} )
-    add_executable(${_TARGET} WIN32 ${_SOURCES_LIST})
-
-    target_link_libraries(${_TARGET} paEngine paFMOD paOpenGL ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${FMOD_LIBRARIES})
-
-    if (WIN32)
+    
+    if(WIN32)
+        add_executable(${_TARGET} WIN32 ${_SOURCES_LIST})
         target_link_libraries(${_TARGET} paWindows)
     endif()
+    
+    if(UNIX)
+        add_executable(${_TARGET} ${_SOURCES_LIST})
+        target_link_libraries(${_TARGET} paX11 ${X11_LIBRARIES})
+        set_property(TARGET ${_TARGET} APPEND PROPERTY INCLUDE_DIRECTORIES ${X11_INCLUDE_DIRS})
+    endif()
+
+    target_link_libraries(${_TARGET} paEngine paFMOD paOpenGL ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${FMOD_LIBRARIES})
     
     add_custom_command(
             TARGET ${_TARGET} POST_BUILD
@@ -92,15 +102,17 @@ function(add_pineapple_app _TARGET _SOURCES)
             COMMAND ${CMAKE_COMMAND} -E copy_directory
                     ${PA_ROOT}/Assets
                     ${CMAKE_CURRENT_BINARY_DIR}/Assets)
-
-    foreach(_library IN ITEMS ${FMOD_LIBRARIES})
-        string(REPLACE "_vc.lib" ".dll" _dll ${_library})
-        add_custom_command(
-            TARGET ${_TARGET} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-                    ${_dll}
-                    ${CMAKE_CURRENT_BINARY_DIR})
-    endforeach()
+    
+    if(WIN32)
+        foreach(_library IN ITEMS ${FMOD_LIBRARIES})
+            string(REPLACE "_vc.lib" ".dll" _dll ${_library})
+            add_custom_command(
+                TARGET ${_TARGET} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy
+                        ${_dll}
+                        ${CMAKE_CURRENT_BINARY_DIR})
+        endforeach()
+    endif()
 endfunction()
 
 set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS
@@ -123,6 +135,11 @@ add_subdirectory(Source/Pineapple/Sound/FMOD)
 if (WIN32)
     add_subdirectory(Source/Pineapple/Platform/Windows)
     set_target_properties (paWindows PROPERTIES FOLDER Plugins)
+endif()
+
+if (UNIX)
+    add_subdirectory(Source/Pineapple/Platform/X11)
+    set_target_properties (paX11 PROPERTIES FOLDER Plugins)
 endif()
 
 set_target_properties (paEngine PROPERTIES FOLDER Engine)
