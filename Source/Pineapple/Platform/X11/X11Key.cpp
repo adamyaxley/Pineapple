@@ -4,6 +4,7 @@
 ------------------------------------------------------------------------------*/
 
 #include <Pineapple/Platform/X11/X11Key.h>
+#include <X11/keysym.h>
 
 namespace
 {
@@ -18,19 +19,19 @@ namespace
 												  pa::Key::Z};
 }
 
-bool pa::lookupX11Key(unsigned int key, Key& keyOut)
+bool pa::lookupX11Key(unsigned int key, pa::Key& keyOut)
 {
 	// <todo> digits from 0 - 9
 
 	// Map Characters (case insensitive)
 	if (key >= 'a' && key <= 'z')
 	{
-		keyOut = g_asciiLetterLookup[key - 'a']
+		keyOut = g_asciiLetterLookup[key - 'a'];
 		return true;
 	}
 	if (key >= 'A' && key <= 'Z')
 	{
-		keyOut = g_asciiLetterLookup[key - 'A']
+		keyOut = g_asciiLetterLookup[key - 'A'];
 		return true;
 	}
 
@@ -66,22 +67,22 @@ bool pa::lookupX11Key(unsigned int key, Key& keyOut)
 	case XK_KP_Add: keyOut = pa::Key::Add; break;
 	case XK_KP_Enter: keyOut = pa::Key::Enter; break;
 	case XK_KP_Decimal: keyOut = pa::Key::Decimal; break;
-	case XK_KP_0: keyOut = pa::Key::Numpad0; break;
-	case XK_KP_1: keyOut = pa::Key::Numpad1; break;
-	case XK_KP_2: keyOut = pa::Key::Numpad2; break;
-	case XK_KP_3: keyOut = pa::Key::Numpad3; break;
-	case XK_KP_4: keyOut = pa::Key::Numpad4; break;
-	case XK_KP_5: keyOut = pa::Key::Numpad5; break;
-	case XK_KP_6: keyOut = pa::Key::Numpad6; break;
-	case XK_KP_7: keyOut = pa::Key::Numpad7; break;
-	case XK_KP_8: keyOut = pa::Key::Numpad8; break;
+	case XK_KP_0: keyOut = pa::Key::NumPad0; break;
+	case XK_KP_1: keyOut = pa::Key::NumPad1; break;
+	case XK_KP_2: keyOut = pa::Key::NumPad2; break;
+	case XK_KP_3: keyOut = pa::Key::NumPad3; break;
+	case XK_KP_4: keyOut = pa::Key::NumPad4; break;
+	case XK_KP_5: keyOut = pa::Key::NumPad5; break;
+	case XK_KP_6: keyOut = pa::Key::NumPad6; break;
+	case XK_KP_7: keyOut = pa::Key::NumPad7; break;
+	case XK_KP_8: keyOut = pa::Key::NumPad8; break;
 	case XK_KP_9:
-		keyOut = pa::Key::Numpad9; break;
+		keyOut = pa::Key::NumPad9; break;
 
 	// Main Buttons
-	case XK_Escape: keyOut = pa::Key::Escape; break;
+	case XK_Escape: keyOut = pa::Key::Esc; break;
 	case XK_Tab: keyOut = pa::Key::Tab; break;
-	case XK_Caps_Lock: keyOut = pa::Key::CapsLock; break;
+	case XK_Caps_Lock: keyOut = pa::Key::Caps; break;
 	case XK_Shift_L: keyOut = pa::Key::LShift; break;
 	case XK_Control_L: keyOut = pa::Key::LCtrl; break;
 	case XK_Alt_L: keyOut = pa::Key::LAlt; break;
@@ -92,7 +93,7 @@ bool pa::lookupX11Key(unsigned int key, Key& keyOut)
 	case XK_Shift_R: keyOut = pa::Key::RShift; break;
 	case XK_Return: keyOut = pa::Key::Enter; break;
 	case XK_BackSpace:
-		keyOut = pa::Key::Backspace; break;
+		keyOut = pa::Key::BackSpace; break;
 
 	// Auxiliary Functions
 	case XK_F1: keyOut = pa::Key::F1; break;

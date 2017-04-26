@@ -77,20 +77,18 @@ endfunction()
 
 function(add_pineapple_app _TARGET _SOURCES)
     set( _SOURCES_LIST ${_SOURCES} ${ARGN} )
-    
+
     if(WIN32)
         add_executable(${_TARGET} WIN32 ${_SOURCES_LIST})
-        target_link_libraries(${_TARGET} paWindows)
+        target_link_libraries(${_TARGET} paEngine paWindows paFMOD paOpenGL ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${FMOD_LIBRARIES})
     endif()
     
     if(UNIX)
         add_executable(${_TARGET} ${_SOURCES_LIST})
-        target_link_libraries(${_TARGET} paX11 ${X11_LIBRARIES})
+        target_link_libraries(${_TARGET} paX11 paFMOD paOpenGL paEngine ${X11_LIBRARIES} pthread ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${FMOD_LIBRARIES})
         set_property(TARGET ${_TARGET} APPEND PROPERTY INCLUDE_DIRECTORIES ${X11_INCLUDE_DIRS})
     endif()
 
-    target_link_libraries(${_TARGET} paEngine paFMOD paOpenGL ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${FMOD_LIBRARIES})
-    
     add_custom_command(
             TARGET ${_TARGET} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory

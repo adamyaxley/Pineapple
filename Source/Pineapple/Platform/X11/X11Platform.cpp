@@ -1,57 +1,59 @@
+#include <Pineapple/Engine/Platform/File.h>
 #include <Pineapple/Platform/X11/X11Platform.h>
-#include <Pineapple/Platform/X11/X11File.h>
+#include <algorithm>
 
 std::shared_ptr<pa::Platform> pa::Make::platform(pa::Arguments* arguments, const pa::PlatformSettings& settings)
 {
 	return std::make_shared<pa::X11Platform>(arguments, settings);
 }
 
-pa::X11Platform::X11Platform(pa::Arguments* arguments, const PlatformSettings& settings)
-    : pa::Platform(settings)
-    , m_dpy(nullptr)
+int main()
 {
-    Window root;
-    XSetWindowAttributes swa;
-    Colormap cmap;
-    int att[] = {GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None};
+	auto arguments = std::make_unique<pa::Arguments>();
+	return pa::Main(arguments.get());
+}
 
-    m_dpy = XOpenDisplay(0);
-    if (m_dpy == nullptr)
-    {
-        PA_DEBUGF("Failed to open display");
-        return;
-    }
+pa::X11Platform::X11Platform(pa::Arguments* arguments, const PlatformSettings& settings)
+	: pa::Platform(settings)
+	, m_dpy(nullptr)
+{
+	m_size = settings.graphics.size;
 
-    root = DefaultRootWindow(m_dpy);
+	Window root;
+	XSetWindowAttributes swa;
+	Colormap cmap;
+	int att[] = {GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None};
 
-    m_vi = glXChooseVisual(m_dpy, DefaultScreen(m_dpy), att);
-    if (m_vi == nullptr)
-    {
-        PA_DEBUGF("Failed to choose visual");
-        return;
-    }
+	m_dpy = XOpenDisplay(0);
+	PA_ASSERTF(m_dpy, "Failed to open display");
 
-    cmap = XCreateColormap(m_dpy, root, m_vi->visual, AllocNone);
+	root = DefaultRootWindow(m_dpy);
 
-    swa.colormap = cmap;
-    swa.event_mask = ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | FocusChangeMask;
+	m_vi = glXChooseVisual(m_dpy, DefaultScreen(m_dpy), att);
+	PA_ASSERTF(m_vi, "Failed to choose visual");
 
-    m_win = XCreateWindow(m_dpy, root, 0, 0, this->m_size.x, this->m_size.y, 0, m_vi->depth, InputOutput, m_vi->visual, CWColormap | CWEventMask, &swa);
+	cmap = XCreateColormap(m_dpy, root, m_vi->visual, AllocNone);
 
-    XFreeColormap(m_dpy, cmap);
-    XMapWindow(m_dpy, m_win);
-    XAutoRepeatOff(m_dpy);
-    XStoreName(m_dpy, m_win, settings.title);
+	swa.colormap = cmap;
+	swa.event_mask = ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | FocusChangeMask;
 
-    // Set up close event
-    Atom wmDelete = XInternAtom(dpy, "WM_DELETE_WINDOW", True);
-    XSetWMProtocols(dpy, win, &wmDelete, 1);
+	//pa::Log::info("XCreateWindow({},{},{},{},{},{},{},{},{},{},{},{})", (uintptr_t)m_dpy, root, 0, 0, this->m_size.x, this->m_size.y, 0, m_vi->depth, (int)InputOutput, (uintptr_t)m_vi->visual, (int)(CWColormap | CWEventMask), (uintptr_t)(&swa));
+	m_win = XCreateWindow(m_dpy, root, 0, 0, this->m_size.x, this->m_size.y, 0, m_vi->depth, InputOutput, m_vi->visual, CWColormap | CWEventMask, &swa);
 
-    // Set up OpenGL context
-    m_glc = glXCreateContext(m_dpy, m_vi, 0, GL_TRUE);
-    glXMakeCurrent(m_dpy, m_win, m_glc);
+	XFreeColormap(m_dpy, cmap);
+	XMapWindow(m_dpy, m_win);
+	XAutoRepeatOff(m_dpy);
+	XStoreName(m_dpy, m_win, settings.title);
 
-    pa::File::init();
+	// Set up close event
+	Atom wmDelete = XInternAtom(m_dpy, "WM_DELETE_WINDOW", True);
+	XSetWMProtocols(m_dpy, m_win, &wmDelete, 1);
+
+	// Set up OpenGL context
+	m_glc = glXCreateContext(m_dpy, m_vi, 0, GL_TRUE);
+	glXMakeCurrent(m_dpy, m_win, m_glc);
+
+	pa::File::init();
 
 	// Unique pointers
 	if (settings.graphics.use)
@@ -67,31 +69,31 @@ pa::X11Platform::X11Platform(pa::Arguments* arguments, const PlatformSettings& s
 
 pa::X11Platform::~X11Platform()
 {
-    m_sound.reset();
+	m_sound.reset();
 	m_graphics.reset();
 
-    if (m_dpy)
-    {
-        // Turn auto repeat back on
-        XAutoRepeatOn(m_dpy);
+	if (m_dpy)
+	{
+		// Turn auto repeat back on
+		XAutoRepeatOn(m_dpy);
 
-        // Destroy Window
-        XUnmapWindow(m_dpy, m_win);
-        XDestroyWindow(m_dpy, m_win);
+		// Destroy Window
+		XUnmapWindow(m_dpy, m_win);
+		XDestroyWindow(m_dpy, m_win);
 
-        // Destroy Context
-        glXMakeCurrent(m_dpy, None, 0);
-        glXDestroyContext(m_dpy, m_glc);
+		// Destroy Context
+		glXMakeCurrent(m_dpy, None, 0);
+		glXDestroyContext(m_dpy, m_glc);
 
-        // Close Display
-        XFree(m_vi);
-        XCloseDisplay(m_dpy);
-    }
+		// Close Display
+		XFree(m_vi);
+		XCloseDisplay(m_dpy);
+	}
 }
 
-void idle()
+void pa::X11Platform::idle()
 {
-    if (getSound())
+	if (getSound())
 	{
 		getSound()->update();
 	}
@@ -105,105 +107,117 @@ void idle()
 
 void pa::X11Platform::setFullScreen(bool fullscreen)
 {
-    XEvent xev;
-    Atom wm_state = XInternAtom(m_dpy, "_NET_WM_STATE", False);
-    Atom fullscreenAtom = XInternAtom(m_dpy, "_NET_WM_STATE_FULLSCREEN", False);
+	XEvent xev;
+	Atom wm_state = XInternAtom(m_dpy, "_NET_WM_STATE", False);
+	Atom fullscreenAtom = XInternAtom(m_dpy, "_NET_WM_STATE_FULLSCREEN", False);
 
-    memset(&xev, 0, sizeof(xev));
-    xev.type = ClientMessage;
-    xev.xclient.window = m_win;
-    xev.xclient.message_type = wm_state;
-    xev.xclient.format = 32;
-    xev.xclient.data.l[0] = (int)fullscreen;
-    xev.xclient.data.l[1] = fullscreenAtom;
-    xev.xclient.data.l[2] = 0;
+	memset(&xev, 0, sizeof(xev));
+	xev.type = ClientMessage;
+	xev.xclient.window = m_win;
+	xev.xclient.message_type = wm_state;
+	xev.xclient.format = 32;
+	xev.xclient.data.l[0] = (int)fullscreen;
+	xev.xclient.data.l[1] = fullscreenAtom;
+	xev.xclient.data.l[2] = 0;
 
-    XSendEvent(m_dpy, DefaultRootWindow(m_dpy), False, SubstructureNotifyMask, &xev);
+	XSendEvent(m_dpy, DefaultRootWindow(m_dpy), False, SubstructureNotifyMask, &xev);
 
-    if (fullscreen)
-    {
-        XWindowAttributes xwa;
-        XGetWindowAttributes(m_dpy, DefaultRootWindow(m_dpy), &xwa);
-        //windowSize.x = xwa.width;
-        //windowSize.y = xwa.height;
-    }
-    else
-    {
-        //windowSize = getSize();
-    }
+#if 0
+	if (fullscreen)
+	{
+		XWindowAttributes xwa;
+		XGetWindowAttributes(m_dpy, DefaultRootWindow(m_dpy), &xwa);
+		windowSize.x = xwa.width;
+		windowSize.y = xwa.height;
+	}
+	else
+	{
+		windowSize = getSize();
+	}
+#endif
 }
 
 void pa::X11Platform::pollEvents()
 {
-    m_input.events.clear();
+	m_input.events.clear();
 
-    while (XPending(m_dpy) > 0)
-    {
-        // Get next event
-        XNextEvent(m_dpy, &xev);
+	while (XPending(m_dpy) > 0)
+	{
+		// Get next event
+		XEvent xev;
+		XNextEvent(m_dpy, &xev);
 
-        Event e;
+		Event e;
+		bool addEvent = true;
 
-        switch (xev.type)
-        {
-        case KeyPress:
-            e.type = pa::Event::Type::KeyPress;
-            e.value = xMapKey(XLookupKeysym(&xev.xkey, 0));
-            keyDown(e.value);
-            break;
+		switch (xev.type)
+		{
+		case KeyPress:
+#undef KeyPress
+			addEvent = lookupX11Key(xev.xkey.keycode, e.key);
+			if (addEvent)
+			{
+				e.type = pa::Event::Type::KeyPress;
+				keyDown(e.key);
+			}
+			break;
 
-        case KeyRelease:
-            e.type = pa::Event::Type::KeyRelease;
-            e.value = xMapKey(XLookupKeysym(&xev.xkey, 0));
-            keyUp(e.value);
-            break;
+		case KeyRelease:
+#undef KeyRelease
+			addEvent = lookupX11Key(xev.xkey.keycode, e.key);
+			if (addEvent)
+			{
+				e.type = pa::Event::Type::KeyRelease;
+				keyUp(e.key);
+			}
+			break;
 
-        case ButtonPress:
-            e.type = pa::Event::Type::KeyPress;
-            switch (xev.xbutton.button)
-            {
-            case Button1:
-                e.value = pa::Key::LMouseButton;
-                m_pointer.setDown(true);
-                break;
-            case Button2: e.value = pa::Key::MMouseButton; break;
-            case Button3: e.value = pa::Key::RMouseButton; break;
-            }
-            keyDown(e.value);
-            break;
+		case ButtonPress:
+			e.type = pa::Event::Type::KeyPress;
+			switch (xev.xbutton.button)
+			{
+			case Button1:
+				e.key = pa::Key::LMouseButton;
+				m_pointer.setDown(true);
+				break;
+			case Button2: e.key = pa::Key::MMouseButton; break;
+			case Button3: e.key = pa::Key::RMouseButton; break;
+			}
+			keyDown(e.key);
+			break;
 
-        case ButtonRelease:
-            e.type = pa::Event::Type::KeyRelease;
-            switch (xev.xbutton.button)
-            {
-            case Button1:
-                e.value = pa::Key::LMouseButton;
-                m_pointer.setDown(false);
-                break;
-            case Button2: e.value = pa::Key::MMouseButton; break;
-            case Button3: e.value = pa::Key::RMouseButton; break;
-            }
-            keyDown(e.value);
-            break;
+		case ButtonRelease:
+			e.type = pa::Event::Type::KeyRelease;
+			switch (xev.xbutton.button)
+			{
+			case Button1:
+				e.key = pa::Key::LMouseButton;
+				m_pointer.setDown(false);
+				break;
+			case Button2: e.key = pa::Key::MMouseButton; break;
+			case Button3: e.key = pa::Key::RMouseButton; break;
+			}
+			keyDown(e.key);
+			break;
 
-        case FocusIn: XAutoRepeatOff(dpy); break;
-        case FocusOut: XAutoRepeatOn(dpy); break;
+		case FocusIn: XAutoRepeatOff(m_dpy); break;
+		case FocusOut: XAutoRepeatOn(m_dpy); break;
 
-        case ClientMessage: e.type = pa::Event::Type::Quit; break;
-        }
+		case ClientMessage: e.type = pa::Event::Type::Quit; break;
+		}
 
-        m_input.events.add(e);
-    }
+		m_input.events.push_back(e);
+	}
 
-    std::copy(m_otherEvents.begin(), m_otherEvents.end(), std::back_inserter(m_input.events));
+	std::copy(m_otherEvents.begin(), m_otherEvents.end(), std::back_inserter(m_input.events));
 
-    XEvent event;
-    XQueryPointer(dpy, win, &event.xbutton.root, &event.xbutton.window, &event.xbutton.x_root,
-                    &event.xbutton.y_root, &event.xbutton.x, &event.xbutton.y, &event.xbutton.state);
+	XEvent event;
+	XQueryPointer(m_dpy, m_win, &event.xbutton.root, &event.xbutton.window, &event.xbutton.x_root,
+					&event.xbutton.y_root, &event.xbutton.x, &event.xbutton.y, &event.xbutton.state);
 
-    int x = PA_CLAMP(0, getSize().x, event.xbutton.x);
-    int y = PA_CLAMP(0, getSize().y, event.xbutton.y);
-    m_pointer.setPosition(x, y);
+	int x = PA_CLAMP(0, getSize().x, event.xbutton.x);
+	int y = PA_CLAMP(0, getSize().y, event.xbutton.y);
+	m_pointer.setPosition(x, y);
 }
 
 void pa::X11Platform::openUrl(const char* url)
