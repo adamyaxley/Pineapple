@@ -6,3 +6,7 @@ create_source_groups(${HELLO_WORLD_SOURCES})
 
 add_executable(HelloWorld ${HELLO_WORLD_SOURCES})
 target_link_libraries(HelloWorld paEngine)
+
+if (UNIX)
+    target_link_libraries(HelloWorld pthread)
+endif()
