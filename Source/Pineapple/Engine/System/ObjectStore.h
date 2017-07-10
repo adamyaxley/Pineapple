@@ -34,7 +34,7 @@ namespace pa
 		int getPriority();
 
 		std::vector<int> getObjectIds() const;
-		ObjectInfoBase& ObjectStore::getObjectInfo(int id);
+		ObjectInfoBase& getObjectInfo(int id);
 
 		void deleteAllInstances();
 

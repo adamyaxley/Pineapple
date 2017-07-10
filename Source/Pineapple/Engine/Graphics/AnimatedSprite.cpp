@@ -29,7 +29,7 @@ unsigned int pa::AnimatedSprite::getFrameCount()
 
 void pa::AnimatedSprite::hideAll()
 {
-	for (auto frame : m_frameList)
+	for (auto&& frame : m_frameList)
 	{
 		frame->setVisible(false);
 	}
@@ -44,10 +44,6 @@ pa::AnimatedSprite::AnimatedSprite(pa::RenderSystem& renderSystem, bool recurrin
 
 pa::AnimatedSprite::~AnimatedSprite()
 {
-	for (auto frame : m_frameList)
-	{
-		delete frame;
-	}
 }
 
 void pa::AnimatedSprite::render()
@@ -62,7 +58,7 @@ void pa::AnimatedSprite::render()
 		setSize(m_frameList[m_frame]->getSize());
 	}
 
-	pa::Sprite* m_sprite = m_frameList[m_frame];
+	pa::Sprite* m_sprite = m_frameList[m_frame].get();
 	m_sprite->setPosition(getPosition());
 	m_sprite->setScale(getScale());
 	m_sprite->setRotation(getRotation());

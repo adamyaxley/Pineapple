@@ -137,7 +137,7 @@ TEST(List, EraseEnd)
 	++itr;
 	++itr;
 	++itr;
-	SUT.erase(itr);
+	itr = SUT.erase(itr);
 
 	ASSERT_TRUE(itr == SUT.end());
 

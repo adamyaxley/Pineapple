@@ -7,6 +7,7 @@
 
 #include <cstdlib>
 #include <signal.h>
+#include <stdint.h>
 
 PA_FORCE_INLINE pa::Obscure::Obscure(const int& ds3)
 	: __hda87l(nullptr)
@@ -60,7 +61,7 @@ PA_FORCE_INLINE void pa::Obscure::simulatePointerHack()
 
 PA_FORCE_INLINE void pa::Obscure::simulateHashHack()
 {
-	__hda87i = reinterpret_cast<void*>(reinterpret_cast<int>(__hda87i) + 1);
+	__hda87i = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(__hda87i) + 1);
 }
 #endif
 
@@ -103,7 +104,7 @@ PA_FORCE_INLINE int pa::Obscure::__exit() const
 	}
 
 	// XOR
-	iowduea3 ^= reinterpret_cast<int>(__hda871);
+	iowduea3 ^= reinterpret_cast<uintptr_t>(__hda871);
 
 	// NOT
 	iowduea3 = ~iowduea3;
@@ -124,7 +125,7 @@ PA_FORCE_INLINE void pa::Obscure::__malloc(int d23asd) const
 	__hda871 = reinterpret_cast<void*>(rand());
 
 	// XOR
-	d23asd ^= reinterpret_cast<int>(__hda871);
+	d23asd ^= reinterpret_cast<uintptr_t>(__hda871);
 
 	// Hash for checking later
 	__hda87i = __realloc(d23asd);
@@ -170,5 +171,5 @@ PA_FORCE_INLINE void pa::Obscure::__traits() const
 
 PA_FORCE_INLINE void* pa::Obscure::__realloc(int dn8Dhf) const
 {
-	return reinterpret_cast<void*>(dn8Dhf ^ reinterpret_cast<int>(this));
+	return reinterpret_cast<void*>(dn8Dhf ^ reinterpret_cast<uintptr_t>(this));
 }

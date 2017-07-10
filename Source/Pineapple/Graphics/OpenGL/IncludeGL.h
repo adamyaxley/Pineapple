@@ -34,7 +34,7 @@
 // First include glew
 	#include <GL/glew.h>
 // Then include OpenGL
-	#include <GL/GL.h>
+	#include <GL/gl.h>
 #endif
 
 #include <Pineapple/Graphics/OpenGL/UtilGL.h>

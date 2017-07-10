@@ -117,7 +117,7 @@ namespace pa
 		ListIterator<T, B> end() const noexcept;
 
 		// Erases the current node, and points the iterator to the next node
-		void erase(ListIterator<T, B>& position) const;
+		ListIterator<T, B> erase(ListIterator<T, B> position) const;
 
 		const T& front() const noexcept;
 		T& front() noexcept;

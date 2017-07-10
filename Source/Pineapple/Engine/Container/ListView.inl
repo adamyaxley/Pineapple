@@ -6,7 +6,7 @@
 template <typename B>
 B& pa::ListViewIterator<B>::operator*()
 {
-	return *m_node->dataPtr;
+	return *this->m_node->dataPtr;
 }
 
 template <typename B>
@@ -18,14 +18,14 @@ pa::ListViewIterator<B>::ListViewIterator(pa::NodeBase<B>* node) noexcept
 template <typename B>
 pa::ListViewIterator<B>& pa::ListViewIterator<B>::operator++()
 {
-	m_node = m_node->next.get();
+	this->m_node = this->m_node->next.get();
 	return *this;
 }
 
 template <typename B>
 pa::ListViewIterator<B>& pa::ListViewIterator<B>::operator--()
 {
-	m_node = m_node->prev;
+	this->m_node = this->m_node->prev;
 	return *this;
 }
 

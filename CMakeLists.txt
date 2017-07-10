@@ -1,5 +1,8 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 project(Pineapple)
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -38,9 +41,13 @@ get_filename_component(PA_ROOT "." ABSOLUTE)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Build/CMake")
 
-find_package(opengl REQUIRED)
-find_package(glew REQUIRED)
-find_package(fmod REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(FMOD REQUIRED)
+
+if(UNIX)
+    find_package(X11 REQUIRED)
+endif()
 
 # Header only libs checked into Ext
 set(EXT_INCLUDE_DIRS ${PA_ROOT}/Ext)
@@ -70,10 +77,18 @@ endfunction()
 
 function(add_pineapple_app _TARGET _SOURCES)
     set( _SOURCES_LIST ${_SOURCES} ${ARGN} )
-    add_executable(${_TARGET} WIN32 ${_SOURCES_LIST})
 
-    target_link_libraries(${_TARGET} paEngine paWindows paFMOD paOpenGL ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${FMOD_LIBRARIES})
+    if(WIN32)
+        add_executable(${_TARGET} WIN32 ${_SOURCES_LIST})
+        target_link_libraries(${_TARGET} paEngine paWindows paFMOD paOpenGL ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${FMOD_LIBRARIES})
+    endif()
     
+    if(UNIX)
+        add_executable(${_TARGET} ${_SOURCES_LIST})
+        target_link_libraries(${_TARGET} paX11 paFMOD paOpenGL paEngine ${X11_LIBRARIES} pthread ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${FMOD_LIBRARIES})
+        set_property(TARGET ${_TARGET} APPEND PROPERTY INCLUDE_DIRECTORIES ${X11_INCLUDE_DIRS})
+    endif()
+
     add_custom_command(
             TARGET ${_TARGET} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -85,15 +100,17 @@ function(add_pineapple_app _TARGET _SOURCES)
             COMMAND ${CMAKE_COMMAND} -E copy_directory
                     ${PA_ROOT}/Assets
                     ${CMAKE_CURRENT_BINARY_DIR}/Assets)
-
-    foreach(_library IN ITEMS ${FMOD_LIBRARIES})
-        string(REPLACE "_vc.lib" ".dll" _dll ${_library})
-        add_custom_command(
-            TARGET ${_TARGET} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-                    ${_dll}
-                    ${CMAKE_CURRENT_BINARY_DIR})
-    endforeach()
+    
+    if(WIN32)
+        foreach(_library IN ITEMS ${FMOD_LIBRARIES})
+            string(REPLACE "_vc.lib" ".dll" _dll ${_library})
+            add_custom_command(
+                TARGET ${_TARGET} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy
+                        ${_dll}
+                        ${CMAKE_CURRENT_BINARY_DIR})
+        endforeach()
+    endif()
 endfunction()
 
 set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS
@@ -112,12 +129,20 @@ set_target_properties (gmock_main PROPERTIES FOLDER Test/gtest)
 add_subdirectory(Source/Pineapple/Engine)
 add_subdirectory(Source/Pineapple/Graphics/OpenGL)
 add_subdirectory(Source/Pineapple/Sound/FMOD)
-add_subdirectory(Source/Pineapple/Platform/Windows)
+
+if (WIN32)
+    add_subdirectory(Source/Pineapple/Platform/Windows)
+    set_target_properties (paWindows PROPERTIES FOLDER Plugins)
+endif()
+
+if (UNIX)
+    add_subdirectory(Source/Pineapple/Platform/X11)
+    set_target_properties (paX11 PROPERTIES FOLDER Plugins)
+endif()
 
 set_target_properties (paEngine PROPERTIES FOLDER Engine)
 set_target_properties (paOpenGL PROPERTIES FOLDER Plugins)
 set_target_properties (paFMOD PROPERTIES FOLDER Plugins)
-set_target_properties (paWindows PROPERTIES FOLDER Plugins)
 
 # Tests
 add_subdirectory(Test/Engine)
