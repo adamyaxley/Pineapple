@@ -149,12 +149,14 @@ void pa::X11Platform::pollEvents()
 
 		Event e;
 		bool addEvent = true;
+		KeySym keySym;
 
 		switch (xev.type)
 		{
 		case KeyPress:
 #undef KeyPress
-			addEvent = lookupX11Key(xev.xkey.keycode, e.key);
+			keySym = XLookupKeysym(&xev.xkey, 0);
+			addEvent = lookupX11Key(keySym, e.key);
 			if (addEvent)
 			{
 				e.type = pa::Event::Type::KeyPress;
@@ -164,7 +166,8 @@ void pa::X11Platform::pollEvents()
 
 		case KeyRelease:
 #undef KeyRelease
-			addEvent = lookupX11Key(xev.xkey.keycode, e.key);
+			keySym = XLookupKeysym(&xev.xkey, 0);
+			addEvent = lookupX11Key(keySym, e.key);
 			if (addEvent)
 			{
 				e.type = pa::Event::Type::KeyRelease;
