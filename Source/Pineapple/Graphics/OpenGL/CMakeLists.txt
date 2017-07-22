@@ -4,11 +4,10 @@ project(paOpenGL)
 glob_source_files(PA_OPENGL_SOURCES)
 create_source_groups(${PA_OPENGL_SOURCES})
 
+list(APPEND PA_OPENGL_SOURCES ${EXT_INCLUDE_DIRS}/glad/OpenGL4.1/src/glad.c)
+source_group(glad ${EXT_INCLUDE_DIRS}/glad/OpenGL4.1/src/glad.c)
+
 add_library(paOpenGL ${PA_OPENGL_SOURCES})
 
-set_property(TARGET paOpenGL APPEND PROPERTY INCLUDE_DIRECTORIES
-    ${GLEW_INCLUDE_DIRS}
-    ${OPENGL_INCLUDE_DIRS}
-)
-
+set_property(TARGET paOpenGL APPEND PROPERTY INCLUDE_DIRECTORIES ${EXT_INCLUDE_DIRS}/glad/OpenGL4.1/include)
 set_property(TARGET paOpenGL APPEND PROPERTY COMPILE_DEFINITIONS PA_OPENGLES2)
