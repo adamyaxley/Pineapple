@@ -95,18 +95,15 @@ pa::GraphicsGL::GraphicsGL(const pa::Vect2<int>& size)
 {
 	pa::Log::info("Starting up graphics size: {} * {}", m_size.x, m_size.y);
 
-#ifndef PA_OPENGLES
-	GLenum err = glewInit();
-	if (GLEW_OK != err)
+	if (!gladLoadGL())
 	{
-		pa::Log::info("Failed to init GLEW (error: {})", err);
+		pa::Log::info("Failed to init GLAD");
 		throw std::exception();
 	}
 	else
 	{
-		pa::Log::info("Successfully inited GLEW");
+		pa::Log::info("Successfully inited GLAD");
 	}
-#endif
 
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 

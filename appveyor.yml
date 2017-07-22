@@ -7,19 +7,13 @@ branches:
 image: Visual Studio 2017
 
 install:
-  - git clone https://github.com/Microsoft/vcpkg.git
-  - cd vcpkg
-  - bootstrap-vcpkg.bat
-  - vcpkg integrate install
-  - vcpkg install glew
-  - cd ..
   - ps: Start-FileDownload 'https://dl.dropboxusercontent.com/s/zrdqvkpjl2426cf/PineappleFMOD.7z'
   - 7z x PineappleFMOD.7z -o"C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel"
 
 build_script:
   - mkdir builddir
   - cd builddir
-  - cmake .. -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
+  - cmake ..
   - cmake --build . --config Debug
   - cmake --build . --config Release
 

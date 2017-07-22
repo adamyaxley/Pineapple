@@ -57,22 +57,20 @@ Currently the following plugins are provided:
 * Platform
   * paWindows - Win32 application
 * Graphics
-  * paOpenGL - OpenGL rendering (uses [glew](http://glew.sourceforge.net/), [stb_image/stb_truetype](https://github.com/nothings/stb), [fontstash](https://github.com/memononen/fontstash) and [glm](https://github.com/g-truc/glm))
+  * paOpenGL - OpenGL rendering (uses [glad](https://github.com/Dav1dde/glad), [stb_image/stb_truetype](https://github.com/nothings/stb), [fontstash](https://github.com/memononen/fontstash) and [glm](https://github.com/g-truc/glm))
 * Sound
   * paFMOD - FMOD backend (requires FMOD)
 
 ## Build
 To build the source, demos and tests you will need the following:
 * [CMake](https://cmake.org/) 3.8
-* [vcpkg](https://github.com/Microsoft/vcpkg) (this is how you will install the glew package, required for the paOpenGL graphics plugin)
-  * [glew](http://glew.sourceforge.net/)
 * [FMOD](http://www.fmod.org/download) (required for the paFMOD sound plugin)
 
-It is recommended to do an out of source build, to avoid polluting the source tree. Replace `{VCPKG_INSTALL_DIR}` with where you installed vcpkg and run the following:
+It is recommended to do an out of source build, to avoid polluting the source tree. Run the following:
 ```
 mkdir builddir
 cd builddir
-cmake .. -DCMAKE_TOOLCHAIN_FILE={VCPKG_INSTALL_DIR}\scripts\buildsystems\vcpkg.cmake
+cmake ..
 ```
 Then open the generated Pineapple.sln file and hit build.
 

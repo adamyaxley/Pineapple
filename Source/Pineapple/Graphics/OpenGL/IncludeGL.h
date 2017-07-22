@@ -31,10 +31,7 @@
 		#pragma clang diagnostic pop
 	#endif
 #else
-// First include glew
-	#include <GL/glew.h>
-// Then include OpenGL
-	#include <GL/gl.h>
+	#include <glad/glad.h>
 #endif
 
 #include <Pineapple/Graphics/OpenGL/UtilGL.h>

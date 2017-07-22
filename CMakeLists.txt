@@ -41,8 +41,6 @@ get_filename_component(PA_ROOT "." ABSOLUTE)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Build/CMake")
 
-find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
 find_package(FMOD REQUIRED)
 
 if(UNIX)
@@ -80,12 +78,13 @@ function(add_pineapple_app _TARGET _SOURCES)
 
     if(WIN32)
         add_executable(${_TARGET} WIN32 ${_SOURCES_LIST})
-        target_link_libraries(${_TARGET} paEngine paWindows paFMOD paOpenGL ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${FMOD_LIBRARIES})
+        # Need to link Opengl32.lib for wgl (not sure if this is correct usage of glad)
+        target_link_libraries(${_TARGET} paEngine paWindows paFMOD paOpenGL Opengl32.lib ${FMOD_LIBRARIES})
     endif()
     
     if(UNIX)
         add_executable(${_TARGET} ${_SOURCES_LIST})
-        target_link_libraries(${_TARGET} paX11 paFMOD paOpenGL paEngine ${X11_LIBRARIES} pthread ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${FMOD_LIBRARIES})
+        target_link_libraries(${_TARGET} paX11 paFMOD paOpenGL paEngine ${X11_LIBRARIES} pthread dl ${FMOD_LIBRARIES})
         set_property(TARGET ${_TARGET} APPEND PROPERTY INCLUDE_DIRECTORIES ${X11_INCLUDE_DIRS})
     endif()
 
