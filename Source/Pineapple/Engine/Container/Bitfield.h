@@ -59,7 +59,7 @@ namespace pa
 	{
 	public:
 		using Storage = typename BitfieldType<roundUpToNextPowerOf2(
-			atLeast8(static_cast<unsigned>(T::_PineappleBitfieldEndMarker)))>::Type;
+			atLeast8(static_cast<unsigned>(T::is_enum_bitfield)))>::Type;
 
 		PA_FORCE_INLINE Bitfield() noexcept;
 

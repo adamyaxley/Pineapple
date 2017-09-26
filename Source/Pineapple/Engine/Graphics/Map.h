@@ -48,7 +48,7 @@ namespace pa
 		{
 			PA_MAP_HWRAP,
 			PA_MAP_VWRAP,
-			_PineappleBitfieldEndMarker
+			is_enum_bitfield
 		};
 
 		// Flags

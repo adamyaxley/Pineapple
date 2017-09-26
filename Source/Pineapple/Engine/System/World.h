@@ -90,7 +90,7 @@ namespace pa
 		{
 			IsRunning,
 			IsStepping,
-			_PineappleBitfieldEndMarker
+			is_enum_bitfield
 		};
 
 		void preStepInstances(const Input& input);

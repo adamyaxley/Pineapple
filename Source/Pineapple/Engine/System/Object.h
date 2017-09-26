@@ -59,7 +59,7 @@ namespace pa
 		enum class Flags
 		{
 			IsDead,
-			_PineappleBitfieldEndMarker
+			is_enum_bitfield
 		};
 
 		// Object flags

@@ -60,7 +60,7 @@ namespace pa
 			HFlip,
 			VFlip,
 			Visible,
-			_PineappleBitfieldEndMarker
+			is_enum_bitfield
 		};
 
 		// Attributes

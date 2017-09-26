@@ -7,7 +7,7 @@ enum class SimpleFlags
 	One,
 	Two,
 	Three,
-	_PineappleBitfieldEndMarker
+	is_enum_bitfield
 };
 
 TEST(Bitfield, SetAndGet)
@@ -80,49 +80,49 @@ TEST(Bitfield, GetBitwise)
 
 enum class Uint8Flags1
 {
-	_PineappleBitfieldEndMarker
+	is_enum_bitfield
 };
 
 enum class Uint8Flags2
 {
 	Flag = 7,
-	_PineappleBitfieldEndMarker
+	is_enum_bitfield
 };
 
 enum class Uint16Flags1
 {
 	Flag = 8,
-	_PineappleBitfieldEndMarker
+	is_enum_bitfield
 };
 
 enum class Uint16Flags2
 {
 	Flag = 15,
-	_PineappleBitfieldEndMarker
+	is_enum_bitfield
 };
 
 enum class Uint32Flags1
 {
 	Flag = 16,
-	_PineappleBitfieldEndMarker
+	is_enum_bitfield
 };
 
 enum class Uint32Flags2
 {
 	Flag = 31,
-	_PineappleBitfieldEndMarker
+	is_enum_bitfield
 };
 
 enum class Uint64Flags1
 {
 	Flag = 32,
-	_PineappleBitfieldEndMarker
+	is_enum_bitfield
 };
 
 enum class Uint64Flags2
 {
 	Flag = 63,
-	_PineappleBitfieldEndMarker
+	is_enum_bitfield
 };
 
 TEST(Bitfield, StorageSize)
