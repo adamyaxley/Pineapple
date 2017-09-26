@@ -46,8 +46,8 @@ namespace pa
 	private:
 		enum class Flags
 		{
-			PA_MAP_HWRAP,
-			PA_MAP_VWRAP,
+			HWrap,
+			VWrap,
 			is_enum_bitfield
 		};
 

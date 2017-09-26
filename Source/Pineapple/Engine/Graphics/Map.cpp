@@ -14,12 +14,12 @@ pa::Map::Map(pa::RenderSystem& renderSystem, float x, float y, int w, int h, boo
 {
 	if (hWrap)
 	{
-		m_flags.set(Flags::PA_MAP_HWRAP);
+		m_flags.set(Flags::HWrap);
 	}
 
 	if (vWrap)
 	{
-		m_flags.set(Flags::PA_MAP_VWRAP);
+		m_flags.set(Flags::VWrap);
 	}
 }
 
@@ -30,12 +30,12 @@ const pa::Vect2<int>& pa::Map::getSize() const
 
 bool pa::Map::getVWrap() const
 {
-	return m_flags.getBool(Flags::PA_MAP_VWRAP);
+	return m_flags.getBool(Flags::VWrap);
 }
 
 bool pa::Map::getHWrap() const
 {
-	return m_flags.getBool(Flags::PA_MAP_HWRAP);
+	return m_flags.getBool(Flags::HWrap);
 }
 
 void pa::Map::setColour(const pa::Colour& colour)
