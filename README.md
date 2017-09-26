@@ -74,7 +74,7 @@ cmake ..
 ```
 Then open the generated Pineapple.sln file and hit build.
 
-Note: To run the tests within Visual Studio you will need to install the [Google Test Adapter](https://github.com/csoltenborn/GoogleTestAdapter), which can be installed via Tools -> Extensions and Updates.
+Note: To run the tests within Visual Studio you will need to install the [Google Test Adapter](https://github.com/csoltenborn/GoogleTestAdapter), which can be installed via Tools -> Extensions and Updates. For Visual Studio 2017 there is an official [Test Adapter for Google Test](https://marketplace.visualstudio.com/items?itemName=VisualCPPTeam.TestAdapterforGoogleTest) that is maintained by the Visual C++ Team.
 
 Please create an issue if you experience any problems (likely!)
 
