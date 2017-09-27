@@ -7,7 +7,7 @@ Level::Level(pa::World& world)
 	: pa::Object(world)
 	, pa::InputHandler(world)
 {
-	m_background = g_resource.background->createMap(0, 0, g_resource.backgroundTileMap);
+	m_background = g_resource.background->createMap(g_resource.backgroundTileMap, 0, 0, false, false, -1);
 }
 
 void Level::onCreate()

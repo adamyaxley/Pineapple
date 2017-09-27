@@ -22,7 +22,7 @@ namespace pa
 		virtual bool onUnload() override;
 
 		// Create a map
-		virtual std::unique_ptr<Map> createMap(float x, float y, const TileMap tilemap, bool hWrap, bool vWrap,
+		virtual std::unique_ptr<Map> createMap(std::shared_ptr<const pa::TileMap> tilemap, float x, float y, bool hWrap, bool vWrap,
 											   int priority) override;
 
 		// Gets the OpenGL texture object associated with this tile set

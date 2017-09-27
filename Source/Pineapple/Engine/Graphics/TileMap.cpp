@@ -5,23 +5,22 @@
 
 #include <Pineapple/Engine/Graphics/TileMap.h>
 
-pa::TileMap::TileMap(int width, int height, pa::Tile* tiles /*= nullptr*/)
+pa::TileMap::TileMap(int width, int height)
 	: m_size(width, height)
-	, m_tileData(tiles)
 {
+	m_tileData.resize(width * height);
 }
 
 pa::Tile pa::TileMap::get(int x, int y) const
 {
 	PA_ASSERTF(x < m_size.x && x >= 0 && y < m_size.y && y >= 0, "Requested tile is not within bounds");
 
-	if (m_tileData)
-	{
-		return m_tileData[y * m_size.x + x];
-	}
-	else
-	{
-		// Return a default pa::Tile that just has the tile ID
-		return (y * m_size.x + x + 1);
-	}
+	return m_tileData[y * m_size.x + x];
+}
+
+void pa::TileMap::set(int x, int y, pa::Tile tile)
+{
+	PA_ASSERTF(x < m_size.x && x >= 0 && y < m_size.y && y >= 0, "Requested tile is not within bounds");
+
+	m_tileData[y * m_size.x + x] = tile;
 }

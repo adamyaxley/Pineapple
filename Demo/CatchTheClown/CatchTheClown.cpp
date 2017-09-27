@@ -58,7 +58,7 @@ struct Level : public pa::Object, public pa::InputHandler
 	{
 		auto backTileSet = world.getPlatform()->getGraphics()->createTileSet("back.png", 96, 96);
 		backTileSet->load();
-		m_back = backTileSet->createPlainWrappedMap(0, 0);
+		m_back = backTileSet->createMap(nullptr, 0, 0, true, true, -1);
 
 		// Create blocks
 		auto blockTexture = world.getPlatform()->getGraphics()->createTexture("block.png");

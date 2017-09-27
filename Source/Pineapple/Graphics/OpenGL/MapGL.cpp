@@ -19,10 +19,12 @@ namespace
 	DrawFuncType g_drawFuncArray[2][2];
 }
 
-pa::MapGL::MapGL(pa::Graphics& graphics, pa::TileSetGL& tileSet, float x, float y, const pa::TileMap tileMap,
+pa::MapGL::MapGL(pa::Graphics& graphics, pa::TileSetGL& tileSet, std::shared_ptr<const pa::TileMap> tileMap, float x, float y,
 				 bool hWrap, bool vWrap, int priority)
-	: pa::Map(graphics.getRenderSystem(), x, y, tileSet.getTileSize().x * tileMap.getSizeConst().x,
-			  tileSet.getTileSize().y * tileMap.getSizeConst().y, hWrap, vWrap, priority,
+	: pa::Map(graphics.getRenderSystem(), x, y, 
+			   (tileMap ? tileSet.getTileSize().x * tileMap->getSizeConst().x : tileSet.getSize().x),
+			   (tileMap ? tileSet.getTileSize().y * tileMap->getSizeConst().y : tileSet.getSize().y), 
+			   hWrap, vWrap, priority,
 			  (tileSet.getFormat() == pa::Texture::Format::RGBA ||
 			   tileSet.getFormat() == pa::Texture::Format::LuminanceAlpha)
 				  ? pa::Render::Type::Ordered
@@ -206,84 +208,98 @@ void pa::MapGL::drawHVWrappedMap(pa::Vect2<float> pos, const pa::VertexBuffer2DG
 
 void pa::MapGL::createVertexBuffer()
 {
-	m_vertexBuffer.createBuffers(4 * m_tileMap.getSizeConst().y * m_tileMap.getSizeConst().x);
-	m_vertexBuffer.setMode(GL_TRIANGLE_STRIP);
-
-	int cols = m_tileSet.getSize().x / m_tileSet.getTileSize().x;
-	int rows = m_tileSet.getSize().y / m_tileSet.getTileSize().y;
-
-	double texelBias = pa::DrawGL::getTexelBias();
-
-	for (int ty = 0; ty < m_tileMap.getSizeConst().y; ty++)
+	if (m_tileMap == nullptr)
 	{
-		for (int tx = 0; tx < m_tileMap.getSizeConst().x; tx++)
+		m_vertexBuffer.createBuffers(4);
+		m_vertexBuffer.setMode(GL_TRIANGLE_STRIP);
+
+		// Simple texture draw
+		m_vertexBuffer.addVertex(0, 0, 0, 0);
+		m_vertexBuffer.addVertex(0, getSize().y, 0, 1);
+		m_vertexBuffer.addVertex(getSize().x, 0, 1, 0);
+		m_vertexBuffer.addVertex(getSize().x, getSize().y, 1, 1);
+	}
+	else
+	{
+		m_vertexBuffer.createBuffers(4 * m_tileMap->getSizeConst().y * m_tileMap->getSizeConst().x);
+		m_vertexBuffer.setMode(GL_TRIANGLE_STRIP);
+
+		int cols = m_tileSet.getSize().x / m_tileSet.getTileSize().x;
+		int rows = m_tileSet.getSize().y / m_tileSet.getTileSize().y;
+
+		const double texelBias = pa::DrawGL::getTexelBias();
+
+		for (int ty = 0; ty < m_tileMap->getSizeConst().y; ty++)
 		{
-			pa::Tile tile = m_tileMap.get(tx, ty);
-
-			// If tile is not the transparent tile
-			if ((tile & PA_TILE_INDEX) > 0)
+			for (int tx = 0; tx < m_tileMap->getSizeConst().x; tx++)
 			{
-				// Move into 0-based tile indexing space
-				tile--;
+				pa::Tile tile = m_tileMap->get(tx, ty);
 
-				// Find tile texture coordinates
-				double ix = (double)((tile & PA_TILE_INDEX) % cols);
-				double iy = (double)((tile & PA_TILE_INDEX) / cols); // x
-
-				pa::Rect<double> texDouble(ix / cols, iy / rows, (ix + 1) / cols, (iy + 1) / rows);
-
-				// Scale values to utilised size
-				texDouble.x1 *= m_tileSet.getUtilisedSize().x;
-				texDouble.y1 *= m_tileSet.getUtilisedSize().y;
-				texDouble.x2 *= m_tileSet.getUtilisedSize().x;
-				texDouble.y2 *= m_tileSet.getUtilisedSize().y;
-
-				// Add bias the the texels so as to not sample neighboring tiles
-				texDouble.x1 += texelBias;
-				texDouble.x2 -= texelBias;
-				texDouble.y1 += texelBias;
-				texDouble.y2 -= texelBias;
-
-				pa::Rect<GLfloat> tex((GLfloat)texDouble.x1, (GLfloat)texDouble.y1, (GLfloat)texDouble.x2,
-									  (GLfloat)texDouble.y2);
-
-				pa::Rect<GLfloat> vertex((GLfloat)(tx * m_tileSet.getTileSize().x),
-										 (GLfloat)(ty * m_tileSet.getTileSize().y),
-										 (GLfloat)((tx + 1) * m_tileSet.getTileSize().x),
-										 (GLfloat)((ty + 1) * m_tileSet.getTileSize().y));
-
-				// Tile flip
-				if (tile & PA_TILE_HFLIP)
+				// If tile is not the transparent tile
+				if ((tile & PA_TILE_INDEX) > 0)
 				{
-					GLfloat temp = tex.x1;
-					tex.x1 = tex.x2;
-					tex.x2 = temp;
-				}
+					// Move into 0-based tile indexing space
+					tile--;
 
-				if (tile & PA_TILE_VFLIP)
-				{
-					GLfloat temp = tex.y1;
-					tex.y1 = tex.y2;
-					tex.y2 = temp;
-				}
+					// Find tile texture coordinates
+					double ix = (double)((tile & PA_TILE_INDEX) % cols);
+					double iy = (double)((tile & PA_TILE_INDEX) / cols); // x
 
-				// Make sure that the texels go right to the end so no tearing
-				if (tx == m_tileMap.getSizeConst().x - 1)
-				{
-					vertex.x2 = (GLfloat)(texelBias + getSize().x);
-				}
+					pa::Rect<double> texDouble(ix / cols, iy / rows, (ix + 1) / cols, (iy + 1) / rows);
 
-				if (ty == m_tileMap.getSizeConst().y - 1)
-				{
-					vertex.y2 = (GLfloat)(texelBias + getSize().y);
-				}
+					// Scale values to utilised size
+					texDouble.x1 *= m_tileSet.getUtilisedSize().x;
+					texDouble.y1 *= m_tileSet.getUtilisedSize().y;
+					texDouble.x2 *= m_tileSet.getUtilisedSize().x;
+					texDouble.y2 *= m_tileSet.getUtilisedSize().y;
 
-				// Note that this generates two backwards facing triangles at the end of each row
-				// to connect to the next row. This relies on GL_CULL_FACE being enabled.
-				m_vertexBuffer.addVertex(vertex.x1, vertex.y1, tex.x1, tex.y1);
-				m_vertexBuffer.addVertex(vertex.x1, vertex.y2, tex.x1, tex.y2);
-				m_vertexBuffer.addVertex(vertex.x2, vertex.y1, tex.x2, tex.y1);
-				m_vertexBuffer.addVertex(vertex.x2, vertex.y2, tex.x2, tex.y2);
+					// Add bias the the texels so as to not sample neighboring tiles
+					texDouble.x1 += texelBias;
+					texDouble.x2 -= texelBias;
+					texDouble.y1 += texelBias;
+					texDouble.y2 -= texelBias;
+
+					pa::Rect<GLfloat> tex((GLfloat)texDouble.x1, (GLfloat)texDouble.y1, (GLfloat)texDouble.x2,
+						(GLfloat)texDouble.y2);
+
+					pa::Rect<GLfloat> vertex((GLfloat)(tx * m_tileSet.getTileSize().x),
+						(GLfloat)(ty * m_tileSet.getTileSize().y),
+						(GLfloat)((tx + 1) * m_tileSet.getTileSize().x),
+						(GLfloat)((ty + 1) * m_tileSet.getTileSize().y));
+
+					// Tile flip
+					if (tile & PA_TILE_HFLIP)
+					{
+						GLfloat temp = tex.x1;
+						tex.x1 = tex.x2;
+						tex.x2 = temp;
+					}
+
+					if (tile & PA_TILE_VFLIP)
+					{
+						GLfloat temp = tex.y1;
+						tex.y1 = tex.y2;
+						tex.y2 = temp;
+					}
+
+					// Make sure that the texels go right to the end so no tearing
+					if (tx == m_tileMap->getSizeConst().x - 1)
+					{
+						vertex.x2 = (GLfloat)(texelBias + getSize().x);
+					}
+
+					if (ty == m_tileMap->getSizeConst().y - 1)
+					{
+						vertex.y2 = (GLfloat)(texelBias + getSize().y);
+					}
+
+					// Note that this generates two backwards facing triangles at the end of each row
+					// to connect to the next row. This relies on GL_CULL_FACE being enabled.
+					m_vertexBuffer.addVertex(vertex.x1, vertex.y1, tex.x1, tex.y1);
+					m_vertexBuffer.addVertex(vertex.x1, vertex.y2, tex.x1, tex.y2);
+					m_vertexBuffer.addVertex(vertex.x2, vertex.y1, tex.x2, tex.y1);
+					m_vertexBuffer.addVertex(vertex.x2, vertex.y2, tex.x2, tex.y2);
+				}
 			}
 		}
 	}

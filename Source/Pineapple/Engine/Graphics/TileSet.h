@@ -25,27 +25,15 @@ namespace pa
 		// Gets the tile size of this tile set
 		const Vect2<int>& getTileSize() const;
 
-		// Gets the width and height measured in tiles
+		// Gets the width and height measured in pixels
 		const Vect2<int>& getSize() const;
 
-		// Sets the width and height measured in tiles
+		// Sets the width and height measured in pixels
 		void setSize(const Vect2<int>& size);
 
 		// Creates a map from this tile set
-		virtual std::unique_ptr<Map> createMap(float x, float y, const TileMap tilemap, bool hWrap = false,
-											   bool vWrap = false, int priority = -1) = 0;
-
-		// Creates a map with horizontal and vertical wrapping
-		std::unique_ptr<Map> createWrappedMap(float x, float y, const TileMap tilemap, int priority = -1);
-
-		// Creates a map without any specific Tile Map, and no wrapping
-		std::unique_ptr<Map> createPlainMap(float x, float y, int priority = -1);
-
-		// Creates a map without any specific Tile Map, and horizontal and vertical wrapping
-		std::unique_ptr<Map> createPlainWrappedMap(float x, float y, int priority = -1);
-
-		// Get the default Tile Map
-		TileMap getDefaultTileMap() const;
+		virtual std::unique_ptr<Map> createMap(std::shared_ptr<const pa::TileMap> tilemap, float x, float y, bool hWrap,
+											   bool vWrap, int priority) = 0;
 
 		// Get underlying texture format
 		Texture::Format getFormat() const;
@@ -59,9 +47,6 @@ namespace pa
 
 		// Number of tiles
 		Vect2<int> m_size;
-
-		// Default tile map
-		TileMap m_defaultTileMap;
 
 		// Get underlying texture format
 		Texture::Format m_format;

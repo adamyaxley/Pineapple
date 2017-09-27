@@ -10,11 +10,7 @@ struct Resource
 	std::shared_ptr<pa::Texture> smallRock;
 
 	std::shared_ptr<pa::TileSet> background;
-
-	constexpr static int tilesWidth = 20;
-	constexpr static int tilesHeight = 20;
-	pa::Tile tileData[tilesWidth * tilesHeight];
-	pa::TileMap backgroundTileMap{tilesWidth, tilesHeight, tileData};
+	std::shared_ptr<pa::TileMap> backgroundTileMap;
 
 	std::shared_ptr<pa::Effect> destroy;
 	std::shared_ptr<pa::Effect> fire;

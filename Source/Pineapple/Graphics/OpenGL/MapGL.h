@@ -16,7 +16,7 @@ namespace pa
 	class MapGL : public Map
 	{
 	public:
-		MapGL(Graphics& graphics, TileSetGL& tileSet, float x, float y, const TileMap map, bool hWrap, bool vWrap,
+		MapGL(Graphics& graphics, TileSetGL& tileSet, std::shared_ptr<const TileMap> map, float x, float y, bool hWrap, bool vWrap,
 			  int priority);
 		~MapGL();
 
@@ -31,7 +31,7 @@ namespace pa
 		const Graphics& m_graphics;
 
 		TileSetGL& m_tileSet;
-		const TileMap m_tileMap;
+		std::shared_ptr<const TileMap> m_tileMap;
 
 		Vect2<int> m_scrollPos;
 

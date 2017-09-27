@@ -11,11 +11,15 @@ void Resource::create(std::shared_ptr<pa::Platform> platform)
 	smallRock = platform->getGraphics()->createTexture("Textures/smallRock.png");
 
 	background = platform->getGraphics()->createTileSet("Textures/background.png", 32, 32);
+	backgroundTileMap = std::make_shared<pa::TileMap>(20, 20);
 	std::uniform_int_distribution<int> dis(0, 4);
 	std::mt19937 gen;
-	for (int i = 0; i < tilesWidth * tilesHeight; i++)
+	for (int x = 0; x < backgroundTileMap->getSizeConst().x; x++)
 	{
-		tileData[i] = dis(gen);
+		for (int y = 0; y < backgroundTileMap->getSizeConst().y; y++)
+		{
+			backgroundTileMap->set(x, y, dis(gen));
+		}
 	}
 
 	destroy = platform->getSound()->createEffect("Sound/destroy.wav");
