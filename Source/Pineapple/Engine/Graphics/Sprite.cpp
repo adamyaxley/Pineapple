@@ -5,38 +5,49 @@
 
 #include <Pineapple/Engine/Graphics/Sprite.h>
 #include <Pineapple/Engine/Util/Macro.h>
+#include <algorithm>
 
-pa::Sprite::Sprite(pa::RenderSystem& renderSystem, int width, int height, pa::Render::Type renderType, int depth)
-	: pa::Render(renderSystem, renderType, depth)
-	, m_position(0.f, 0.f)
-	, m_origin((float)(width / 2), (float)(height / 2))
-	, m_scale(1.0f, 1.0f)
-	, m_size(width, height)
-	, m_rotation(0.f)
-	, m_colour(pa::ColourSet::White)
+namespace
 {
+	pa::Render::Type getRenderTypeFromFrames(const std::vector<std::shared_ptr<pa::Texture>>& frames)
+	{
+		auto it = std::find_if(std::begin(frames), std::end(frames),
+			[](auto frame) { return pa::Render::Type::Ordered == pa::Texture::getRenderTypeFromTextureFormat(frame->getFormat()); });
+
+		if (it != std::end(frames))
+		{
+			return pa::Render::Type::Ordered;
+		}
+		else
+		{
+			return pa::Render::Type::Unordered;
+		}
+	}
+
+	pa::Vect2<int> getSizeFromFrames(const std::vector<std::shared_ptr<pa::Texture>>& frames)
+	{
+		PA_ASSERTF(frames.size() > 0, "A sprite must have at least one frame");
+
+		const auto& size = frames[0]->getSize();
+		auto it = std::find_if(std::begin(frames), std::end(frames),
+			[&size](auto frame) { return size != frame->getSize(); });
+
+		PA_ASSERTF(it == std::end(frames), "Size of all frames of a Sprite must be the same");
+		return size;
+	}
+}
+
+pa::Sprite::Sprite(pa::RenderSystem& renderSystem, std::vector<std::shared_ptr<Texture>>&& frames, int depth)
+	: pa::Render(renderSystem, getRenderTypeFromFrames(frames), depth)
+	, pa::SpriteAttributes(getSizeFromFrames(frames))
+	, m_frames(frames)
+	, m_currentFrame(0)
+{
+	PA_ASSERTF(m_frames.size() > 0, "A sprite must have at least one frame");
+
 	setVisible(true);
-}
-
-const pa::Vect2<int>& pa::Sprite::getSize() const
-{
-	return m_size;
-}
-
-void pa::Sprite::setScale(float scale)
-{
-	m_scale.x = scale;
-	m_scale.y = scale;
-}
-
-void pa::Sprite::setRotation(float radians)
-{
-	m_rotation = radians;
-}
-
-float pa::Sprite::getRotation() const
-{
-	return m_rotation;
+	setPlaybackEnabled(true);
+	setPlaybackMode(PlaybackMode::Forward);
 }
 
 void pa::Sprite::setHFlip(bool hFlip)
@@ -69,24 +80,39 @@ bool pa::Sprite::getVisible() const
 	return m_flags.getBool(Flags::Visible);
 }
 
-void pa::Sprite::setSize(pa::Vect2<int>& size)
+void pa::Sprite::setFrame(unsigned int frame)
 {
-	m_size = size;
+	m_currentFrame = frame % getNumberOfFrames();
 }
 
-void pa::Sprite::setSize(const pa::Vect2<int>& size)
+unsigned int pa::Sprite::getFrame() const
 {
-	m_size = size;
+	return m_currentFrame;
 }
 
-void pa::Sprite::setColour(const pa::Colour& colour)
+unsigned int pa::Sprite::getNumberOfFrames() const
 {
-	m_colour = colour;
+	return m_frames.size();
 }
 
-pa::Colour& pa::Sprite::getColour()
+void pa::Sprite::setPlaybackEnabled(bool enabled)
 {
-	return m_colour;
+	enabled ? m_flags.set(Flags::EnablePlayback) : m_flags.clear(Flags::EnablePlayback);
+}
+
+bool pa::Sprite::getPlaybackEnabled() const
+{
+	return m_flags.getBool(Flags::EnablePlayback);
+}
+
+void pa::Sprite::setPlaybackMode(PlaybackMode mode)
+{
+	mode == PlaybackMode::Forward ? m_flags.set(Flags::ForwardPlayback) : m_flags.clear(Flags::ForwardPlayback);
+}
+
+pa::Sprite::PlaybackMode pa::Sprite::getPlaybackMode() const
+{
+	return m_flags.get(Flags::ForwardPlayback) ? PlaybackMode::Forward : PlaybackMode::Backward;
 }
 
 void pa::Sprite::pin(const pa::Sprite* sprite, pa::Vect2<float>& offset)
@@ -95,4 +121,28 @@ void pa::Sprite::pin(const pa::Sprite* sprite, pa::Vect2<float>& offset)
 	offset.rotate(sprite->getRotation());
 	offset += sprite->getPositionConst();
 	setPosition(offset);
+}
+
+void pa::Sprite::render()
+{
+	auto& texture = m_frames[getFrame()];
+
+	texture->render(*this);
+
+	// Advance animation
+	if (m_flags.get(Flags::ForwardPlayback))
+	{
+		m_currentFrame = (m_currentFrame + 1) % m_frames.size();
+	}
+	else
+	{
+		if (m_currentFrame > 0)
+		{
+			m_currentFrame -= 1;
+		}
+		else
+		{
+			m_currentFrame = m_frames.size() - 1;
+		}
+	}
 }

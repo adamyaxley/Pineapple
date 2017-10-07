@@ -9,29 +9,26 @@
 #include <Pineapple/Engine/Container/Vect2.h>
 #include <Pineapple/Engine/Graphics/Colour.h>
 #include <Pineapple/Engine/Graphics/Render.h>
+#include <Pineapple/Engine/Graphics/SpriteAttributes.h>
+#include <Pineapple/Engine/Graphics/Texture.h>
 #include <Pineapple/Engine/Util/Format.h>
 
 namespace pa
 {
-	class Sprite : public Render
+	class Sprite : public Render, public SpriteAttributes
 	{
 	public:
-		Sprite(RenderSystem& renderSystem, int width, int height, Render::Type renderType, int depth = 0);
+
+		enum class PlaybackMode
+		{
+			Forward,
+			Backward
+		};
+
+		Sprite(RenderSystem& renderSystem, std::vector<std::shared_ptr<Texture>>&& frames, int depth);
 		virtual ~Sprite()
 		{
 		}
-
-		// Attributes
-		const Vect2<int>& getSize() const;
-
-		PA_FORMAT_VECTOR_REAL(Position, m_position)
-		PA_FORMAT_VECTOR_REAL(Origin, m_origin)
-		PA_FORMAT_VECTOR_REAL(Scale, m_scale)
-
-		void setScale(float scale);
-
-		void setRotation(float radians);
-		float getRotation() const;
 
 		// Flags
 		void setHFlip(bool hFlip);
@@ -43,16 +40,20 @@ namespace pa
 		void setVisible(bool visible);
 		bool getVisible() const;
 
-		void setColour(const Colour& colour);
-		Colour& getColour();
+		void setFrame(unsigned int frame);
+		unsigned int getFrame() const;
+		unsigned int getNumberOfFrames() const;
+
+		void setPlaybackEnabled(bool enabled);
+		bool getPlaybackEnabled() const;
+
+		void setPlaybackMode(PlaybackMode mode);
+		PlaybackMode getPlaybackMode() const;
 
 		// Pin this sprite on another sprite with the offset
 		void pin(const Sprite* sprite, Vect2<float>& offset);
 
-	protected:
-		// Only derived classes can modify the sprites size directly
-		void setSize(Vect2<int>& size);
-		void setSize(const Vect2<int>& size);
+		virtual void render() override;
 
 	private:
 		enum class Flags
@@ -60,17 +61,18 @@ namespace pa
 			HFlip,
 			VFlip,
 			Visible,
+			EnablePlayback,
+			ForwardPlayback,
 			is_enum_bitfield
 		};
-
-		// Attributes
-		Vect2<int> m_size;
-		float m_rotation; // radians clockwise
 
 		// Flags
 		Bitfield<Flags> m_flags;
 
-		// Colour
-		Colour m_colour;
+		// Current frame
+		unsigned int m_currentFrame;
+
+		// Frame list
+		const std::vector<std::shared_ptr<Texture>> m_frames;
 	};
 }
