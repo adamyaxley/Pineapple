@@ -14,8 +14,8 @@ namespace pa
 		void drawQuad(bool hFlip, bool vFlip, const TextureCoordsGL& textureCoords);
 
 		// Transforms the current drawing matrix
-		void transform2d(const Vect2<float>& view, Vect2<float>& origin, Vect2<float>& position, int depth,
-						 Vect2<float>& scale, float rotation);
+		void transform2d(const Vect2<float>& view, const Vect2<float>& origin, const Vect2<float>& position, int depth,
+						 const Vect2<float>& scale, float rotation);
 
 		// This will get the bias that will be used when clamping texture regions so as to not sample neighboring
 		// regions

@@ -11,11 +11,13 @@
 #include <string.h>
 
 pa::Text::Text(pa::RenderSystem& renderSystem)
-	: pa::Sprite(renderSystem, 0, 0, pa::Render::Type::Ordered, 1)
+	: pa::Render(renderSystem, pa::Render::Type::Ordered, 1)
+	, pa::SpriteAttributes({ 0, 0 })
 	, m_text(nullptr)
 	, m_textSize(0)
 	, m_outline(0)
 	, m_outlineColour(pa::ColourSet::Black)
+	, m_visible(true)
 {
 }
 
@@ -90,4 +92,14 @@ void pa::Text::setOutlineColour(const pa::Colour& colour)
 pa::Colour& pa::Text::getOutlineColour()
 {
 	return m_outlineColour;
+}
+
+void pa::Text::setVisible(bool visible)
+{
+	m_visible = visible;
+}
+
+bool pa::Text::getVisible() const
+{
+	return m_visible;
 }

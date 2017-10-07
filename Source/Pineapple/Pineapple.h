@@ -25,7 +25,6 @@
 #include <Pineapple/Engine/Util/Obscure.h>
 
 // Graphics
-#include <Pineapple/Engine/Graphics/AnimatedSprite.h>
 #include <Pineapple/Engine/Graphics/Font.h>
 #include <Pineapple/Engine/Graphics/Graphics.h>
 #include <Pineapple/Engine/Graphics/Map.h>

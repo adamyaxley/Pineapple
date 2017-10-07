@@ -10,7 +10,7 @@
 
 namespace pa
 {
-	class Text : public Sprite
+	class Text : public Render, public SpriteAttributes
 	{
 	public:
 		Text(RenderSystem& renderSystem);
@@ -25,6 +25,9 @@ namespace pa
 		void setOutlineColour(const Colour& colour);
 		Colour& getOutlineColour();
 
+		void setVisible(bool visible);
+		bool getVisible() const;
+
 	protected:
 		virtual void onTextChange() = 0;
 
@@ -34,5 +37,7 @@ namespace pa
 
 		int m_outline;
 		Colour m_outlineColour;
+
+		bool m_visible;
 	};
 }

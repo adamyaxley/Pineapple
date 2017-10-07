@@ -5,13 +5,16 @@
 
 #pragma once
 
-#include <Pineapple/Engine/Graphics/Sprite.h>
+#include <Pineapple/Engine/Container/Vect2.h>
+#include <Pineapple/Engine/Graphics/Render.h>
 #include <Pineapple/Engine/Platform/Resource.h>
 #include <memory>
 
 namespace pa
 {
-	class Texture : public Resource
+	class Sprite;
+
+	class Texture : public Resource, std::enable_shared_from_this<Texture>
 	{
 	public:
 		enum class Format
@@ -24,13 +27,22 @@ namespace pa
 			Colour256
 		};
 
-		Texture(const char* path);
+		static Render::Type getRenderTypeFromTextureFormat(Format format)
+		{
+			return (format == Format::RGBA ||
+				format == Format::LuminanceAlpha)
+				? Render::Type::Ordered
+				: Render::Type::Unordered;
+		}
+
+		Texture(const char* path, RenderSystem& renderSystem);
 		virtual ~Texture()
 		{
 		}
 
-		// Returns nullptr if unsuccessful, a pointer to the created sprite otherwise
-		virtual std::unique_ptr<Sprite> createSprite() = 0;
+		std::unique_ptr<Sprite> createSprite();
+
+		virtual void render(const Sprite& sprite) = 0;
 
 		virtual Texture* createTexture(int x, int y, int width, int height) = 0;
 
@@ -45,6 +57,8 @@ namespace pa
 		void setFormat(Format format);
 
 	private:
+		RenderSystem& m_renderSystem;
+
 		Vect2<int> m_size;
 
 		Format m_format;

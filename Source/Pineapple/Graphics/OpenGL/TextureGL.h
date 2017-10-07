@@ -19,15 +19,14 @@ namespace pa
 		TextureGL(Graphics& graphics, const char* path);
 		~TextureGL();
 
-		// Creates a new OpenGL sprite from this texture
-		virtual std::unique_ptr<Sprite> createSprite() override;
-
 		virtual Texture* createTexture(int x, int y, int width, int height) override;
 
 		// Gets the OpenGL texture object associated with this tile set
 		GLuint getGLObject() const;
 
 		const TextureCoordsGL& getTextureCoords() const;
+
+		void render(const Sprite& sprite);
 
 	protected:
 		void setGLObject(GLuint id);
