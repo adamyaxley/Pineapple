@@ -129,20 +129,23 @@ void pa::Sprite::render()
 
 	texture->render(*this);
 
-	// Advance animation
-	if (m_flags.get(Flags::ForwardPlayback))
+	if (m_flags.get(Flags::EnablePlayback))
 	{
-		m_currentFrame = (m_currentFrame + 1) % m_frames.size();
-	}
-	else
-	{
-		if (m_currentFrame > 0)
+		// Advance animation
+		if (m_flags.get(Flags::ForwardPlayback))
 		{
-			m_currentFrame -= 1;
+			m_currentFrame = (m_currentFrame + 1) % m_frames.size();
 		}
 		else
 		{
-			m_currentFrame = m_frames.size() - 1;
+			if (m_currentFrame > 0)
+			{
+				m_currentFrame -= 1;
+			}
+			else
+			{
+				m_currentFrame = m_frames.size() - 1;
+			}
 		}
 	}
 }

@@ -14,7 +14,7 @@ namespace pa
 {
 	class Sprite;
 
-	class Texture : public Resource, std::enable_shared_from_this<Texture>
+	class Texture : public Resource, public std::enable_shared_from_this<Texture>
 	{
 	public:
 		enum class Format
@@ -44,7 +44,7 @@ namespace pa
 
 		virtual void render(const Sprite& sprite) = 0;
 
-		virtual Texture* createTexture(int x, int y, int width, int height) = 0;
+		virtual std::shared_ptr<Texture> createTexture(int x, int y, int width, int height) = 0;
 
 		// Gets the size of the texture, in pixels
 		const Vect2<int>& getSize() const;

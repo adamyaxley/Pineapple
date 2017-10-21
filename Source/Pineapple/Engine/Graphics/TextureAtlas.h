@@ -15,17 +15,17 @@ namespace pa
 	class TextureAtlas
 	{
 	public:
-		TextureAtlas(Texture* texture);
+		TextureAtlas(std::shared_ptr<Texture> texture);
 		~TextureAtlas();
 
 		// Loads a JSON texture atlas file, returns true if successful
 		bool load(const char* atlasFilename);
 
 		// Creates a new texture from the atlas, returns nullptr if the provided filename was not found
-		Texture* createTexture(const char* filename);
+		std::shared_ptr<Texture> createTexture(const char* filename);
 
 	private:
-		Texture* m_texture;
+		std::shared_ptr<Texture> m_texture;
 
 		std::unique_ptr<Document> m_document;
 
