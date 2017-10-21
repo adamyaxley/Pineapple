@@ -15,7 +15,7 @@ struct pa::Document
 	rapidjson::Document json;
 };
 
-pa::TextureAtlas::TextureAtlas(pa::Texture* texture)
+pa::TextureAtlas::TextureAtlas(std::shared_ptr<pa::Texture> texture)
 	: m_texture(texture)
 	, m_isLoaded(false)
 {
@@ -52,7 +52,7 @@ bool pa::TextureAtlas::load(const char* atlasFilename)
 	return m_isLoaded;
 }
 
-pa::Texture* pa::TextureAtlas::createTexture(const char* filename)
+std::shared_ptr<pa::Texture> pa::TextureAtlas::createTexture(const char* filename)
 {
 	PA_ASSERTF(m_isLoaded, "You must load a texture atlas first.");
 

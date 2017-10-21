@@ -148,11 +148,13 @@ add_subdirectory(Test/Engine)
 set_target_properties (paEngineTest PROPERTIES FOLDER Test)
 
 # Demos
+add_subdirectory(Demo/AnimatedSprite)
 add_subdirectory(Demo/SpaceRocks)
 add_subdirectory(Demo/HelloWorld)
 add_subdirectory(Demo/CatchTheClown)
 add_subdirectory(Demo/Simple)
 add_subdirectory(Demo/Text)
+set_target_properties (AnimatedSprite PROPERTIES FOLDER Demo)
 set_target_properties (SpaceRocks PROPERTIES FOLDER Demo)
 set_target_properties (HelloWorld PROPERTIES FOLDER Demo)
 set_target_properties (CatchTheClown PROPERTIES FOLDER Demo)

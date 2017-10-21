@@ -19,13 +19,13 @@ pa::TextureGL::~TextureGL()
 {
 }
 
-pa::Texture* pa::TextureGL::createTexture(int x, int y, int width, int height)
+std::shared_ptr<pa::Texture> pa::TextureGL::createTexture(int x, int y, int width, int height)
 {
-	auto texture = std::make_unique<pa::TextureSubGL>(m_graphics, *this, x, y, x + width, y + height);
+	auto texture = std::make_shared<pa::TextureSubGL>(m_graphics, *this, x, y, x + width, y + height);
 	auto ptr = texture.get();
 	addChildDependency(ptr);
-	m_subTextures.push_back(std::move(texture));
-	return ptr;
+	m_subTextures.push_back(texture);
+	return texture;
 }
 
 GLuint pa::TextureGL::getGLObject() const
