@@ -19,15 +19,14 @@ namespace pa
 		TextureGL(Graphics& graphics, const char* path);
 		~TextureGL();
 
-		// Creates a new OpenGL sprite from this texture
-		virtual std::unique_ptr<Sprite> createSprite() override;
-
-		virtual Texture* createTexture(int x, int y, int width, int height) override;
+		virtual std::shared_ptr<Texture> createTexture(int x, int y, int width, int height) override;
 
 		// Gets the OpenGL texture object associated with this tile set
 		GLuint getGLObject() const;
 
 		const TextureCoordsGL& getTextureCoords() const;
+
+		void render(const Sprite& sprite);
 
 	protected:
 		void setGLObject(GLuint id);
@@ -41,6 +40,7 @@ namespace pa
 
 		TextureCoordsGL m_textureCoords;
 
-		std::vector<std::unique_ptr<pa::Texture>> m_subTextures;
+		// <todo> is this necessary? They are only being stored here so they dont get destroyed before the main texture has so dependencies work.
+		std::vector<std::shared_ptr<pa::Texture>> m_subTextures;
 	};
 }

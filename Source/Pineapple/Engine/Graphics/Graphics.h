@@ -63,6 +63,7 @@ namespace pa
 		virtual std::shared_ptr<Texture> createTexture(const char* path) = 0;
 		virtual std::shared_ptr<TileSet> createTileSet(const char* path, int tileWidth, int tileHeight) = 0;
 		virtual std::shared_ptr<Font> createFont(const char* path) = 0;
+		std::unique_ptr<Sprite> createSprite(std::vector<std::shared_ptr<Texture>>& frames);
 
 		// Creates a fragment shader
 		virtual std::shared_ptr<Shader> createShader(ShaderType type, const char* path) = 0;
