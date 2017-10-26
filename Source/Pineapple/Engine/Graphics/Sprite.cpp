@@ -44,10 +44,6 @@ pa::Sprite::Sprite(pa::RenderSystem& renderSystem, std::vector<std::shared_ptr<T
 	, m_currentFrame(0)
 {
 	PA_ASSERTF(m_frames.size() > 0, "A sprite must have at least one frame");
-
-	setVisible(true);
-	setPlaybackEnabled(true);
-	setPlaybackMode(PlaybackMode::Forward);
 }
 
 void pa::Sprite::setHFlip(bool hFlip)
@@ -72,12 +68,12 @@ bool pa::Sprite::getVFlip() const
 
 void pa::Sprite::setVisible(bool visible)
 {
-	visible ? m_flags.set(Flags::Visible) : m_flags.clear(Flags::Visible);
+	visible ? m_flags.clear(Flags::Invisible) : m_flags.set(Flags::Invisible);
 }
 
 bool pa::Sprite::getVisible() const
 {
-	return m_flags.getBool(Flags::Visible);
+	return !m_flags.getBool(Flags::Invisible);
 }
 
 void pa::Sprite::setFrame(unsigned int frame)
@@ -107,12 +103,12 @@ bool pa::Sprite::getPlaybackEnabled() const
 
 void pa::Sprite::setPlaybackMode(PlaybackMode mode)
 {
-	mode == PlaybackMode::Forward ? m_flags.set(Flags::ForwardPlayback) : m_flags.clear(Flags::ForwardPlayback);
+	mode == PlaybackMode::Backward ? m_flags.set(Flags::BackwardPlayback) : m_flags.clear(Flags::BackwardPlayback);
 }
 
 pa::Sprite::PlaybackMode pa::Sprite::getPlaybackMode() const
 {
-	return m_flags.get(Flags::ForwardPlayback) ? PlaybackMode::Forward : PlaybackMode::Backward;
+	return m_flags.get(Flags::BackwardPlayback) ? PlaybackMode::Backward : PlaybackMode::Forward;
 }
 
 void pa::Sprite::pin(const pa::Sprite* sprite, pa::Vect2<float>& offset)
@@ -129,10 +125,10 @@ void pa::Sprite::render()
 
 	texture->render(*this);
 
-	if (m_flags.get(Flags::EnablePlayback))
+	if (getPlaybackEnabled())
 	{
 		// Advance animation
-		if (m_flags.get(Flags::ForwardPlayback))
+		if (getPlaybackMode() == pa::Sprite::PlaybackMode::Forward)
 		{
 			m_currentFrame = (m_currentFrame + 1) % m_frames.size();
 		}
