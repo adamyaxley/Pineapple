@@ -60,9 +60,9 @@ namespace pa
 		{
 			HFlip,
 			VFlip,
-			Visible,
+			Invisible,
 			EnablePlayback,
-			ForwardPlayback,
+			BackwardPlayback,
 			is_enum_bitfield
 		};
 
