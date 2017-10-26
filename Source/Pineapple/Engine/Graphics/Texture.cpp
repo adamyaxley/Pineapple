@@ -18,7 +18,7 @@ pa::Texture::Texture(const char* path, pa::RenderSystem& renderSystem)
 std::unique_ptr<pa::Sprite> pa::Texture::createSprite()
 {
 	std::vector<std::shared_ptr<pa::Texture>> frames{ shared_from_this() };
-	return std::make_unique<pa::Sprite>(m_renderSystem, std::move(frames), 0);
+	return std::make_unique<pa::Sprite>(m_renderSystem, frames, 0);
 }
 
 const pa::Vect2<int>& pa::Texture::getSize() const

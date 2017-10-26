@@ -99,7 +99,7 @@ void pa::Graphics::setProjection(int x, int y, int x2, int y2)
 	m_size.y = y2;
 }
 
-std::unique_ptr<pa::Sprite> pa::Graphics::createSprite(std::vector<std::shared_ptr<pa::Texture>>&& frames)
+std::unique_ptr<pa::Sprite> pa::Graphics::createSprite(std::vector<std::shared_ptr<pa::Texture>>& frames)
 {
-	return std::make_unique<pa::Sprite>(m_renderSystem, std::forward<decltype(frames)>(frames), 0);
+	return std::make_unique<pa::Sprite>(m_renderSystem, frames, 0);
 }

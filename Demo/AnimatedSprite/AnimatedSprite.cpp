@@ -119,7 +119,7 @@ int pa::Main(pa::Arguments* arguments)
 	}
 
 	// Create a sprite from those frames
-	auto creatureSprite = platform->getGraphics()->createSprite(std::move(frames));
+	auto creatureSprite = platform->getGraphics()->createSprite(frames);
 
 	// Create the world
 	pa::World world(platform);

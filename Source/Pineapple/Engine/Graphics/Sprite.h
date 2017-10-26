@@ -25,7 +25,7 @@ namespace pa
 			Backward
 		};
 
-		Sprite(RenderSystem& renderSystem, std::vector<std::shared_ptr<Texture>>&& frames, int depth);
+		Sprite(RenderSystem& renderSystem, std::vector<std::shared_ptr<Texture>>& frames, int depth);
 		virtual ~Sprite()
 		{
 		}
