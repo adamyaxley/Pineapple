@@ -35,24 +35,19 @@ struct Creature : public pa::Object, public pa::InputHandler
 	void onStep(pa::Time delta) override
 	{
 		const unsigned int standingIndexes[] = { 1, 4, 7 };
-
-		const unsigned int walkingIndexes[3][4] = {
-			{ 0, 1, 2, 1 },
-			{ 3, 4, 5, 4 },
-			{ 6, 7, 8, 7 }
-		};
+		const unsigned int walkingIndexes[3][4] = {{ 0, 1, 2, 1 }, { 3, 4, 5, 4 }, { 6, 7, 8, 7 }};
 
 		bool standing = false;
 
 		if (m_increment.x > 0)
 		{
 			m_walkingIndex = 2;
-			m_walkingFlip = true;
+			m_horizontalFlip = true;
 		}
 		else if (m_increment.x < 0)
 		{
 			m_walkingIndex = 2;
-			m_walkingFlip = false;
+			m_horizontalFlip = false;
 		}
 		else if (m_increment.y > 0)
 		{
@@ -68,9 +63,7 @@ struct Creature : public pa::Object, public pa::InputHandler
 		}
 
 		m_sprite->getPosition() += m_increment;
-		m_increment = { 0, 0 };
-
-		m_sprite->setHFlip(m_walkingFlip);
+		m_sprite->setHFlip(m_horizontalFlip);
 
 		// Set correct animation based on state
 		if (standing)
@@ -82,13 +75,15 @@ struct Creature : public pa::Object, public pa::InputHandler
 		{
 			m_sprite->setFrame(walkingIndexes[m_walkingIndex][(++m_walkingSteps / 6) % 4]);
 		}
+
+		m_increment = { 0, 0 };
 	}
 
 	std::unique_ptr<pa::Sprite> m_sprite;
 	pa::Vect2<int> m_increment{ 0, 0 };
 	int m_walkingIndex{ 1 };
 	int m_walkingSteps{ 0 };
-	bool m_walkingFlip{ false };
+	bool m_horizontalFlip{ false };
 };
 
 int pa::Main(pa::Arguments* arguments)
@@ -109,12 +104,11 @@ int pa::Main(pa::Arguments* arguments)
 	{
 		const int frameWidth = 16;
 		const int frameHeight = 24;
-
-		int x = i % 3;
-		int y = i / 3;
+		const int x = i % 3;
+		const int y = i / 3;
 
 		auto frame = spriteSheet->createTexture(x * frameWidth, y * frameHeight, frameWidth, frameHeight);
-		frames.push_back(std::move(frame));
+		frames.push_back(frame);
 	}
 
 	// Create a sprite from those frames
