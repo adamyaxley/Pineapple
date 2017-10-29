@@ -114,7 +114,6 @@ int pa::Main(pa::Arguments* arguments)
 		int y = i / 3;
 
 		auto frame = spriteSheet->createTexture(x * frameWidth, y * frameHeight, frameWidth, frameHeight);
-		frame->load();
 		frames.push_back(std::move(frame));
 	}
 

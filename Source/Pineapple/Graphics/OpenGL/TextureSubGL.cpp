@@ -12,6 +12,11 @@ pa::TextureSubGL::TextureSubGL(pa::Graphics& graphics, pa::TextureGL& texture, i
 {
 	pa::Vect2<int> size(x2 - x1, y2 - y1);
 	setSize(size);
+
+	if (m_texture.isLoaded())
+	{
+		load();
+	}
 }
 
 pa::TextureSubGL::~TextureSubGL()
