@@ -19,16 +19,15 @@ namespace
 	DrawFuncType g_drawFuncArray[2][2];
 }
 
-pa::MapGL::MapGL(pa::Graphics& graphics, pa::TileSetGL& tileSet, std::shared_ptr<const pa::TileMap> tileMap, float x, float y,
-				 bool hWrap, bool vWrap, int priority)
-	: pa::Map(graphics.getRenderSystem(), x, y, 
-			   (tileMap ? tileSet.getTileSize().x * tileMap->getSizeConst().x : tileSet.getSize().x),
-			   (tileMap ? tileSet.getTileSize().y * tileMap->getSizeConst().y : tileSet.getSize().y), 
-			   hWrap, vWrap, priority,
-			  (tileSet.getFormat() == pa::Texture::Format::RGBA ||
-			   tileSet.getFormat() == pa::Texture::Format::LuminanceAlpha)
-				  ? pa::Render::Type::Ordered
-				  : pa::Render::Type::Unordered)
+pa::MapGL::MapGL(pa::Graphics& graphics, pa::TileSetGL& tileSet, std::shared_ptr<const pa::TileMap> tileMap, float x,
+				 float y, bool hWrap, bool vWrap, int priority)
+	: pa::Map(graphics.getRenderSystem(), x, y,
+			  (tileMap ? tileSet.getTileSize().x * tileMap->getSizeConst().x : tileSet.getSize().x),
+			  (tileMap ? tileSet.getTileSize().y * tileMap->getSizeConst().y : tileSet.getSize().y), hWrap, vWrap,
+			  priority, (tileSet.getFormat() == pa::Texture::Format::RGBA ||
+						 tileSet.getFormat() == pa::Texture::Format::LuminanceAlpha)
+							? pa::Render::Type::Ordered
+							: pa::Render::Type::Unordered)
 	, m_graphics(graphics)
 	, m_tileSet(tileSet)
 	, m_tileMap(tileMap)
@@ -260,12 +259,12 @@ void pa::MapGL::createVertexBuffer()
 					texDouble.y2 -= texelBias;
 
 					pa::Rect<GLfloat> tex((GLfloat)texDouble.x1, (GLfloat)texDouble.y1, (GLfloat)texDouble.x2,
-						(GLfloat)texDouble.y2);
+										  (GLfloat)texDouble.y2);
 
 					pa::Rect<GLfloat> vertex((GLfloat)(tx * m_tileSet.getTileSize().x),
-						(GLfloat)(ty * m_tileSet.getTileSize().y),
-						(GLfloat)((tx + 1) * m_tileSet.getTileSize().x),
-						(GLfloat)((ty + 1) * m_tileSet.getTileSize().y));
+											 (GLfloat)(ty * m_tileSet.getTileSize().y),
+											 (GLfloat)((tx + 1) * m_tileSet.getTileSize().x),
+											 (GLfloat)((ty + 1) * m_tileSet.getTileSize().y));
 
 					// Tile flip
 					if (tile & PA_TILE_HFLIP)

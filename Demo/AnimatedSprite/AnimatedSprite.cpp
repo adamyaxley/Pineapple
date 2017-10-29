@@ -7,35 +7,27 @@ struct Creature : public pa::Object, public pa::InputHandler
 		, pa::InputHandler(world)
 		, m_sprite(std::move(sprite))
 	{
-		m_sprite->setPosition({ 320, 240 });
+		m_sprite->setPosition({320, 240});
 		m_sprite->setScale(5.f);
 	}
 
 	void onKeyDown(pa::Key key) override
 	{
 		const int speed = 3;
-		
+
 		switch (key)
 		{
-		case pa::Key::Left:
-			m_increment.x -= speed;
-			break;
-		case pa::Key::Right:
-			m_increment.x += speed;
-			break;
-		case pa::Key::Up:
-			m_increment.y -= speed;
-			break;
-		case pa::Key::Down:
-			m_increment.y += speed;
-			break;
+		case pa::Key::Left: m_increment.x -= speed; break;
+		case pa::Key::Right: m_increment.x += speed; break;
+		case pa::Key::Up: m_increment.y -= speed; break;
+		case pa::Key::Down: m_increment.y += speed; break;
 		}
 	}
 
 	void onStep(pa::Time delta) override
 	{
-		const unsigned int standingIndexes[] = { 1, 4, 7 };
-		const unsigned int walkingIndexes[3][4] = {{ 0, 1, 2, 1 }, { 3, 4, 5, 4 }, { 6, 7, 8, 7 }};
+		const unsigned int standingIndexes[] = {1, 4, 7};
+		const unsigned int walkingIndexes[3][4] = {{0, 1, 2, 1}, {3, 4, 5, 4}, {6, 7, 8, 7}};
 
 		bool standing = false;
 
@@ -76,14 +68,14 @@ struct Creature : public pa::Object, public pa::InputHandler
 			m_sprite->setFrame(walkingIndexes[m_walkingIndex][(++m_walkingSteps / 6) % 4]);
 		}
 
-		m_increment = { 0, 0 };
+		m_increment = {0, 0};
 	}
 
 	std::unique_ptr<pa::Sprite> m_sprite;
-	pa::Vect2<int> m_increment{ 0, 0 };
-	int m_walkingIndex{ 1 };
-	int m_walkingSteps{ 0 };
-	bool m_horizontalFlip{ false };
+	pa::Vect2<int> m_increment{0, 0};
+	int m_walkingIndex{1};
+	int m_walkingSteps{0};
+	bool m_horizontalFlip{false};
 };
 
 int pa::Main(pa::Arguments* arguments)

@@ -16,8 +16,8 @@ namespace pa
 	class MapGL : public Map
 	{
 	public:
-		MapGL(Graphics& graphics, TileSetGL& tileSet, std::shared_ptr<const TileMap> map, float x, float y, bool hWrap, bool vWrap,
-			  int priority);
+		MapGL(Graphics& graphics, TileSetGL& tileSet, std::shared_ptr<const TileMap> map, float x, float y, bool hWrap,
+			  bool vWrap, int priority);
 		~MapGL();
 
 		virtual void onDependencyNotify(Dependency* parent) override;

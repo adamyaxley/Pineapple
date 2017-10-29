@@ -41,7 +41,8 @@ bool pa::lookupX11Key(unsigned int key, pa::Key& keyOut)
 	// case XK_3270_PrintScreen:			return PA_PRINT_SCREEN;
 	case XK_Scroll_Lock: keyOut = pa::Key::Scroll; break;
 	case XK_Pause:
-		keyOut = pa::Key::Pause; break;
+		keyOut = pa::Key::Pause;
+		break;
 
 	// Cursor Control
 	case XK_Insert: keyOut = pa::Key::Insert; break;
@@ -50,14 +51,16 @@ bool pa::lookupX11Key(unsigned int key, pa::Key& keyOut)
 	case XK_Delete: keyOut = pa::Key::Delete; break;
 	case XK_End: keyOut = pa::Key::End; break;
 	case XK_Next:
-		keyOut = pa::Key::PageDown; break;
+		keyOut = pa::Key::PageDown;
+		break;
 
 	// Motion
 	case XK_Left: keyOut = pa::Key::Left; break;
 	case XK_Up: keyOut = pa::Key::Up; break;
 	case XK_Right: keyOut = pa::Key::Right; break;
 	case XK_Down:
-		keyOut = pa::Key::Down; break;
+		keyOut = pa::Key::Down;
+		break;
 
 	// Number Pad
 	case XK_Num_Lock: keyOut = pa::Key::NumLock; break;
@@ -77,7 +80,8 @@ bool pa::lookupX11Key(unsigned int key, pa::Key& keyOut)
 	case XK_KP_7: keyOut = pa::Key::NumPad7; break;
 	case XK_KP_8: keyOut = pa::Key::NumPad8; break;
 	case XK_KP_9:
-		keyOut = pa::Key::NumPad9; break;
+		keyOut = pa::Key::NumPad9;
+		break;
 
 	// Main Buttons
 	case XK_Escape: keyOut = pa::Key::Esc; break;
@@ -88,12 +92,14 @@ bool pa::lookupX11Key(unsigned int key, pa::Key& keyOut)
 	case XK_Alt_L: keyOut = pa::Key::LAlt; break;
 	case XK_space: keyOut = pa::Key::Space; break;
 	case XK_Alt_R:
-		keyOut = pa::Key::RAlt; break; // <todo> doesnt work
+		keyOut = pa::Key::RAlt;
+		break; // <todo> doesnt work
 	case XK_Control_R: keyOut = pa::Key::RCtrl; break;
 	case XK_Shift_R: keyOut = pa::Key::RShift; break;
 	case XK_Return: keyOut = pa::Key::Enter; break;
 	case XK_BackSpace:
-		keyOut = pa::Key::BackSpace; break;
+		keyOut = pa::Key::BackSpace;
+		break;
 
 	// Auxiliary Functions
 	case XK_F1: keyOut = pa::Key::F1; break;

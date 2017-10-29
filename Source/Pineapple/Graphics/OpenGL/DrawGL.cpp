@@ -35,8 +35,8 @@ void pa::DrawGL::drawQuad(bool hFlip, bool vFlip, const pa::TextureCoordsGL& tex
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
-void pa::DrawGL::transform2d(const pa::Vect2<float>& view, const pa::Vect2<float>& origin, const pa::Vect2<float>& position,
-							 int depth, const pa::Vect2<float>& scale, float rotation)
+void pa::DrawGL::transform2d(const pa::Vect2<float>& view, const pa::Vect2<float>& origin,
+							 const pa::Vect2<float>& position, int depth, const pa::Vect2<float>& scale, float rotation)
 {
 	// Translate view
 	glTranslatef(-(GLfloat)view.x, -(GLfloat)view.y, 0.f);

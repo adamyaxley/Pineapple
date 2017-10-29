@@ -18,7 +18,6 @@ namespace pa
 	class Sprite : public Render, public SpriteAttributes
 	{
 	public:
-
 		enum class PlaybackMode
 		{
 			Forward,

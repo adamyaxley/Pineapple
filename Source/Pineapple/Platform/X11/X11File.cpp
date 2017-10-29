@@ -60,7 +60,8 @@ pa::File::Result pa::File::writeInternal(const char* path, unsigned char* buffer
 	return writeStandard(makeInternalPath(path).c_str(), buffer, size);
 }
 
-pa::File::Result pa::File::getModificationTime(const char* path, std::chrono::system_clock::time_point& modificationTime)
+pa::File::Result pa::File::getModificationTime(const char* path,
+											   std::chrono::system_clock::time_point& modificationTime)
 {
 	struct stat st;
 	int ret = stat(makeAssetsPath(path).c_str(), &st);

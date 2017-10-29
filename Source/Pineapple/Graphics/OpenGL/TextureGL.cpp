@@ -74,8 +74,8 @@ void pa::TextureGL::render(const pa::Sprite& sprite)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		pa::DrawGL::transform2d(m_graphics.getSpriteView(), sprite.getOriginConst(), sprite.getPositionConst(), sprite.getPriority(), sprite.getScaleConst(),
-			sprite.getRotation());
+		pa::DrawGL::transform2d(m_graphics.getSpriteView(), sprite.getOriginConst(), sprite.getPositionConst(),
+								sprite.getPriority(), sprite.getScaleConst(), sprite.getRotation());
 
 		// Set the drawing colour
 		const auto& colour = sprite.getColour();

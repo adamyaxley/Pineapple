@@ -32,10 +32,11 @@ void pa::TextGL::render()
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		unsigned int colour =
-			gl3fonsRGBA((unsigned char)(getColour().R * 255), (unsigned char)(getColour().G * 255), (unsigned char)(getColour().B * 255), (unsigned char)(getColour().A * 255));
-		unsigned int outlineColour = gl3fonsRGBA((unsigned char)(getOutlineColour().R * 255), (unsigned char)(getOutlineColour().G * 255),
-												 (unsigned char)(getOutlineColour().B * 255), (unsigned char)(getOutlineColour().A * 255));
+		unsigned int colour = gl3fonsRGBA((unsigned char)(getColour().R * 255), (unsigned char)(getColour().G * 255),
+										  (unsigned char)(getColour().B * 255), (unsigned char)(getColour().A * 255));
+		unsigned int outlineColour =
+			gl3fonsRGBA((unsigned char)(getOutlineColour().R * 255), (unsigned char)(getOutlineColour().G * 255),
+						(unsigned char)(getOutlineColour().B * 255), (unsigned char)(getOutlineColour().A * 255));
 
 		auto fs = m_font.getFonsContext();
 

@@ -3,7 +3,6 @@
   This software is licensed under the Zlib license (see license.txt for details)
 ------------------------------------------------------------------------------*/
 
-
 #include <Pineapple/Engine/Platform/Platform.h>
 #include <Pineapple/Platform/X11/X11Key.h>
 #include <GL/glx.h>
@@ -32,12 +31,11 @@ namespace pa
 		virtual void openUrl(const char* url) override;
 
 	private:
-
 		void keyDown(Key key);
 		void keyUp(Key key);
 
 		std::vector<Event> m_otherEvents;
-		
+
 		// window information
 		Display* m_dpy;
 		Window m_win;

@@ -11,8 +11,9 @@ namespace
 {
 	pa::Render::Type getRenderTypeFromFrames(const std::vector<std::shared_ptr<pa::Texture>>& frames)
 	{
-		auto it = std::find_if(std::begin(frames), std::end(frames),
-			[](auto frame) { return pa::Render::Type::Ordered == pa::Texture::getRenderTypeFromTextureFormat(frame->getFormat()); });
+		auto it = std::find_if(std::begin(frames), std::end(frames), [](auto frame) {
+			return pa::Render::Type::Ordered == pa::Texture::getRenderTypeFromTextureFormat(frame->getFormat());
+		});
 
 		if (it != std::end(frames))
 		{
@@ -30,7 +31,7 @@ namespace
 
 		const auto& size = frames[0]->getSize();
 		auto it = std::find_if(std::begin(frames), std::end(frames),
-			[&size](auto frame) { return size != frame->getSize(); });
+							   [&size](auto frame) { return size != frame->getSize(); });
 
 		PA_ASSERTF(it == std::end(frames), "Size of all frames of a Sprite must be the same");
 		return size;

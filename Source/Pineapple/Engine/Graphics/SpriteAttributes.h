@@ -1,8 +1,13 @@
+/*------------------------------------------------------------------------------
+  Pineapple Game Engine - Copyright (c) 2011-2017 Adam Yaxley
+  This software is licensed under the Zlib license (see license.txt for details)
+------------------------------------------------------------------------------*/
+
 #pragma once
 
+#include <Pineapple/Engine/Container/Vect2.h>
 #include <Pineapple/Engine/Graphics/Colour.h>
 #include <Pineapple/Engine/Util/Format.h>
-#include <Pineapple/Engine/Container/Vect2.h>
 
 namespace pa
 {
@@ -31,7 +36,6 @@ namespace pa
 		void setSize(const Vect2<int>& size);
 
 	private:
-
 		// Size
 		Vect2<int> m_size;
 

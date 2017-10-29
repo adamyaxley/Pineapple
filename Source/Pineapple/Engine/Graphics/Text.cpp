@@ -12,7 +12,7 @@
 
 pa::Text::Text(pa::RenderSystem& renderSystem)
 	: pa::Render(renderSystem, pa::Render::Type::Ordered, 1)
-	, pa::SpriteAttributes({ 0, 0 })
+	, pa::SpriteAttributes({0, 0})
 	, m_text(nullptr)
 	, m_textSize(0)
 	, m_outline(0)

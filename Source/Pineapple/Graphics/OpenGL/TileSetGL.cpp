@@ -65,8 +65,8 @@ bool pa::TileSetGL::onUnload()
 	return true;
 }
 
-std::unique_ptr<pa::Map> pa::TileSetGL::createMap(std::shared_ptr<const pa::TileMap> tilemap, float x, float y, bool hWrap, bool vWrap,
-												  int priority)
+std::unique_ptr<pa::Map> pa::TileSetGL::createMap(std::shared_ptr<const pa::TileMap> tilemap, float x, float y,
+												  bool hWrap, bool vWrap, int priority)
 {
 	PA_ASSERTF(isLoaded(), "Tileset is not loaded");
 	return std::make_unique<pa::MapGL>(m_graphics, *this, tilemap, x, y, hWrap, vWrap, priority);

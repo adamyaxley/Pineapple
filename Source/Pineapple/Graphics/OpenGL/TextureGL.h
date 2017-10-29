@@ -40,7 +40,8 @@ namespace pa
 
 		TextureCoordsGL m_textureCoords;
 
-		// <todo> is this necessary? They are only being stored here so they dont get destroyed before the main texture has so dependencies work.
+		// <todo> is this necessary? They are only being stored here so they dont get destroyed before the main texture
+		// has so dependencies work.
 		std::vector<std::shared_ptr<pa::Texture>> m_subTextures;
 	};
 }

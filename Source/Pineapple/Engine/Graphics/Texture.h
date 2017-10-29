@@ -29,10 +29,8 @@ namespace pa
 
 		static Render::Type getRenderTypeFromTextureFormat(Format format)
 		{
-			return (format == Format::RGBA ||
-				format == Format::LuminanceAlpha)
-				? Render::Type::Ordered
-				: Render::Type::Unordered;
+			return (format == Format::RGBA || format == Format::LuminanceAlpha) ? Render::Type::Ordered
+																				: Render::Type::Unordered;
 		}
 
 		Texture(const char* path, RenderSystem& renderSystem);

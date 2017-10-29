@@ -43,13 +43,13 @@ int pa::DynamicPool::getSize() const noexcept
 {
 	// use std::reduce() when C++17 comes out
 	return paStd::accumulate(m_pools.begin(), m_pools.end(), 0,
-					  [](int sum, const pa::Pool& pool) { return sum + pool.getSize(); });
+							 [](int sum, const pa::Pool& pool) { return sum + pool.getSize(); });
 }
 
 int pa::DynamicPool::getCapacity() const noexcept
 {
 	return paStd::accumulate(m_pools.begin(), m_pools.end(), 0,
-					  [](int sum, const pa::Pool& pool) { return sum + pool.getCapacity(); });
+							 [](int sum, const pa::Pool& pool) { return sum + pool.getCapacity(); });
 }
 
 void pa::DynamicPool::reserve(std::size_t size)

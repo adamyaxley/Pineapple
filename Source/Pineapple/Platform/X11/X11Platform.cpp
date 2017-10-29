@@ -1,3 +1,8 @@
+/*------------------------------------------------------------------------------
+  Pineapple Game Engine - Copyright (c) 2011-2017 Adam Yaxley
+  This software is licensed under the Zlib license (see license.txt for details)
+------------------------------------------------------------------------------*/
+
 #include <Pineapple/Engine/Platform/File.h>
 #include <Pineapple/Platform/X11/X11Platform.h>
 #include <algorithm>
@@ -35,10 +40,14 @@ pa::X11Platform::X11Platform(pa::Arguments* arguments, const PlatformSettings& s
 	cmap = XCreateColormap(m_dpy, root, m_vi->visual, AllocNone);
 
 	swa.colormap = cmap;
-	swa.event_mask = ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | FocusChangeMask;
+	swa.event_mask =
+		ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | FocusChangeMask;
 
-	//pa::Log::info("XCreateWindow({},{},{},{},{},{},{},{},{},{},{},{})", (uintptr_t)m_dpy, root, 0, 0, this->m_size.x, this->m_size.y, 0, m_vi->depth, (int)InputOutput, (uintptr_t)m_vi->visual, (int)(CWColormap | CWEventMask), (uintptr_t)(&swa));
-	m_win = XCreateWindow(m_dpy, root, 0, 0, this->m_size.x, this->m_size.y, 0, m_vi->depth, InputOutput, m_vi->visual, CWColormap | CWEventMask, &swa);
+	// pa::Log::info("XCreateWindow({},{},{},{},{},{},{},{},{},{},{},{})", (uintptr_t)m_dpy, root, 0, 0, this->m_size.x,
+	// this->m_size.y, 0, m_vi->depth, (int)InputOutput, (uintptr_t)m_vi->visual, (int)(CWColormap | CWEventMask),
+	// (uintptr_t)(&swa));
+	m_win = XCreateWindow(m_dpy, root, 0, 0, this->m_size.x, this->m_size.y, 0, m_vi->depth, InputOutput, m_vi->visual,
+						  CWColormap | CWEventMask, &swa);
 
 	XFreeColormap(m_dpy, cmap);
 	XMapWindow(m_dpy, m_win);
@@ -216,7 +225,7 @@ void pa::X11Platform::pollEvents()
 
 	XEvent event;
 	XQueryPointer(m_dpy, m_win, &event.xbutton.root, &event.xbutton.window, &event.xbutton.x_root,
-					&event.xbutton.y_root, &event.xbutton.x, &event.xbutton.y, &event.xbutton.state);
+				  &event.xbutton.y_root, &event.xbutton.x, &event.xbutton.y, &event.xbutton.state);
 
 	int x = PA_CLAMP(0, getSize().x, event.xbutton.x);
 	int y = PA_CLAMP(0, getSize().y, event.xbutton.y);
