@@ -121,6 +121,11 @@ int pa::Main(pa::Arguments* arguments)
 	// Create a sprite from those frames
 	auto creatureSprite = platform->getGraphics()->createSprite(frames);
 
+	// Create a simple background
+	auto tileSet = platform->getGraphics()->createTileSet("background.png", 32, 32);
+	tileSet->load();
+	auto map = tileSet->createMap(nullptr, 0, 0, true, true, -1);
+
 	// Create the world
 	pa::World world(platform);
 
