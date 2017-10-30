@@ -38,8 +38,8 @@ namespace
 	}
 }
 
-pa::Sprite::Sprite(pa::RenderSystem& renderSystem, std::vector<std::shared_ptr<Texture>>& frames, int depth)
-	: pa::Render(renderSystem, getRenderTypeFromFrames(frames), depth)
+pa::Sprite::Sprite(pa::RenderSystem& renderSystem, std::vector<std::shared_ptr<Texture>>& frames, int priority)
+	: pa::Render(renderSystem, getRenderTypeFromFrames(frames), priority)
 	, pa::SpriteAttributes(getSizeFromFrames(frames))
 	, m_frames(frames)
 	, m_currentFrame(0)
