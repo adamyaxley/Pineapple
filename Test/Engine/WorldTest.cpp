@@ -245,31 +245,21 @@ TEST(World, VariadicTemplates)
 
 namespace
 {
-	struct Base : public pa::Object, public std::enable_shared_from_this<Base>
+	struct Base : public pa::Object, private pa::EnableChildList<Base>
 	{
 		Base(pa::World& world)
 			: pa::Object(world)
+			, pa::EnableChildList<Base>(this)
 		{
-		}
-
-		void onCreate() override
-		{
-			getWorld().registerChild(shared_from_this());
 		}
 	};
 
-	struct Derived : public Base
+	struct Derived : public Base, private pa::EnableChildList<Derived>
 	{
 		Derived(pa::World& world)
 			: Base(world)
+			, pa::EnableChildList<Derived>(this)
 		{
-		}
-
-		void onCreate() override
-		{
-			Base::onCreate();
-
-			getWorld().registerChild(std::static_pointer_cast<Derived, Base>(shared_from_this()));
 		}
 	};
 
@@ -284,28 +274,53 @@ namespace
 
 TEST(World, RegisterChildren)
 {
+	// Guarantee small memory overhead for registering children
+	ASSERT_EQ(sizeof(Base), sizeof(pa::Object));
+
 	pa::World world;
+
+	auto base = world.create<Base>();
+
+	ASSERT_EQ(world.getList<Base>().size(), 1u);
+	ASSERT_EQ(world.getChildList<Base>().size(), 1u);
+	ASSERT_EQ(world.getList<Derived>().size(), 0u);
+	ASSERT_EQ(world.getChildList<Derived>().size(), 0u);
+
+	base->destroy();
+	world.step(pa::Time(0.f));
+
+	ASSERT_EQ(world.getList<Base>().size(), 0u);
+	ASSERT_EQ(world.getChildList<Base>().size(), 0u);
+	ASSERT_EQ(world.getList<Derived>().size(), 0u);
+	ASSERT_EQ(world.getChildList<Derived>().size(), 0u);
 
 	auto derived = world.create<Derived>();
 
-	// Guarantee small memory overhead for registering children
-	ASSERT_EQ(sizeof(Base), sizeof(pa::Object) + sizeof(std::enable_shared_from_this<Base>));
-
+	ASSERT_EQ(world.getList<Base>().size(), 0u);
 	ASSERT_EQ(world.getChildList<Base>().size(), 1u);
+	ASSERT_EQ(world.getList<Derived>().size(), 1u);
+	ASSERT_EQ(world.getChildList<Derived>().size(), 1u);
 
 	derived->destroy();
 	world.step(pa::Time(0.f));
 
+	ASSERT_EQ(world.getList<Base>().size(), 0u);
 	ASSERT_EQ(world.getChildList<Base>().size(), 0u);
+	ASSERT_EQ(world.getList<Derived>().size(), 0u);
+	ASSERT_EQ(world.getChildList<Derived>().size(), 0u);
 
 	auto derivedDerived = world.create<DerivedDerived>();
 
+	ASSERT_EQ(world.getList<Base>().size(), 0u);
 	ASSERT_EQ(world.getChildList<Base>().size(), 1u);
+	ASSERT_EQ(world.getList<Derived>().size(), 0u);
 	ASSERT_EQ(world.getChildList<Derived>().size(), 1u);
 
 	derivedDerived->destroy();
 	world.step(pa::Time(0.f));
 
+	ASSERT_EQ(world.getList<Base>().size(), 0u);
 	ASSERT_EQ(world.getChildList<Base>().size(), 0u);
+	ASSERT_EQ(world.getList<Derived>().size(), 0u);
 	ASSERT_EQ(world.getChildList<Derived>().size(), 0u);
 }

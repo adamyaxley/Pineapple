@@ -9,6 +9,7 @@
 #include <Pineapple/Engine/System/Input.h>
 #include <Pineapple/Engine/System/ObjectStore.h>
 #include <Pineapple/Engine/System/Time.h>
+#include <Pineapple/Engine/System/EnableChildList.h>
 #include <functional>
 
 namespace pa
@@ -19,6 +20,11 @@ namespace pa
 		using Callback = std::function<void(World&, const Input& input)>;
 		using CallbackContainer = std::list<Callback>;
 		using CallbackIterator = CallbackContainer::const_iterator;
+
+		template <typename T>
+		friend class EnableChildList;
+
+		friend ObjectStore;
 
 		World(std::shared_ptr<Platform> platform);
 
@@ -45,10 +51,6 @@ namespace pa
 		// Creates a new instance and adds it to the world
 		template <typename T, typename... Args>
 		std::shared_ptr<T> create(Args&&... args);
-
-		// Register a child of T
-		template <typename T>
-		void registerChild(std::shared_ptr<T> child);
 
 		// Get the instance list of an object
 		template <typename T>
@@ -102,6 +104,17 @@ namespace pa
 		void postStepInstances(const Input& input);
 
 		void changeScene();
+
+		// Register a child of T
+		template <typename T>
+		void registerChild(std::shared_ptr<T> child);
+
+		template <typename T>
+		PA_FORCE_INLINE void registerPostConstructionObjectTransform(T&& functor);
+
+		PA_FORCE_INLINE void executePostConstructionObjectTransforms(std::shared_ptr<Object> object);
+
+		std::list<std::function<void(std::shared_ptr<Object>)>> m_postConstructionObjectTransforms;
 
 		std::shared_ptr<Platform> m_platform;
 

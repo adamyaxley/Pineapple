@@ -6,7 +6,7 @@
 #include "Resource.h"
 #include "Warp.h"
 
-class Rock : public Warp, public std::enable_shared_from_this<Rock>
+class Rock : public Warp, private pa::EnableChildList<Rock>
 {
 public:
 	float m_rotation;

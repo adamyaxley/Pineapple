@@ -43,6 +43,7 @@ const pa::ObjectList<T>& pa::World::getList()
 template <typename T>
 const pa::ObjectList<T>& pa::World::getChildList()
 {
+	static_assert(std::is_base_of<pa::EnableChildList<T>, T>::value, "To track children of T and enable getChildList<T>() functionality, T must inherit from EnableChildList<T>");
 	return m_objectStore.getChildList<T>();
 }
 
@@ -70,4 +71,19 @@ pa::World::CallbackIterator pa::World::registerPostStepInstancesCallback(T&& cal
 {
 	m_postStepInstancesCallbacks.emplace_front(std::forward<T>(callback));
 	return m_postStepInstancesCallbacks.begin();
+}
+
+template <typename T>
+void pa::World::registerPostConstructionObjectTransform(T&& functor)
+{
+	m_postConstructionObjectTransforms.emplace_back(std::forward<T>(functor));
+}
+
+void pa::World::executePostConstructionObjectTransforms(std::shared_ptr<pa::Object> object)
+{
+	for (auto&& transform : m_postConstructionObjectTransforms)
+	{
+		transform(object);
+	}
+	m_postConstructionObjectTransforms.clear();
 }

@@ -13,6 +13,9 @@ std::shared_ptr<T> pa::ObjectStore::create(Args&&... args)
 	// Add to T instance list
 	getObjectInfo<T>().getList().push_back(object);
 
+	// Execute child registration functions
+	object->getWorld().executePostConstructionObjectTransforms(object);
+
 	return object;
 }
 

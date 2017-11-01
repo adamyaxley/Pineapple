@@ -5,13 +5,12 @@ std::mt19937 Rock::gen;
 
 Rock::Rock(pa::World& world)
 	: Warp(world)
+	, pa::EnableChildList<Rock>(this)
 {
 }
 
 void Rock::onCreate()
 {
-	getWorld().registerChild(shared_from_this());
-
 	setSprite(g_resource.rock->createSprite());
 
 	std::uniform_real_distribution<float> rotationDis(0.1f, PA_PI / 18.f);
@@ -45,8 +44,6 @@ SmallRock::SmallRock(pa::World& world)
 
 void SmallRock::onCreate()
 {
-	getWorld().registerChild(shared_from_this());
-
 	setSprite(g_resource.smallRock->createSprite());
 
 	std::uniform_real_distribution<float> rotationDis(0.1f, PA_PI / 12.f);
