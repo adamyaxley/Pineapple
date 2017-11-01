@@ -5,7 +5,7 @@ std::mt19937 Rock::gen;
 
 Rock::Rock(pa::World& world)
 	: Warp(world)
-	, pa::EnableChildList<Rock>(this)
+	, pa::EnableChildList<Rock>(world)
 {
 }
 

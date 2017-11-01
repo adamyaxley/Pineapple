@@ -6,9 +6,9 @@ namespace pa
 	class EnableChildList
 	{
 	public:
-		EnableChildList(T* parent)
+		EnableChildList(World& world)
 		{
-			parent->getWorld().registerPostConstructionObjectTransform([](std::shared_ptr<pa::Object> object) {
+			world.registerPostConstructionObjectTransform([](std::shared_ptr<pa::Object> object) {
 				object->getWorld().registerChild(std::static_pointer_cast<T, pa::Object>(object)); });
 		}
 	};

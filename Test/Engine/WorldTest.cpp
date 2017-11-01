@@ -249,7 +249,7 @@ namespace
 	{
 		Base(pa::World& world)
 			: pa::Object(world)
-			, pa::EnableChildList<Base>(this)
+			, pa::EnableChildList<Base>(world)
 		{
 		}
 	};
@@ -258,7 +258,7 @@ namespace
 	{
 		Derived(pa::World& world)
 			: Base(world)
-			, pa::EnableChildList<Derived>(this)
+			, pa::EnableChildList<Derived>(world)
 		{
 		}
 	};
