@@ -4,12 +4,6 @@
 #include <cstdio>
 #include <sys/stat.h>
 
-// This code goes in windowsFile
-//std::unique_ptr<pa::FileSystem> pa::MakeInternal::fileSystem(PlatformSettings::FileSystem fileSystemSettings)
-//{
-//
-//}
-
 namespace
 {
 	pa::FileResult openFile(FILE** file, const char* path, const char* mode)
