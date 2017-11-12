@@ -76,7 +76,6 @@ bool pa::PlatformSettings::loadFromFile(const char* filename /* = pineapple.json
 
 void pa::PlatformSettings::print() const
 {
-
 	pa::Log::info("Title: {}", title);
 	pa::Log::info("EngineAssetPath: {}", fileSystem.engineAssetPath);
 	pa::Log::info("UserAssetPath: {}", fileSystem.userAssetPath);
