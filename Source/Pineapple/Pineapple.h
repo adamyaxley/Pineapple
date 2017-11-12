@@ -15,7 +15,6 @@
 #include <Pineapple/Engine/Container/Rect.h>
 #include <Pineapple/Engine/Container/Vect2.h>
 #include <Pineapple/Engine/Platform/Event.h>
-#include <Pineapple/Engine/Platform/File.h>
 #include <Pineapple/Engine/Platform/Platform.h>
 #include <Pineapple/Engine/System/InputHandler.h>
 #include <Pineapple/Engine/System/Object.h>

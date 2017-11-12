@@ -6,6 +6,7 @@
 #pragma once
 
 #include <Pineapple/Engine/Platform/Dependency.h>
+#include <Pineapple/Engine/Platform/FileSystem.h>
 #include <chrono>
 #include <memory>
 
@@ -25,7 +26,7 @@ namespace pa
 		friend struct std::default_delete<Resource>;
 
 	public:
-		Resource(const char* path);
+		Resource(const FilePath& path);
 
 		// Make sure that the resource is loaded, and add a reference
 		void load();
@@ -48,7 +49,7 @@ namespace pa
 		// Get memory usage
 		// int getMemory();
 
-		const char* getPath() const;
+		const FilePath& getPath() const;
 
 	protected:
 		// Load this resource completely
@@ -67,6 +68,6 @@ namespace pa
 		std::chrono::system_clock::time_point m_lastLoadTime;
 
 		// The path to this resource
-		const char* m_path;
+		FilePath m_path;
 	};
 }

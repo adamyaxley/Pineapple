@@ -12,7 +12,7 @@
 #include <Pineapple/Engine/Graphics/Texture.h>
 #include <Pineapple/Engine/Graphics/TileSet.h>
 #include <Pineapple/Engine/Platform/ResourceManager.h>
-
+#include <Pineapple/Engine/Platform/FileSystem.h>
 #include <memory>
 
 namespace pa
@@ -21,7 +21,7 @@ namespace pa
 
 	namespace MakeInternal
 	{
-		std::unique_ptr<Graphics> graphics(const Vect2<int>& size);
+		std::unique_ptr<Graphics> graphics(const Vect2<int>& size, const FileSystem& fileSystem);
 	}
 
 	class Graphics
@@ -35,7 +35,7 @@ namespace pa
 		};
 
 		// Graphics engine start up and shut down
-		Graphics(const Vect2<int>& size);
+		Graphics(const Vect2<int>& size, const FileSystem& fileSystem);
 		virtual ~Graphics();
 
 		// Get size
@@ -60,13 +60,13 @@ namespace pa
 		void setProjection(int x, int y, int x2, int y2);
 
 		// Resource loading
-		virtual std::shared_ptr<Texture> createTexture(const char* path) = 0;
-		virtual std::shared_ptr<TileSet> createTileSet(const char* path, int tileWidth, int tileHeight) = 0;
-		virtual std::shared_ptr<Font> createFont(const char* path) = 0;
+		virtual std::shared_ptr<Texture> createTexture(const char* path, FileStorage storage = FileStorage::UserAsset) = 0;
+		virtual std::shared_ptr<TileSet> createTileSet(const char* path, int tileWidth, int tileHeight, FileStorage storage = FileStorage::UserAsset) = 0;
+		virtual std::shared_ptr<Font> createFont(const char* path, FileStorage storage = FileStorage::UserAsset) = 0;
 		std::unique_ptr<Sprite> createSprite(std::vector<std::shared_ptr<Texture>>& frames);
 
 		// Creates a fragment shader
-		virtual std::shared_ptr<Shader> createShader(ShaderType type, const char* path) = 0;
+		virtual std::shared_ptr<Shader> createShader(ShaderType type, const char* path, FileStorage storage = FileStorage::UserAsset) = 0;
 		virtual std::shared_ptr<Program> createProgram() = 0;
 
 		virtual void render() = 0;
@@ -84,6 +84,8 @@ namespace pa
 		RenderSystem m_renderSystem;
 
 		Program* m_deferredProgram = nullptr;
+
+		const FileSystem& m_fileSystem;
 
 	private:
 		Vect2<float> m_spriteView;

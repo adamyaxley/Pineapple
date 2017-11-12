@@ -5,7 +5,7 @@
 
 #include <Pineapple/Engine/Graphics/Shader.h>
 
-pa::Shader::Shader(const pa::ShaderType shaderType, const char* path)
+pa::Shader::Shader(const pa::ShaderType shaderType, const pa::FilePath& path)
 	: pa::Resource(path)
 	, m_type(shaderType)
 {

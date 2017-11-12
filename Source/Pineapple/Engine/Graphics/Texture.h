@@ -33,7 +33,7 @@ namespace pa
 																				: Render::Type::Unordered;
 		}
 
-		Texture(const char* path, RenderSystem& renderSystem);
+		Texture(const FilePath& path, RenderSystem& renderSystem);
 		virtual ~Texture()
 		{
 		}

@@ -7,7 +7,6 @@
 
 #include <Pineapple/Engine/Graphics/Graphics.h>
 #include <Pineapple/Graphics/OpenGL/IncludeGL.h>
-#include <vector>
 
 struct FONScontext;
 
@@ -16,16 +15,16 @@ namespace pa
 	class GraphicsGL : public Graphics
 	{
 	public:
-		GraphicsGL(const Vect2<int>& size);
+		GraphicsGL(const Vect2<int>& size, const FileSystem& fileSystem);
 		virtual ~GraphicsGL();
 
 		// Resource loading
-		virtual std::shared_ptr<Texture> createTexture(const char* path) override;
-		virtual std::shared_ptr<TileSet> createTileSet(const char* path, int tileWidth, int tileHeight) override;
-		virtual std::shared_ptr<Font> createFont(const char* path) override;
+		virtual std::shared_ptr<Texture> createTexture(const char* path, FileStorage storage) override;
+		virtual std::shared_ptr<TileSet> createTileSet(const char* path, int tileWidth, int tileHeight, FileStorage storage) override;
+		virtual std::shared_ptr<Font> createFont(const char* path, FileStorage storage) override;
 
 		// Creates a fragment shader
-		virtual std::shared_ptr<Shader> createShader(ShaderType type, const char* path) override;
+		virtual std::shared_ptr<Shader> createShader(ShaderType type, const char* path, FileStorage storage) override;
 		virtual std::shared_ptr<Program> createProgram() override;
 
 		virtual void render() override;

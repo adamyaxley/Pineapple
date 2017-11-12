@@ -1,0 +1,4 @@
+{
+	"engineAssetPath": "${PA_SETTINGS_ENGINE_ASSETS_PATH}",
+	"userAssetPath": "${PA_SETTINGS_USER_ASSETS_PATH}"
+}

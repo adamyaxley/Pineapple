@@ -7,7 +7,7 @@
 #include <Pineapple/Graphics/OpenGL/TextureGL.h>
 #include <Pineapple/Graphics/OpenGL/TextureSubGL.h>
 
-pa::TextureGL::TextureGL(pa::Graphics& graphics, const char* path)
+pa::TextureGL::TextureGL(pa::Graphics& graphics, const pa::FilePath& path)
 	: pa::Texture(path, graphics.getRenderSystem())
 	, m_graphics(graphics)
 	, m_id(0)
@@ -28,27 +28,6 @@ std::shared_ptr<pa::Texture> pa::TextureGL::createTexture(int x, int y, int widt
 	return texture;
 }
 
-GLuint pa::TextureGL::getGLObject() const
-{
-	PA_ASSERTF(isLoaded(), "Texture is not loaded");
-	return m_id;
-}
-
-const pa::TextureCoordsGL& pa::TextureGL::getTextureCoords() const
-{
-	return m_textureCoords;
-}
-
-void pa::TextureGL::setGLObject(GLuint id)
-{
-	m_id = id;
-}
-
-void pa::TextureGL::setTextureCoords(float x1, float y1, float x2, float y2)
-{
-	m_textureCoords.set(x1, y1, x2, y2);
-}
-
 void pa::TextureGL::render(const pa::Sprite& sprite)
 {
 	if (sprite.getVisible() && isLoaded())
@@ -60,9 +39,9 @@ void pa::TextureGL::render(const pa::Sprite& sprite)
 		GLint activeObject;
 		glGetIntegerv(GL_TEXTURE_BINDING_2D, &activeObject);
 
-		if (activeObject != getGLObject())
+		if (activeObject != m_id)
 		{
-			glBindTexture(GL_TEXTURE_2D, getGLObject());
+			glBindTexture(GL_TEXTURE_2D, m_id);
 		}
 
 		// Load a new drawing matrix
@@ -85,7 +64,7 @@ void pa::TextureGL::render(const pa::Sprite& sprite)
 		glScalef((GLfloat)getSize().x, (GLfloat)getSize().y, 1.f);
 
 		// Draw quad
-		pa::DrawGL::drawQuad(sprite.getHFlip(), sprite.getVFlip(), getTextureCoords());
+		pa::DrawGL::drawQuad(sprite.getHFlip(), sprite.getVFlip(), m_textureCoords);
 
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -97,4 +76,9 @@ void pa::TextureGL::render(const pa::Sprite& sprite)
 
 		PA_GL_CHECK_ERROR();
 	}
+}
+
+GLuint pa::TextureGL::getGLObject() const
+{
+	return m_id;
 }

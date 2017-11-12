@@ -6,7 +6,7 @@
 #include <Pineapple/Engine/Platform/Resource.h>
 #include <Pineapple/Engine/Util/Macro.h>
 
-pa::Resource::Resource(const char* path)
+pa::Resource::Resource(const pa::FilePath& path)
 	: m_loadState(pa::ResourceLoadState::SuccessfullyUnloaded)
 	, m_path(path)
 {
@@ -14,7 +14,7 @@ pa::Resource::Resource(const char* path)
 
 pa::Resource::~Resource()
 {
-	PA_ASSERTF(!isLoaded(), "This resource is still loaded: {}", getPath())
+	PA_ASSERTF(!isLoaded(), "This resource is still loaded: {}", getPath().asString())
 }
 
 void pa::Resource::reload()
@@ -30,7 +30,7 @@ void pa::Resource::reload()
 void pa::Resource::load()
 {
 	// can do reference counting here in the future
-	PA_ASSERTF(!isLoaded(), "This resource cannot be acquired twice: {}", getPath());
+	PA_ASSERTF(!isLoaded(), "This resource cannot be acquired twice: {}", getPath().asString());
 
 	m_lastLoadTime = std::chrono::system_clock::now();
 
@@ -42,14 +42,14 @@ void pa::Resource::load()
 	else
 	{
 		m_loadState = pa::ResourceLoadState::FailedToLoad;
-		pa::Log::info("Failed to load {}", getPath());
+		pa::Log::info("Failed to load {}", getPath().asString());
 	}
 }
 
 void pa::Resource::unload()
 {
 	// can do reference counting here in the future
-	PA_ASSERTF(isLoaded(), "This resource has already been unloaded: {}", getPath());
+	PA_ASSERTF(isLoaded(), "This resource has already been unloaded: {}", getPath().asString());
 	if (onUnload())
 	{
 		m_loadState = pa::ResourceLoadState::SuccessfullyUnloaded;
@@ -58,7 +58,7 @@ void pa::Resource::unload()
 	else
 	{
 		m_loadState = pa::ResourceLoadState::FailedToUnload;
-		pa::Log::info("Failed to unload {}", getPath());
+		pa::Log::info("Failed to unload {}", getPath().asString());
 	}
 }
 
@@ -82,7 +82,7 @@ std::chrono::system_clock::time_point pa::Resource::getLastLoadTime() const
 	return m_lastLoadTime;
 }
 
-const char* pa::Resource::getPath() const
+const pa::FilePath& pa::Resource::getPath() const
 {
 	return m_path;
 }

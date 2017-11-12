@@ -3,7 +3,6 @@
   This software is licensed under the Zlib license (see license.txt for details)
 ------------------------------------------------------------------------------*/
 
-#include <Pineapple/Engine/Platform/File.h>
 #include <Pineapple/Engine/Platform/Memory.h>
 #include <Pineapple/Engine/Platform/Platform.h>
 #include <Pineapple/Graphics/OpenGL/FontGL.h>
@@ -11,7 +10,7 @@
 #include <Pineapple/Graphics/OpenGL/UtilGL.h>
 #include <fontstash.h>
 
-pa::FontGL::FontGL(pa::Graphics& graphics, FONScontext* fonsContext, const char* path)
+pa::FontGL::FontGL(pa::Graphics& graphics, FONScontext* fonsContext, const pa::FilePath& path)
 	: pa::Font(path)
 	, m_graphics(graphics)
 	, m_fonsContext(fonsContext)
@@ -27,47 +26,24 @@ pa::FontGL::~FontGL()
 
 bool pa::FontGL::onLoad()
 {
-	unsigned int size;
-	pa::File::Result result;
-
-	// Get the file size
-	result = pa::File::getSize(getPath(), &size);
-
-	if (result != pa::File::Result::Success)
+	pa::FileBuffer buffer;
+	auto result = getPath().read(buffer);
+	if (result != pa::FileResult::Success)
 	{
-		pa::Log::info("{}: {}", pa::File::getResultString(result), getPath());
+		pa::Log::info("{}: {}", pa::FileSystem::getResultString(result), getPath().asString());
 		return false;
 	}
-
-	// Allocate our buffer
-	m_buffer = (unsigned char*)pa::Memory::allocate(size);
-
-	// Read in the data
-	result = pa::File::read(getPath(), m_buffer);
-	if (result != pa::File::Result::Success)
-	{
-		pa::Log::info("{}: {}", pa::File::getResultString(result), getPath());
-		pa::Memory::deallocate(m_buffer);
-		m_buffer = nullptr;
-
-		return false;
-	}
-
-	m_fonsFont = fonsAddFontMem(m_fonsContext, getPath(), m_buffer, size, 0 /*do not free the data*/);
-
-	pa::Log::info("Loaded Font: {}", getPath());
-
+	m_buffer = std::move(buffer.getBuffer());
+	m_fonsFont = fonsAddFontMem(m_fonsContext, getPath().asString().c_str(), m_buffer.get(), buffer.getSize(), 0 /*do not free the data*/);
+	pa::Log::info("Loaded Font: {}", getPath().asString());
 	return true;
 }
 
 bool pa::FontGL::onUnload()
 {
-	// Not sure what to do here
+	// <todo> Not sure what to do here
 	// fons__freeFont(m_fonsFont);
 	// m_fonsContext->nfonts--;
-
-	pa::Memory::deallocate((void*)m_buffer);
-	m_buffer = nullptr;
 
 	return true;
 }

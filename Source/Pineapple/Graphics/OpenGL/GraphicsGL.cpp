@@ -30,9 +30,9 @@ namespace
 #define GLFONTSTASH_IMPLEMENTATION
 #include <gl3fontstash.h>
 
-std::unique_ptr<pa::Graphics> pa::MakeInternal::graphics(const pa::Vect2<int>& size)
+std::unique_ptr<pa::Graphics> pa::MakeInternal::graphics(const pa::Vect2<int>& size, const pa::FileSystem& fileSystem)
 {
-	return std::make_unique<pa::GraphicsGL>(size);
+	return std::make_unique<pa::GraphicsGL>(size, fileSystem);
 }
 
 namespace
@@ -90,8 +90,8 @@ namespace
 	}
 }
 
-pa::GraphicsGL::GraphicsGL(const pa::Vect2<int>& size)
-	: pa::Graphics(size)
+pa::GraphicsGL::GraphicsGL(const pa::Vect2<int>& size, const pa::FileSystem& fileSystem)
+	: pa::Graphics(size, fileSystem)
 {
 	pa::Log::info("Starting up graphics size: {} * {}", m_size.x, m_size.y);
 
@@ -127,31 +127,31 @@ pa::GraphicsGL::~GraphicsGL()
 	gl3fonsDelete(m_fonsContext);
 }
 
-std::shared_ptr<pa::Texture> pa::GraphicsGL::createTexture(const char* path)
+std::shared_ptr<pa::Texture> pa::GraphicsGL::createTexture(const char* path, pa::FileStorage storage)
 {
-	auto texture = std::make_shared<pa::TextureFileGL>(*this, path);
+	auto texture = std::make_shared<pa::TextureFileGL>(*this, pa::FilePath(m_fileSystem, storage, path));
 	getResourceManager().add(texture);
 	return texture;
 }
 
-std::shared_ptr<pa::TileSet> pa::GraphicsGL::createTileSet(const char* path, int tileWidth, int tileHeight)
+std::shared_ptr<pa::TileSet> pa::GraphicsGL::createTileSet(const char* path, int tileWidth, int tileHeight, pa::FileStorage storage)
 {
-	auto tileSet = std::make_shared<pa::TileSetGL>(*this, tileWidth, tileHeight, path);
+	auto tileSet = std::make_shared<pa::TileSetGL>(*this, tileWidth, tileHeight, pa::FilePath(m_fileSystem, storage, path));
 	getResourceManager().add(tileSet);
 	return tileSet;
 }
 
-std::shared_ptr<pa::Font> pa::GraphicsGL::createFont(const char* path)
+std::shared_ptr<pa::Font> pa::GraphicsGL::createFont(const char* path, pa::FileStorage storage)
 {
-	auto font = std::make_shared<pa::FontGL>(*this, m_fonsContext, path);
+	auto font = std::make_shared<pa::FontGL>(*this, m_fonsContext, pa::FilePath(m_fileSystem, storage, path));
 	getResourceManager().add(font);
 	return font;
 }
 
-std::shared_ptr<pa::Shader> pa::GraphicsGL::createShader(pa::ShaderType type, const char* path)
+std::shared_ptr<pa::Shader> pa::GraphicsGL::createShader(pa::ShaderType type, const char* path, pa::FileStorage storage)
 {
 #ifdef PA_OPENGLES2
-	auto shader = std::make_shared<pa::ShaderGL>(type, path);
+	auto shader = std::make_shared<pa::ShaderGL>(type, pa::FilePath(m_fileSystem, storage, path));
 	getResourceManager().add(shader);
 	return shader;
 #else

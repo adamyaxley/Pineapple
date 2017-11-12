@@ -7,7 +7,7 @@
 #include <Pineapple/Graphics/OpenGL/MapGL.h>
 #include <Pineapple/Graphics/OpenGL/TileSetGL.h>
 
-pa::TileSetGL::TileSetGL(pa::Graphics& graphics, int tileWidth, int tileHeight, const char* path)
+pa::TileSetGL::TileSetGL(pa::Graphics& graphics, int tileWidth, int tileHeight, const pa::FilePath& path)
 	: pa::TileSet(tileWidth, tileHeight, path)
 	, m_graphics(graphics)
 	, m_id(0)
@@ -20,7 +20,7 @@ pa::TileSetGL::~TileSetGL()
 
 bool pa::TileSetGL::onLoad()
 {
-	pa::ImageGL image(getPath());
+	pa::ImageGL image(*this);
 
 	bool loaded = false;
 
@@ -41,11 +41,11 @@ bool pa::TileSetGL::onLoad()
 			m_utilisedSize.cart((double)(size.x - (size.x % getTileSize().x)) / size.x,
 								(double)(size.y - (size.y % getTileSize().y)) / size.y);
 
-			pa::Log::info("Loaded TileSet: {}", getPath());
+			pa::Log::info("Loaded TileSet: {}", getPath().asString());
 		}
 		else
 		{
-			pa::Log::info("Error, GL texture could not be generated for: {}", getPath());
+			pa::Log::info("Error, GL texture could not be generated for: {}", getPath().asString());
 		}
 	}
 

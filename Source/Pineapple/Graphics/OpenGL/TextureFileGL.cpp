@@ -6,7 +6,7 @@
 #include <Pineapple/Graphics/OpenGL/ImageGL.h>
 #include <Pineapple/Graphics/OpenGL/TextureFileGL.h>
 
-pa::TextureFileGL::TextureFileGL(pa::Graphics& graphics, const char* path)
+pa::TextureFileGL::TextureFileGL(pa::Graphics& graphics, const pa::FilePath& path)
 	: pa::TextureGL(graphics, path)
 {
 }
@@ -17,7 +17,7 @@ pa::TextureFileGL::~TextureFileGL()
 
 bool pa::TextureFileGL::onLoad()
 {
-	pa::ImageGL image(getPath());
+	pa::ImageGL image(*this);
 
 	bool loaded = false;
 
@@ -32,13 +32,13 @@ bool pa::TextureFileGL::onLoad()
 
 			setSize(image.getSize());
 			setFormat(image.getOriginalFormat());
-			setGLObject(id);
+			m_id = id;
 
-			pa::Log::info("Loaded Texture: {}", getPath());
+			pa::Log::info("Loaded Texture: {}", getPath().asString());
 		}
 		else
 		{
-			pa::Log::info("Error, GL texture could not be generated for: {}", getPath());
+			pa::Log::info("Error, GL texture could not be generated for: {}", getPath().asString());
 		}
 	}
 
@@ -49,13 +49,10 @@ bool pa::TextureFileGL::onLoad()
 
 bool pa::TextureFileGL::onUnload()
 {
-	GLuint id = getGLObject();
-
-	if (glIsTexture(id))
+	if (glIsTexture(m_id))
 	{
-		glDeleteTextures(1, &id);
-		setGLObject(0);
+		glDeleteTextures(1, &m_id);
+		m_id = 0;
 	}
-
 	return true;
 }

@@ -15,7 +15,7 @@ namespace pa
 	class MusicFMOD : public Music
 	{
 	public:
-		MusicFMOD(Sound& sound, FMOD::System* system, const char* path);
+		MusicFMOD(Sound& sound, FMOD::System* system, const FilePath& path);
 		~MusicFMOD();
 
 		virtual bool onLoad() override;

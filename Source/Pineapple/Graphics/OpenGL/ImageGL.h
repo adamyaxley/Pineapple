@@ -14,7 +14,7 @@ namespace pa
 	class ImageGL
 	{
 	public:
-		ImageGL(const char* path);
+		ImageGL(const Resource& resource);
 		~ImageGL()
 		{
 		}
@@ -35,8 +35,8 @@ namespace pa
 		Texture::Format getOriginalFormat() const;
 
 	private:
-		// Path to physical resource
-		const char* m_path;
+		// The physical resource
+		const Resource& m_resource;
 
 		// Size of image, in pixels
 		Vect2<int> m_size;

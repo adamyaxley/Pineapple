@@ -10,12 +10,13 @@
 #include <fmod.hpp>
 #include <fmod_errors.h>
 
-std::unique_ptr<pa::Sound> pa::MakeInternal::sound()
+std::unique_ptr<pa::Sound> pa::MakeInternal::sound(const pa::FileSystem& fileSystem)
 {
-	return std::make_unique<pa::SoundFMOD>();
+	return std::make_unique<pa::SoundFMOD>(fileSystem);
 }
 
-pa::SoundFMOD::SoundFMOD()
+pa::SoundFMOD::SoundFMOD(const FileSystem& fileSystem)
+	: pa::Sound(fileSystem)
 {
 	FMOD_RESULT result = FMOD::System_Create(&m_system);
 	pa::UtilFMOD::checkResult(result);
@@ -50,12 +51,12 @@ void pa::SoundFMOD::update()
 	m_system->update();
 }
 
-std::shared_ptr<pa::Effect> pa::SoundFMOD::createNativeEffect(const char* path)
+std::shared_ptr<pa::Effect> pa::SoundFMOD::createNativeEffect(const pa::FilePath& path)
 {
 	return std::make_shared<pa::EffectFMOD>(m_system, path);
 }
 
-std::shared_ptr<pa::Music> pa::SoundFMOD::createNativeMusic(pa::Sound& sound, const char* path)
+std::shared_ptr<pa::Music> pa::SoundFMOD::createNativeMusic(pa::Sound& sound, const pa::FilePath& path)
 {
 	return std::make_shared<pa::MusicFMOD>(sound, m_system, path);
 }

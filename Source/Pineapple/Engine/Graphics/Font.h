@@ -14,7 +14,7 @@ namespace pa
 	class Font : public Resource
 	{
 	public:
-		Font(const char* path);
+		Font(const FilePath& path);
 		~Font();
 
 		virtual std::unique_ptr<Text> createText() = 0;

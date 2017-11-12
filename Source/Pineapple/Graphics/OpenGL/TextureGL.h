@@ -16,24 +16,16 @@ namespace pa
 	class TextureGL : public Texture
 	{
 	public:
-		TextureGL(Graphics& graphics, const char* path);
+		TextureGL(Graphics& graphics, const FilePath& path);
 		~TextureGL();
 
 		virtual std::shared_ptr<Texture> createTexture(int x, int y, int width, int height) override;
 
-		// Gets the OpenGL texture object associated with this tile set
-		GLuint getGLObject() const;
-
-		const TextureCoordsGL& getTextureCoords() const;
-
 		void render(const Sprite& sprite);
 
+		GLuint getGLObject() const;
+
 	protected:
-		void setGLObject(GLuint id);
-
-		void setTextureCoords(float x1, float y1, float x2, float y2);
-
-	private:
 		Graphics& m_graphics;
 
 		GLuint m_id;

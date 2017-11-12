@@ -3,11 +3,10 @@
   This software is licensed under the Zlib license (see license.txt for details)
 ------------------------------------------------------------------------------*/
 
-#include <Pineapple/Engine/Platform/File.h>
 #include <Pineapple/Sound/FMOD/MusicFMOD.h>
 #include <Pineapple/Sound/FMOD/UtilFMOD.h>
 
-pa::MusicFMOD::MusicFMOD(pa::Sound& sound, FMOD::System* system, const char* path)
+pa::MusicFMOD::MusicFMOD(pa::Sound& sound, FMOD::System* system, const pa::FilePath& path)
 	: pa::Music(sound, path)
 	, m_system(system)
 	, m_sound(nullptr)
@@ -22,7 +21,7 @@ pa::MusicFMOD::~MusicFMOD()
 bool pa::MusicFMOD::onLoad()
 {
 	FMOD_RESULT result =
-		m_system->createStream((pa::File::getAssetsPath() + getPath()).c_str(), FMOD_DEFAULT, nullptr, &m_sound);
+		m_system->createStream(getPath().asString().c_str(), FMOD_DEFAULT, nullptr, &m_sound);
 	return pa::UtilFMOD::checkResult(result);
 }
 

@@ -18,12 +18,12 @@ namespace
 void pa::Asset::load(pa::Graphics& graphics)
 {
 	// Load textures TODO do this from atlas
-	g_pixelTexture = graphics.createTexture("Pineapple/Textures/pixel.png");
+	g_pixelTexture = graphics.createTexture("Pineapple/Textures/pixel.png", pa::FileStorage::EngineAsset);
 
 	// Load shaders TODO quad shaders
 	// g_quadFradShader = graphics.createShader(pa::ShaderType::FRAGMENT, "Pineapple/Shaders/quad.frag");
 	// g_quadVertShader = graphics.createShader(pa::ShaderType::VERTEX, "Pineapple/Shaders/quad.vert");
-	g_passVertShader = graphics.createShader(pa::ShaderType::VERTEX, "Pineapple/Shaders/pass.vert");
+	g_passVertShader = graphics.createShader(pa::ShaderType::VERTEX, "Pineapple/Shaders/pass.vert", pa::FileStorage::EngineAsset);
 }
 
 std::shared_ptr<pa::Texture> pa::Asset::Texture::getPixelTexture()

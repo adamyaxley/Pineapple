@@ -12,7 +12,7 @@ namespace pa
 	class TextureFileGL : public TextureGL
 	{
 	public:
-		TextureFileGL(Graphics& graphics, const char* path);
+		TextureFileGL(Graphics& graphics, const FilePath& path);
 		~TextureFileGL();
 
 		virtual bool onLoad() override;

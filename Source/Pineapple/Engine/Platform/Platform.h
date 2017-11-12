@@ -7,15 +7,14 @@
 
 #include <Pineapple/Engine/Container/Vect2.h>
 #include <Pineapple/Engine/Platform/Event.h>
+#include <Pineapple/Engine/Platform/FileSystem.h>
 #include <Pineapple/Engine/Platform/Pointer.h>
+#include <Pineapple/Engine/Platform/PlatformSettings.h>
 #include <Pineapple/Engine/System/Input.h>
 #include <Pineapple/Engine/Util/Macro.h>
-
 #include <Pineapple/Engine/Graphics/Graphics.h>
 #include <Pineapple/Engine/Sound/Sound.h>
-
 #include <memory>
-#include <vector>
 
 namespace pa
 {
@@ -29,22 +28,6 @@ namespace pa
 	extern int Main(Arguments*);
 
 	class Platform;
-
-	struct PlatformSettings
-	{
-		const char* title;
-
-		struct Graphics
-		{
-			bool use = true;
-			Vect2<int> size;
-		} graphics;
-
-		struct Sound
-		{
-			bool use = true;
-		} sound;
-	};
 
 	namespace Make
 	{
@@ -74,6 +57,9 @@ namespace pa
 		// Sound
 		Sound* getSound();
 
+		// FileSystem
+		const FileSystem& getFileSystem() const;
+
 		// Idle
 		virtual void idle() = 0;
 
@@ -98,5 +84,7 @@ namespace pa
 
 		std::unique_ptr<Graphics> m_graphics;
 		std::unique_ptr<Sound> m_sound;
+
+		std::unique_ptr<FileSystem> m_fileSystem;
 	};
 }

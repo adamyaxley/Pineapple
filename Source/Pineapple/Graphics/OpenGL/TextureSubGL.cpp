@@ -31,12 +31,12 @@ bool pa::TextureSubGL::onLoad()
 
 		// Note that if the texture changes size the original rect will be invalidated if the rect has trasnformed in
 		// the new texture
-		setTextureCoords((float)m_rect.x1 / (float)m_texture.getSize().x,
+		m_textureCoords.set((float)m_rect.x1 / (float)m_texture.getSize().x,
 						 (float)m_rect.y1 / (float)m_texture.getSize().y,
 						 (float)m_rect.x2 / (float)m_texture.getSize().x,
 						 (float)m_rect.y2 / (float)m_texture.getSize().y);
 
-		setGLObject(m_texture.getGLObject());
+		m_id = m_texture.getGLObject();
 
 		return true;
 	}

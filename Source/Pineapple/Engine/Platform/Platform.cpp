@@ -39,3 +39,8 @@ pa::Sound* pa::Platform::getSound()
 {
 	return m_sound.get();
 }
+
+const pa::FileSystem& pa::Platform::getFileSystem() const
+{
+	return *m_fileSystem.get();
+}

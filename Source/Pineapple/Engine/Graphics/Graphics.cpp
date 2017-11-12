@@ -7,9 +7,10 @@
 #include <Pineapple/Engine/Graphics/Map.h>
 #include <Pineapple/Engine/Graphics/Sprite.h>
 
-pa::Graphics::Graphics(const pa::Vect2<int>& size)
+pa::Graphics::Graphics(const pa::Vect2<int>& size, const pa::FileSystem& fileSystem)
 	: m_size(size)
 	, m_settingSize(size)
+	, m_fileSystem(fileSystem)
 {
 }
 

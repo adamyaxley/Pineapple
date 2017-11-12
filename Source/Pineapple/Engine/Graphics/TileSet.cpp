@@ -5,7 +5,7 @@
 
 #include <Pineapple/Engine/Graphics/TileSet.h>
 
-pa::TileSet::TileSet(int tileWidth, int tileHeight, const char* path)
+pa::TileSet::TileSet(int tileWidth, int tileHeight, const pa::FilePath& path)
 	: pa::Resource(path)
 	, m_tileSize(tileWidth, tileHeight)
 {
