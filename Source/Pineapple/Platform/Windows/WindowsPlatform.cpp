@@ -42,7 +42,7 @@ namespace
 
 		if (wglSwapIntervalEXT)
 		{
-			wglSwapIntervalEXT(sync);
+			wglSwapIntervalEXT(sync ? 1 : 0);
 		}
 	}
 
