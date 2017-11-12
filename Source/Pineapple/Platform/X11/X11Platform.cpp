@@ -3,7 +3,6 @@
   This software is licensed under the Zlib license (see license.txt for details)
 ------------------------------------------------------------------------------*/
 
-#include <Pineapple/Engine/Platform/File.h>
 #include <Pineapple/Platform/X11/X11Platform.h>
 #include <algorithm>
 
@@ -62,7 +61,7 @@ pa::X11Platform::X11Platform(pa::Arguments* arguments, const PlatformSettings& s
 	m_glc = glXCreateContext(m_dpy, m_vi, 0, GL_TRUE);
 	glXMakeCurrent(m_dpy, m_win, m_glc);
 
-	pa::File::init();
+	m_fileSystem = pa::MakeInternal::fileSystem(settings.fileSystem);
 
 	// Unique pointers
 	if (settings.graphics.use)
@@ -80,6 +79,7 @@ pa::X11Platform::~X11Platform()
 {
 	m_sound.reset();
 	m_graphics.reset();
+	m_fileSystem.reset();
 
 	if (m_dpy)
 	{
