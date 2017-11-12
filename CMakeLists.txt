@@ -50,6 +50,10 @@ endif()
 # Header only libs checked into Ext
 set(EXT_INCLUDE_DIRS ${PA_ROOT}/Ext)
 
+if(MSVC)
+    add_compile_options("/MP")
+endif()
+
 function(glob_source_files _SOURCES)
     get_filename_component(_src_root_path "." ABSOLUTE)
     file(
