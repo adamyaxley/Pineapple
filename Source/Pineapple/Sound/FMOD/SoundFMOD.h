@@ -13,14 +13,14 @@ namespace pa
 	class SoundFMOD : public Sound
 	{
 	public:
-		SoundFMOD();
+		SoundFMOD(const FileSystem& fileSystem);
 		~SoundFMOD();
 
 		virtual void update() override;
 
 	private:
-		virtual std::shared_ptr<Effect> createNativeEffect(const char* path) override;
-		virtual std::shared_ptr<Music> createNativeMusic(Sound& sound, const char* path) override;
+		virtual std::shared_ptr<Effect> createNativeEffect(const FilePath& path) override;
+		virtual std::shared_ptr<Music> createNativeMusic(Sound& sound, const FilePath& path) override;
 
 		FMOD::System* m_system;
 	};

@@ -3,7 +3,6 @@
   This software is licensed under the Zlib license (see license.txt for details)
 ------------------------------------------------------------------------------*/
 
-#include <Pineapple/Engine/Platform/File.h>
 #include <Pineapple/Engine/Platform/Memory.h>
 #include <Pineapple/Engine/Platform/Platform.h>
 #include <Pineapple/Graphics/OpenGL/ImageGL.h>
@@ -12,44 +11,26 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-pa::ImageGL::ImageGL(const char* path)
-	: m_path(path)
-	, m_size(0, 0)
+pa::ImageGL::ImageGL(const pa::Resource& resource)
+	: m_size(0, 0)
 	, m_data(nullptr)
+	, m_resource(resource)
 {
 }
 
 bool pa::ImageGL::load()
 {
-	unsigned int size;
-	pa::File::Result result;
-
-	// Get the file size
-	result = pa::File::getSize(m_path, &size);
-
-	if (result != pa::File::Result::Success)
+	pa::FileBuffer buffer;
+	auto result = m_resource.getPath().read(buffer);
+	if (result != pa::FileResult::Success)
 	{
-		pa::Log::info("{}: {}", pa::File::getResultString(result), m_path);
-		return false;
-	}
-
-	// Allocate our buffer
-	unsigned char* buffer = (unsigned char*)pa::Memory::allocate(size);
-
-	// Read in the data
-	result = pa::File::read(m_path, buffer);
-	if (result != pa::File::Result::Success)
-	{
-		pa::Log::info("{}: {}", pa::File::getResultString(result), m_path);
+		pa::Log::info("{}: {}", pa::FileSystem::getResultString(result), m_resource.getPath().asString());
 		return false;
 	}
 
 	// Use stb_image.c to load the file
 	int comp;
-	m_data = stbi_load_from_memory(buffer, (int)size, &m_size.x, &m_size.y, &comp, 4);
-
-	// Deallocate old buffer
-	pa::Memory::deallocate(buffer);
+	m_data = stbi_load_from_memory(buffer.getBuffer().get(), (int)buffer.getSize(), &m_size.x, &m_size.y, &comp, 4);
 
 	if (m_data == nullptr)
 	{

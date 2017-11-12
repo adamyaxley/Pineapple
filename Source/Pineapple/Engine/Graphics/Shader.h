@@ -19,7 +19,7 @@ namespace pa
 	class Shader : public Resource
 	{
 	public:
-		Shader(const ShaderType shaderType, const char* path);
+		Shader(const ShaderType shaderType, const FilePath& path);
 		virtual ~Shader();
 
 		PA_FORCE_INLINE ShaderType getType();

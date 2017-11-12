@@ -15,7 +15,7 @@ namespace pa
 	class EffectFMOD : public Effect
 	{
 	public:
-		EffectFMOD(FMOD::System* system, const char* path);
+		EffectFMOD(FMOD::System* system, const FilePath& path);
 		~EffectFMOD();
 
 		virtual bool onLoad() override;

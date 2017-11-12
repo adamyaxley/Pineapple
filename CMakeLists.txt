@@ -87,18 +87,13 @@ function(add_pineapple_app _TARGET _SOURCES)
         target_link_libraries(${_TARGET} paX11 paFMOD paOpenGL paEngine ${X11_LIBRARIES} pthread dl ${FMOD_LIBRARIES})
         set_property(TARGET ${_TARGET} APPEND PROPERTY INCLUDE_DIRECTORIES ${X11_INCLUDE_DIRS})
     endif()
-
-    add_custom_command(
-            TARGET ${_TARGET} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-                    ${CMAKE_CURRENT_LIST_DIR}/Assets
-                    ${CMAKE_CURRENT_BINARY_DIR}/Assets)
-                    
-    add_custom_command(
-            TARGET ${_TARGET} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-                    ${PA_ROOT}/Assets
-                    ${CMAKE_CURRENT_BINARY_DIR}/Assets)
+    
+    if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/pineapple.json)
+        set(PA_SETTINGS_USER_ASSETS_PATH ${CMAKE_CURRENT_LIST_DIR}/Assets)
+        set(PA_SETTINGS_ENGINE_ASSETS_PATH ${PA_ROOT}/Assets)
+        # Configure the settings file
+        configure_file(${CMAKE_CURRENT_LIST_DIR}/pineapple.json ${CMAKE_CURRENT_BINARY_DIR}/pineapple.json)
+    endif()
     
     if(WIN32)
         foreach(_library IN ITEMS ${FMOD_LIBRARIES})

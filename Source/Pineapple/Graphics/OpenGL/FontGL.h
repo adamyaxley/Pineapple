@@ -16,7 +16,7 @@ namespace pa
 	class FontGL : public Font
 	{
 	public:
-		FontGL(Graphics& graphics, FONScontext* fonsContext, const char* path);
+		FontGL(Graphics& graphics, FONScontext* fonsContext, const FilePath& path);
 		~FontGL();
 
 		virtual bool onLoad() override;
@@ -37,7 +37,7 @@ namespace pa
 
 		GLuint m_texture;
 
-		unsigned char* m_buffer;
+		std::unique_ptr<unsigned char[]> m_buffer;
 
 		unsigned int m_faceSize;
 

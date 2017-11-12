@@ -9,7 +9,7 @@
 #include <Pineapple/Engine/Util/Macro.h>
 #include <memory>
 
-pa::Texture::Texture(const char* path, pa::RenderSystem& renderSystem)
+pa::Texture::Texture(const pa::FilePath& path, pa::RenderSystem& renderSystem)
 	: pa::Resource(path)
 	, m_renderSystem(renderSystem)
 {

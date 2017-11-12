@@ -5,7 +5,7 @@
 
 #include <Pineapple/Engine/Sound/Music.h>
 
-pa::Music::Music(pa::Sound& sound, const char* path)
+pa::Music::Music(pa::Sound& sound, const pa::FilePath& path)
 	: pa::Resource(path)
 	, m_sound(sound)
 {

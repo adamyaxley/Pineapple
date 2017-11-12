@@ -123,7 +123,7 @@ void pa::ProgramGL::onDependencyNotify(pa::Dependency* parent)
 	if (m_vertex != nullptr && m_fragment != nullptr && m_vertex->isLoaded() && m_fragment->isLoaded())
 	{
 		pa::Log::info("Linking program {} with fragment shader: '{}' and vertex shader: '{}'", m_id,
-					  m_fragment->getPath(), m_vertex->getPath());
+					  m_fragment->getPath().asString(), m_vertex->getPath().asString());
 		link();
 
 		if (isLinked())

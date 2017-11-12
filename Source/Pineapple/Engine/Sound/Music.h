@@ -13,7 +13,7 @@ namespace pa
 	class Music : public Resource
 	{
 	public:
-		Music(Sound& sound, const char* path);
+		Music(Sound& sound, const FilePath& path);
 		~Music();
 
 		virtual void play() = 0;

@@ -12,7 +12,7 @@ namespace pa
 	class Effect : public Resource
 	{
 	public:
-		Effect(const char* path);
+		Effect(const FilePath& path);
 
 		virtual void play() = 0;
 		virtual void loop() = 0;

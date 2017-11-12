@@ -7,6 +7,11 @@
 #include <Pineapple/Engine/Sound/Music.h>
 #include <Pineapple/Engine/Sound/Sound.h>
 
+pa::Sound::Sound(const FileSystem& fileSystem)
+	: m_fileSystem(fileSystem)
+{
+}
+
 pa::Sound::~Sound()
 {
 }
@@ -16,16 +21,16 @@ pa::ResourceManager& pa::Sound::getResourceManager()
 	return m_resourceManager;
 }
 
-std::shared_ptr<pa::Effect> pa::Sound::createEffect(const char* path)
+std::shared_ptr<pa::Effect> pa::Sound::createEffect(const char* path, pa::FileStorage storage)
 {
-	auto effect = createNativeEffect(path);
+	auto effect = createNativeEffect(pa::FilePath(m_fileSystem, storage, path));
 	m_resourceManager.add(effect);
 	return effect;
 }
 
-std::shared_ptr<pa::Music> pa::Sound::createMusic(const char* path)
+std::shared_ptr<pa::Music> pa::Sound::createMusic(const char* path, pa::FileStorage storage)
 {
-	auto music = createNativeMusic(*this, path);
+	auto music = createNativeMusic(*this, pa::FilePath(m_fileSystem, storage, path));
 	m_resourceManager.add(music);
 	return music;
 }

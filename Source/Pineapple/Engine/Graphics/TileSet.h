@@ -17,7 +17,7 @@ namespace pa
 	class TileSet : public Resource
 	{
 	public:
-		TileSet(int tileWidth, int tileHeight, const char* path);
+		TileSet(int tileWidth, int tileHeight, const FilePath& path);
 		~TileSet()
 		{
 		}

@@ -3,11 +3,10 @@
   This software is licensed under the Zlib license (see license.txt for details)
 ------------------------------------------------------------------------------*/
 
-#include <Pineapple/Engine/Platform/File.h>
 #include <Pineapple/Sound/FMOD/EffectFMOD.h>
 #include <Pineapple/Sound/FMOD/UtilFMOD.h>
 
-pa::EffectFMOD::EffectFMOD(FMOD::System* system, const char* path)
+pa::EffectFMOD::EffectFMOD(FMOD::System* system, const pa::FilePath& path)
 	: pa::Effect(path)
 	, m_system(system)
 	, m_sound(nullptr)
@@ -22,7 +21,7 @@ pa::EffectFMOD::~EffectFMOD()
 bool pa::EffectFMOD::onLoad()
 {
 	FMOD_RESULT result =
-		m_system->createSound((pa::File::getAssetsPath() + getPath()).c_str(), FMOD_DEFAULT, nullptr, &m_sound);
+		m_system->createSound(getPath().asString().c_str(), FMOD_DEFAULT, nullptr, &m_sound);
 	return pa::UtilFMOD::checkResult(result);
 }
 

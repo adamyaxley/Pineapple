@@ -4,7 +4,6 @@
 ------------------------------------------------------------------------------*/
 
 #include <Pineapple/Engine/Graphics/Graphics.h>
-#include <Pineapple/Engine/Platform/File.h>
 #include <Pineapple/Engine/Platform/Platform.h>
 #include <Pineapple/Engine/Sound/Sound.h>
 #include <Pineapple/Engine/Util/Macro.h>
@@ -129,12 +128,12 @@ pa::WindowsPlatform::WindowsPlatform(pa::WindowsArguments* arguments, const pa::
 	AdjustWindowRectEx(&WindowRect, m_dwStyle, FALSE, m_dwExStyle);
 
 #ifdef UNICODE
-	int bufferSize = MultiByteToWideChar(CP_UTF8, 0, settings.title, -1, nullptr, 0);
+	int bufferSize = MultiByteToWideChar(CP_UTF8, 0, settings.title.c_str(), -1, nullptr, 0);
 	LPWSTR translatedTitle = static_cast<LPWSTR>(pa::Memory::allocate(sizeof(wchar_t) * (bufferSize + 1)));
-	MultiByteToWideChar(CP_UTF8, 0, settings.title, -1, translatedTitle, bufferSize);
+	MultiByteToWideChar(CP_UTF8, 0, settings.title.c_str(), -1, translatedTitle, bufferSize);
 	translatedTitle[bufferSize] = L'\0';
 #else
-	const char* translatedTitle = settings.title;
+	const char* translatedTitle = settings.title.c_str();
 #endif
 
 	// Create the window
@@ -166,17 +165,17 @@ pa::WindowsPlatform::WindowsPlatform(pa::WindowsArguments* arguments, const pa::
 	srand((unsigned int)::time(0));
 	rand();
 
-	pa::File::init();
+	m_fileSystem = pa::MakeInternal::fileSystem(settings.fileSystem);
 
 	// Unique pointers
 	if (settings.graphics.use)
 	{
-		m_graphics = pa::MakeInternal::graphics(settings.graphics.size);
+		m_graphics = pa::MakeInternal::graphics(settings.graphics.size, *m_fileSystem.get());
 	}
 
 	if (settings.sound.use)
 	{
-		m_sound = pa::MakeInternal::sound();
+		m_sound = pa::MakeInternal::sound(*m_fileSystem.get());
 	}
 }
 
@@ -184,6 +183,7 @@ pa::WindowsPlatform::~WindowsPlatform()
 {
 	m_sound.reset();
 	m_graphics.reset();
+	m_fileSystem.reset();
 
 	// Free memory
 	wglMakeCurrent(m_hDC, NULL);

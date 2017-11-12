@@ -5,11 +5,10 @@
 
 #ifdef PA_OPENGLES2
 
-	#include <Pineapple/Engine/Platform/File.h>
 	#include <Pineapple/Engine/Platform/Platform.h>
 	#include <Pineapple/Graphics/OpenGL/ShaderGL.h>
 
-pa::ShaderGL::ShaderGL(const pa::ShaderType shaderType, const char* path)
+pa::ShaderGL::ShaderGL(const pa::ShaderType shaderType, const pa::FilePath& path)
 	: pa::Shader(shaderType, path)
 	, m_id(0)
 {
@@ -33,12 +32,14 @@ bool pa::ShaderGL::onLoad()
 	// Load from file into buff
 	std::string contents;
 	{
-		pa::File::Result result = pa::File::readString(getPath(), contents);
+		pa::FileBuffer fileBuffer;
+		pa::FileResult result = getPath().read(fileBuffer);
 
-		if (result != pa::File::Result::Success)
+		if (result != pa::FileResult::Success)
 		{
-			pa::Log::info("{}: {}", pa::File::getResultString(result), getPath());
+			pa::Log::info("{}: {}", pa::FileSystem::getResultString(result), getPath().asString());
 		}
+		contents = fileBuffer.createString();
 	}
 
 	const char* buffer = contents.c_str();

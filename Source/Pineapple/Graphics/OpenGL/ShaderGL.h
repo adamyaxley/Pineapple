@@ -13,7 +13,7 @@ namespace pa
 	class ShaderGL : public Shader
 	{
 	public:
-		ShaderGL(const ShaderType shaderType, const char* path);
+		ShaderGL(const ShaderType shaderType, const FilePath& path);
 		~ShaderGL();
 
 		virtual bool onLoad() override;

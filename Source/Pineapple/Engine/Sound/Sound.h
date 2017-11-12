@@ -16,7 +16,7 @@ namespace pa
 
 	namespace MakeInternal
 	{
-		std::unique_ptr<Sound> sound();
+		std::unique_ptr<Sound> sound(const FileSystem& fileSystem);
 	}
 
 	class Effect;
@@ -27,7 +27,7 @@ namespace pa
 	public:
 		using Handle = std::list<Music*>::const_iterator;
 
-		Sound() = default;
+		Sound(const FileSystem& fileSystem);
 		virtual ~Sound();
 
 		void pauseMusic();
@@ -41,8 +41,8 @@ namespace pa
 
 		ResourceManager& getResourceManager();
 
-		std::shared_ptr<Effect> createEffect(const char* path);
-		std::shared_ptr<Music> createMusic(const char* path);
+		std::shared_ptr<Effect> createEffect(const char* path, FileStorage storage = FileStorage::UserAsset);
+		std::shared_ptr<Music> createMusic(const char* path, FileStorage storage = FileStorage::UserAsset);
 
 		Handle registerMusic(Music* music);
 		void unregisterMusic(Handle handle);
@@ -52,8 +52,8 @@ namespace pa
 		}
 
 	private:
-		virtual std::shared_ptr<Effect> createNativeEffect(const char* path) = 0;
-		virtual std::shared_ptr<Music> createNativeMusic(Sound& sound, const char* path) = 0;
+		virtual std::shared_ptr<Effect> createNativeEffect(const FilePath& path) = 0;
+		virtual std::shared_ptr<Music> createNativeMusic(Sound& sound, const FilePath& path) = 0;
 
 		ResourceManager m_resourceManager;
 
@@ -61,5 +61,7 @@ namespace pa
 		bool m_effectEnabled = true;
 
 		std::list<Music*> m_musicList;
+
+		const FileSystem& m_fileSystem;
 	};
 }

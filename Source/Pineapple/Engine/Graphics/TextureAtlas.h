@@ -15,11 +15,11 @@ namespace pa
 	class TextureAtlas
 	{
 	public:
-		TextureAtlas(std::shared_ptr<Texture> texture);
+		TextureAtlas(std::shared_ptr<Texture> texture, const FilePath& path);
 		~TextureAtlas();
 
 		// Loads a JSON texture atlas file, returns true if successful
-		bool load(const char* atlasFilename);
+		bool load();
 
 		// Creates a new texture from the atlas, returns nullptr if the provided filename was not found
 		std::shared_ptr<Texture> createTexture(const char* filename);
@@ -30,5 +30,7 @@ namespace pa
 		std::unique_ptr<Document> m_document;
 
 		bool m_isLoaded;
+
+		const FilePath m_path;
 	};
 }

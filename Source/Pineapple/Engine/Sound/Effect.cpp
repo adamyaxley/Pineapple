@@ -5,7 +5,7 @@
 
 #include <Pineapple/Engine/Sound/Effect.h>
 
-pa::Effect::Effect(const char* path)
+pa::Effect::Effect(const pa::FilePath& path)
 	: pa::Resource(path)
 {
 }

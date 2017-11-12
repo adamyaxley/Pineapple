@@ -15,7 +15,7 @@ namespace pa
 	class TileSetGL : public TileSet
 	{
 	public:
-		TileSetGL(Graphics& graphics, int tileWidth, int tileHeight, const char* path);
+		TileSetGL(Graphics& graphics, int tileWidth, int tileHeight, const FilePath& path);
 		~TileSetGL();
 
 		virtual bool onLoad() override;

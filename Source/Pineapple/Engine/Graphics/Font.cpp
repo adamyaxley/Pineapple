@@ -5,7 +5,7 @@
 
 #include <Pineapple/Engine/Graphics/Font.h>
 
-pa::Font::Font(const char* path)
+pa::Font::Font(const pa::FilePath& path)
 	: pa::Resource(path)
 {
 }

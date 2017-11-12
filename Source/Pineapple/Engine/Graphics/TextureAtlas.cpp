@@ -5,7 +5,6 @@
 
 #include <Pineapple/Engine/Graphics/Texture.h>
 #include <Pineapple/Engine/Graphics/TextureAtlas.h>
-#include <Pineapple/Engine/Platform/File.h>
 #include <Pineapple/Engine/Platform/Platform.h>
 #include <rapidjson/document.h>
 #include <rapidjson/rapidjson.h>
@@ -15,9 +14,10 @@ struct pa::Document
 	rapidjson::Document json;
 };
 
-pa::TextureAtlas::TextureAtlas(std::shared_ptr<pa::Texture> texture)
+pa::TextureAtlas::TextureAtlas(std::shared_ptr<pa::Texture> texture, const pa::FilePath& path)
 	: m_texture(texture)
 	, m_isLoaded(false)
+	, m_path(path)
 {
 	m_document = std::make_unique<pa::Document>();
 }
@@ -26,14 +26,19 @@ pa::TextureAtlas::~TextureAtlas()
 {
 }
 
-bool pa::TextureAtlas::load(const char* atlasFilename)
+bool pa::TextureAtlas::load()
 {
 	std::string contents;
-	pa::File::Result result = pa::File::readString(atlasFilename, contents);
-
-	if (result != pa::File::Result::Success)
 	{
-		pa::Log::info("{}: {}", pa::File::getResultString(result), atlasFilename);
+		pa::FileBuffer buffer;
+		auto result = m_path.read(buffer);
+
+		if (result != pa::FileResult::Success)
+		{
+			pa::Log::info("{}: {}", pa::FileSystem::getResultString(result), m_path.asString());
+			return false;
+		}
+		contents = buffer.createString();
 	}
 
 	// Load json
@@ -41,7 +46,7 @@ bool pa::TextureAtlas::load(const char* atlasFilename)
 
 	if (m_document->json.HasParseError())
 	{
-		pa::Log::info("Failed to parse {}, error was: {}", atlasFilename, m_document->json.GetParseError());
+		pa::Log::info("Failed to parse {}, error was: {}", m_path.asString(), m_document->json.GetParseError());
 		m_isLoaded = false;
 	}
 	else
