@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+import sys
+
+if sys.version_info[0] != 3:
+    print("This script requires Python version 3.x")
+    sys.exit(1)
+
 import os
 import shutil
 import argparse
