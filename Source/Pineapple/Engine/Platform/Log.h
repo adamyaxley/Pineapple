@@ -5,7 +5,14 @@
 
 #pragma once
 
+#if defined(__clang__)
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wexpansion-to-defined"
+#endif
 #include <spdlog/fmt/fmt.h>
+#if defined(__clang__ )
+	#pragma clang diagnostic pop
+#endif
 
 namespace _paInternal
 {
