@@ -4,10 +4,12 @@ import argparse
 import common
 
 def main():
+    # Parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("--standardese-path", dest="standardesePath", action="store", help="The path to the standardese binary", required=True)
     args = parser.parse_args()
     
+    # Generate docs using CMake and Standardese
     buildDir = os.path.join(common.getRoot(), "_Temp", "Docs", "Engine")
     common.mkdir(buildDir)
     common.callBlockingWithOutput(["cmake", "-DGenerateDocs=ON", "-B" + buildDir, "-H" + common.getRoot(), "-DSTANDARDESE_TOOL=" + args.standardesePath])
@@ -16,12 +18,11 @@ def main():
     # Copy generated docs to Docs
     generatedDir = os.path.join(buildDir, "standardese_docs_engine")
     copyDir = os.path.join(common.getRoot(), "Docs", "Engine")
-    print("Copying generated docs from {} to {}".format(generatedDir, copyDir))
     common.mkdir(copyDir)
     docFiles = common.getFiles(generatedDir, ".md")
-    print(docFiles)
+    print("Generated Files")
     for file in docFiles:
-        print("Copying {} to {}".format(file, copyDir))
+        print("\t" + file)
         shutil.copy2(file, copyDir)
     
     print("Done!")
