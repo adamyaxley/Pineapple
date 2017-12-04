@@ -117,6 +117,23 @@ set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS
 
 include_directories(Source ${EXT_INCLUDE_DIRS})
 
+option(GenerateDocs "GenerateDocs" OFF)
+if (GenerateDocs)
+    get_property(DOC_INCLUDE_DIRS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+    file(
+        GLOB_RECURSE DOC_HEADER_FILES
+        LIST_DIRECTORIES false
+        "${PA_ROOT}/Source/Pineapple/Engine/*.h*"
+    )
+    set(STANDARDESE_TOOL C:/standardese/standardese.exe)
+    include(C:/standardese/standardese-config.cmake)
+    
+    standardese_generate(docs_engine
+                         --compilation.standard=c++14
+                         INCLUDE_DIRECTORY ${DOC_INCLUDE_DIRS}
+                         INPUT ${DOC_HEADER_FILES})
+endif()
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON) # To be able to sort projects into folders
 
 set_target_properties (gtest PROPERTIES FOLDER Test/gtest)

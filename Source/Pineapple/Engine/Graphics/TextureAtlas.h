@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <Pineapple/Engine/Platform/FileSystem.h>
 #include <memory>
 
 namespace pa
