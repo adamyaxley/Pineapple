@@ -125,7 +125,6 @@ if (GenerateDocs)
         LIST_DIRECTORIES false
         "${PA_ROOT}/Source/Pineapple/Engine/*.h*"
     )
-    set(STANDARDESE_TOOL C:/standardese/standardese.exe)
     include(C:/standardese/standardese-config.cmake)
     
     standardese_generate(docs_engine
