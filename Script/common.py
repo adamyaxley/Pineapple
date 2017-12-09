@@ -24,9 +24,14 @@ def mkdir(dir):
         if e.errno != errno.EEXIST:
             raise
 
-def callBlockingWithOutput(command):
-    with subprocess.Popen(command, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
-        for line in p.stdout:
-            print(line, end='')
-        p.communicate()
-        p.wait()
+def callBlocking(pipeOutput, command):
+    if pipeOutput:
+        with subprocess.Popen(command, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
+            for line in p.stdout:
+                print(line, end='')
+            p.communicate()
+            p.wait()
+    else:
+        with subprocess.Popen(command, stdout=subprocess.PIPE) as p:
+            p.communicate()
+            p.wait()
