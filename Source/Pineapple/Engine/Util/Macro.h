@@ -10,7 +10,9 @@
 #include <cstddef>
 
 // Optimization Hints
-#if defined(_MSC_VER)
+#if defined(__clang__ )
+	#define PA_FORCE_INLINE inline
+#elif defined(_MSC_VER)
 	#define PA_FORCE_INLINE __forceinline
 #elif defined(__GNUC__)
 	#define PA_FORCE_INLINE inline __attribute__((always_inline))

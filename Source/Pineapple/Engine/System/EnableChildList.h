@@ -2,6 +2,8 @@
 
 namespace pa
 {
+	class World;
+	
 	template <typename T>
 	class EnableChildList
 	{
