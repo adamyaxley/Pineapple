@@ -222,7 +222,7 @@
     
       - [Vect2](doc_Vect2.md#Vect2.h "pa::Vect2\<T\>")
     
-      - [World](doc_World.md#World.h "pa::World")
+      - [World](doc_World.md#pa::World "pa::World") - A World manages the lifetime and interaction of all objects that have been created inside it.
 
   - `pa::Asset`
     

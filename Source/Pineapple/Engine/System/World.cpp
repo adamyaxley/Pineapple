@@ -28,9 +28,6 @@ pa::World::~World()
 
 bool pa::World::step(Time deltaTime, const pa::Input& input)
 {
-	PA_ASSERTF(!m_flags.getBool(Flags::IsStepping), "The world is already stepping");
-	m_flags.set(Flags::IsStepping);
-
 	// Change screen
 	changeScene();
 
@@ -47,8 +44,6 @@ bool pa::World::step(Time deltaTime, const pa::Input& input)
 	// Add one tick
 	m_ticks++;
 
-	m_flags.clear(Flags::IsStepping);
-
 	// Has the game ended?
 	return m_flags.getBool(Flags::IsRunning);
 }
@@ -61,11 +56,6 @@ void pa::World::end()
 int pa::World::getTicks() const
 {
 	return m_ticks;
-}
-
-bool pa::World::isStepping() const
-{
-	return m_flags.getBool(Flags::IsStepping);
 }
 
 pa::Time pa::World::getTime() const
