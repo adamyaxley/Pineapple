@@ -17,6 +17,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
+if(MSVC)
+    add_definitions(-D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING)
+    add_compile_options("/MP")
+endif()
+
 if (GENERATE_TESTS)
     include(CTest)
 
@@ -54,10 +59,6 @@ endif()
 
 # Header only libs checked into Ext
 set(EXT_INCLUDE_DIRS ${PA_ROOT}/Ext)
-
-if(MSVC)
-    add_compile_options("/MP")
-endif()
 
 function(glob_source_files _SOURCES)
     get_filename_component(_src_root_path "." ABSOLUTE)
