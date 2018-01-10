@@ -75,7 +75,7 @@ A World manages the lifetime and interaction of all objects that have been creat
 
 <pre><code class="language-cpp">World();</code></pre>
 
-Basic constructor to create an fresh new World.
+Basic constructor to create a fresh new World.
 
 ### Constructor `pa::World::World`<a id="pa::World::World(std::shared_ptr-Platform-)"></a>
 

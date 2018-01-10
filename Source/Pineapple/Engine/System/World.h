@@ -27,7 +27,7 @@ namespace pa
 
 		friend ObjectStore;
 
-		/// \brief Basic constructor to create an fresh new World.
+		/// \brief Basic constructor to create a fresh new World.
 		World();
 
 		/// \brief Creates a World
