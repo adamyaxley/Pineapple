@@ -1,0 +1,22 @@
+version: 0.1.{build}
+
+branches:
+  only:
+    - master
+
+image: Visual Studio 2017
+
+install:
+  - ps: Start-FileDownload 'https://dl.dropboxusercontent.com/s/zrdqvkpjl2426cf/PineappleFMOD.7z'
+  - 7z x PineappleFMOD.7z -o"C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel"
+
+build_script:
+  - mkdir builddir
+  - cd builddir
+  - cmake .. -G "Visual Studio 15 2017 Win64"
+  - cmake --build . --config Debug
+  - cmake --build . --config Release
+
+test_script:
+  - ctest -C Debug
+  - ctest -C Release

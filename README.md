@@ -3,9 +3,9 @@
 
 Note: this software is ALPHA, it is not stable, it's API can and will change.
 
-|              | Win32                                                                           |
-|:------------:|:------------------------------------------------------------------------------: |
-| Build & Test | [![Build](https://ci.appveyor.com/api/projects/status/y9r29elqeg6hy7na?svg=true)](https://ci.appveyor.com/project/Adam19855/pineapple) |
+|              | Win64 | Win32 |
+|:------------:|:----: |:-----:|
+| Build & Test | [![Build](https://ci.appveyor.com/api/projects/status/77denkuux6smnk7j?svg=true)](https://ci.appveyor.com/project/Adam19855/pineapple-8gctu) | [![Build](https://ci.appveyor.com/api/projects/status/y9r29elqeg6hy7na?svg=true)](https://ci.appveyor.com/project/Adam19855/pineapple) |
 
 
 
