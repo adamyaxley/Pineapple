@@ -52,8 +52,8 @@ namespace pa
 		template <typename T, typename... Args>
 		Ptr<T> acquire(Args&&... args);
 
-		int getSize() const noexcept;
-		int getCapacity() const noexcept;
+		std::size_t getSize() const noexcept;
+		std::size_t getCapacity() const noexcept;
 
 	private:
 		template <typename T>

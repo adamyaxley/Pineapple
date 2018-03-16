@@ -32,7 +32,7 @@ void pa::ObjectInfo<T>::clearAllInstances()
 template <typename T>
 void pa::ObjectInfo<T>::clearDeadInstances()
 {
-	for (int i = m_instanceList.size() - 1; i >= 0; i--)
+	for (auto i = m_instanceList.size() - 1; i != std::numeric_limits<std::size_t>::max(); i--)
 	{
 		if (m_instanceList[i]->isDead())
 		{
@@ -41,7 +41,7 @@ void pa::ObjectInfo<T>::clearDeadInstances()
 		}
 	}
 
-	for (int i = m_childList.size() - 1; i >= 0; i--)
+	for (auto i = m_childList.size() - 1; i != std::numeric_limits<std::size_t>::max(); i--)
 	{
 		if (m_childList[i]->isDead())
 		{

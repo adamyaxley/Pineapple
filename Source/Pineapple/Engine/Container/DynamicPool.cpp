@@ -39,24 +39,24 @@ pa::DynamicPool::~DynamicPool()
 {
 }
 
-int pa::DynamicPool::getSize() const noexcept
+std::size_t pa::DynamicPool::getSize() const noexcept
 {
 	// use std::reduce() when C++17 comes out
-	return paStd::accumulate(m_pools.begin(), m_pools.end(), 0,
-							 [](int sum, const pa::Pool& pool) { return sum + pool.getSize(); });
+	return paStd::accumulate(m_pools.begin(), m_pools.end(), (std::size_t)0,
+							 [](std::size_t sum, const pa::Pool& pool) { return sum + pool.getSize(); });
 }
 
-int pa::DynamicPool::getCapacity() const noexcept
+std::size_t pa::DynamicPool::getCapacity() const noexcept
 {
-	return paStd::accumulate(m_pools.begin(), m_pools.end(), 0,
-							 [](int sum, const pa::Pool& pool) { return sum + pool.getCapacity(); });
+	return paStd::accumulate(m_pools.begin(), m_pools.end(), (std::size_t)0,
+							 [](std::size_t sum, const pa::Pool& pool) { return sum + pool.getCapacity(); });
 }
 
 void pa::DynamicPool::reserve(std::size_t size)
 {
-	int capacity = getCapacity();
+	auto capacity = getCapacity();
 
-	if (capacity < static_cast<int>(size))
+	if (capacity < size)
 	{
 		m_pools.emplace_back(m_maxObjectSize, size - capacity);
 		m_nextSize = size;

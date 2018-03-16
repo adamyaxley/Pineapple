@@ -20,12 +20,12 @@ pa::Pool::~Pool()
 	pa::Memory::deallocate(m_objects);
 }
 
-int pa::Pool::getSize() const noexcept
+std::size_t pa::Pool::getSize() const noexcept
 {
 	return m_indexBuffer.getSize();
 }
 
-int pa::Pool::getCapacity() const noexcept
+std::size_t pa::Pool::getCapacity() const noexcept
 {
 	return m_indexBuffer.getCapacity();
 }

@@ -7,7 +7,7 @@
 #include <Pineapple/Engine/Util/Macro.h>
 #include <string>
 
-void* pa::Memory::allocate(unsigned long size)
+void* pa::Memory::allocate(std::size_t size)
 {
 	void* addr = malloc(size);
 
@@ -22,7 +22,7 @@ void pa::Memory::deallocate(void* addr)
 	free(addr);
 }
 
-void* pa::Memory::reallocate(void* block, unsigned long size)
+void* pa::Memory::reallocate(void* block, std::size_t size)
 {
 	void* addr = realloc(block, size);
 	PA_ASSERTF(addr != nullptr, "Failed to reallocate memory to size: {} bytes", size);

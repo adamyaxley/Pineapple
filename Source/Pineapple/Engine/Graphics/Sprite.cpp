@@ -82,12 +82,12 @@ void pa::Sprite::setFrame(unsigned int frame)
 	m_currentFrame = frame % getNumberOfFrames();
 }
 
-unsigned int pa::Sprite::getFrame() const
+std::size_t pa::Sprite::getFrame() const
 {
 	return m_currentFrame;
 }
 
-unsigned int pa::Sprite::getNumberOfFrames() const
+std::size_t pa::Sprite::getNumberOfFrames() const
 {
 	return m_frames.size();
 }
