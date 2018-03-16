@@ -8,13 +8,13 @@ TEST(IndexBuffer, AcquireFromSingle)
 {
 	pa::IndexBuffer SUT(1);
 
-	int a = SUT.acquire();
+	auto a = SUT.acquire();
 	ASSERT_EQ(0, a);
 }
 
 TEST(IndexBuffer, AcquireFromMultiple)
 {
-	std::vector<int> result;
+	std::vector<std::size_t> result;
 	result.reserve(3);
 
 	pa::IndexBuffer SUT(3);
@@ -33,9 +33,9 @@ TEST(IndexBuffer, ReleaseSingle)
 {
 	pa::IndexBuffer SUT(1);
 
-	int a = SUT.acquire();
+	auto a = SUT.acquire();
 	SUT.release(a);
-	int b = SUT.acquire();
+	auto b = SUT.acquire();
 	ASSERT_EQ(a, b);
 }
 
@@ -44,16 +44,16 @@ TEST(IndexBuffer, ReleaseMultiple)
 	pa::IndexBuffer SUT(2);
 
 	// Acquire 2
-	int a = SUT.acquire();
-	int b = SUT.acquire();
+	auto a = SUT.acquire();
+	auto b = SUT.acquire();
 
 	// Release them back
 	SUT.release(b);
 	SUT.release(a);
 
 	// Reacquire them
-	int c = SUT.acquire();
-	int d = SUT.acquire();
+	auto c = SUT.acquire();
+	auto d = SUT.acquire();
 
 	ASSERT_TRUE((c == b && d == a) || (c == a && d == b));
 }
@@ -64,9 +64,9 @@ TEST(IndexBuffer, AcquireReleaseSome)
 
 	for (int i = 0; i < 100; i++)
 	{
-		int a = SUT.acquire();
-		int b = SUT.acquire();
-		int c = SUT.acquire();
+		auto a = SUT.acquire();
+		auto b = SUT.acquire();
+		auto c = SUT.acquire();
 
 		ASSERT_TRUE(a < 5 && a >= 0);
 		ASSERT_TRUE(b < 5 && b >= 0);
@@ -82,7 +82,7 @@ TEST(IndexBuffer, AcquireReleaseSome)
 
 TEST(IndexBuffer, Size)
 {
-	int capacities[] = {5, 10, 32};
+	std::size_t capacities[] = {5, 10, 32};
 
 	for (auto&& c : capacities)
 	{
@@ -90,13 +90,13 @@ TEST(IndexBuffer, Size)
 
 		ASSERT_EQ(c, SUT.getSize());
 
-		for (int i = c; i > 0; i--)
+		for (std::size_t i = c; i > 0; i--)
 		{
 			SUT.acquire();
 			ASSERT_EQ(i - 1, SUT.getSize());
 		}
 
-		for (int i = 0; i < c; i++)
+		for (std::size_t i = 0; i < c; i++)
 		{
 			SUT.release(i);
 			ASSERT_EQ(i + 1, SUT.getSize());
@@ -106,7 +106,7 @@ TEST(IndexBuffer, Size)
 
 TEST(IndexBuffer, Capacity)
 {
-	int capacities[] = {5, 10, 32, 120};
+	std::size_t capacities[] = {5, 10, 32, 120};
 
 	for (auto&& c : capacities)
 	{
@@ -120,14 +120,14 @@ TEST(IndexBuffer, Stress) // 584
 {
 	pa::IndexBuffer SUT(500);
 
-	for (int n = 0; n < 500000; n++)
+	for (std::size_t n = 0; n < 500000; n++)
 	{
-		for (int i = 0; i < 500; i++)
+		for (std::size_t i = 0; i < 500; i++)
 		{
 			SUT.acquire();
 		}
 
-		for (int i = 0; i < 500; i++)
+		for (std::size_t i = 0; i < 500; i++)
 		{
 			SUT.release(i);
 		}
