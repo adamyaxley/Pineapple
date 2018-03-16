@@ -90,21 +90,8 @@ int pa::Main(pa::Arguments* arguments)
 	auto spriteSheet = platform->getGraphics()->createTexture("creature.png");
 	spriteSheet->load();
 
-	// Specify the frames that we want
-	std::vector<std::shared_ptr<pa::Texture>> frames;
-	for (int i = 0; i < 12; i++)
-	{
-		const int frameWidth = 16;
-		const int frameHeight = 24;
-		const int x = i % 3;
-		const int y = i / 3;
-
-		auto frame = spriteSheet->createTexture(x * frameWidth, y * frameHeight, frameWidth, frameHeight);
-		frames.push_back(frame);
-	}
-
-	// Create a sprite from those frames
-	auto creatureSprite = platform->getGraphics()->createSprite(frames);
+	// Create an animated sprite from the loaded sprite sheet
+	auto creatureSprite = spriteSheet->createSprite({ 16, 24 });
 
 	// Create a simple background
 	auto tileSet = platform->getGraphics()->createTileSet("background.png", 32, 32);

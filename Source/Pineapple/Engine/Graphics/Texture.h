@@ -40,6 +40,12 @@ namespace pa
 
 		std::unique_ptr<Sprite> createSprite();
 
+		/// \brief Creates an animated sprite by splitting up the texture into a uniform grid of frames of equal
+		/// size. The frames are numbered from 0 to N from right to left, top to bottom.
+		/// \param frameSize The size of each frame.
+		/// \returns A std::shared_ptr to the created sprite.
+		std::unique_ptr<Sprite> createSprite(const Vect2<int>& frameSize);
+
 		virtual void render(const Sprite& sprite) = 0;
 
 		virtual std::shared_ptr<Texture> createTexture(int x, int y, int width, int height) = 0;

@@ -21,6 +21,23 @@ std::unique_ptr<pa::Sprite> pa::Texture::createSprite()
 	return std::make_unique<pa::Sprite>(m_renderSystem, frames, 0);
 }
 
+std::unique_ptr<pa::Sprite> pa::Texture::createSprite(const pa::Vect2<int>& frameSize)
+{
+	std::vector<std::shared_ptr<pa::Texture>> frames;
+	const pa::Vect2<int> frameCount{ getSize().x / frameSize.x, getSize().y / frameSize.y };
+
+	for (int y = 0; y < frameCount.y; y++)
+	{
+		for (int x = 0; x < frameCount.x; x++)
+		{
+			auto frame = createTexture(x * frameSize.x, y * frameSize.y, frameSize.x, frameSize.y);
+			frames.push_back(frame);
+		}
+	}
+
+	return std::make_unique<pa::Sprite>(m_renderSystem, frames, 0);
+}
+
 const pa::Vect2<int>& pa::Texture::getSize() const
 {
 	PA_ASSERTF(isLoaded(), "Texture is not loaded");
