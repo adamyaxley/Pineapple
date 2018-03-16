@@ -39,9 +39,9 @@ namespace pa
 		void setVisible(bool visible);
 		bool getVisible() const;
 
-		void setFrame(unsigned int frame);
-		unsigned int getFrame() const;
-		unsigned int getNumberOfFrames() const;
+		void setFrame(std::size_t frame);
+		std::size_t getFrame() const;
+		std::size_t getNumberOfFrames() const;
 
 		void setPlaybackEnabled(bool enabled);
 		bool getPlaybackEnabled() const;
@@ -69,7 +69,7 @@ namespace pa
 		Bitfield<Flags> m_flags;
 
 		// Current frame
-		unsigned int m_currentFrame;
+		std::size_t m_currentFrame;
 
 		// Frame list
 		const std::vector<std::shared_ptr<Texture>> m_frames;

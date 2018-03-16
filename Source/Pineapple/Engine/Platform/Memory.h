@@ -5,14 +5,16 @@
 
 #pragma once
 
+#include <cstddef>
+
 namespace pa
 {
 	namespace Memory
 	{
-		void* allocate(unsigned long size);
+		void* allocate(std::size_t size);
 
 		void deallocate(void*);
 
-		void* reallocate(void*, unsigned long size);
+		void* reallocate(void*, std::size_t size);
 	}
 }

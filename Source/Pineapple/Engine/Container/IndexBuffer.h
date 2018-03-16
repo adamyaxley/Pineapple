@@ -21,7 +21,7 @@ namespace pa
 		PA_FORCE_INLINE IndexBuffer(std::size_t capacity);
 
 		// Initialise a buffer of indexes ranging from startIndex to endIndex
-		PA_FORCE_INLINE IndexBuffer(const int startIndex, std::size_t capacity);
+		PA_FORCE_INLINE IndexBuffer(const std::size_t startIndex, const std::size_t capacity);
 
 		// Destructor
 		PA_FORCE_INLINE ~IndexBuffer();
@@ -30,26 +30,26 @@ namespace pa
 		PA_FORCE_INLINE bool empty() const;
 
 		// Gets the size of the buffer
-		PA_FORCE_INLINE int getSize() const noexcept;
+		PA_FORCE_INLINE std::size_t getSize() const noexcept;
 
 		// Gets the capacity of the buffer
-		PA_FORCE_INLINE int getCapacity() const noexcept;
+		PA_FORCE_INLINE std::size_t getCapacity() const noexcept;
 
 		// Acquire a free index
-		PA_FORCE_INLINE int acquire();
+		PA_FORCE_INLINE std::size_t acquire();
 
 		// Release a index back to the buffer
-		PA_FORCE_INLINE void release(int id);
+		PA_FORCE_INLINE void release(std::size_t id);
 
 	private:
 		// Buffer start pointer
-		int* m_buffer;
+		std::size_t* m_buffer;
 
 		// Size of the renaming buffer
-		int m_size;
+		std::size_t m_size;
 
 		// Total size of the buffers capacity
-		const int m_capacity;
+		const std::size_t m_capacity;
 	};
 }
 

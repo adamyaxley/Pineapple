@@ -77,17 +77,17 @@ bool pa::Sprite::getVisible() const
 	return !m_flags.getBool(Flags::Invisible);
 }
 
-void pa::Sprite::setFrame(unsigned int frame)
+void pa::Sprite::setFrame(std::size_t frame)
 {
 	m_currentFrame = frame % getNumberOfFrames();
 }
 
-unsigned int pa::Sprite::getFrame() const
+std::size_t pa::Sprite::getFrame() const
 {
 	return m_currentFrame;
 }
 
-unsigned int pa::Sprite::getNumberOfFrames() const
+std::size_t pa::Sprite::getNumberOfFrames() const
 {
 	return m_frames.size();
 }

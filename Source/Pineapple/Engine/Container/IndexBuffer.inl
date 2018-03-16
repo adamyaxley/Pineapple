@@ -10,11 +10,11 @@ PA_FORCE_INLINE pa::IndexBuffer::IndexBuffer(std::size_t capacity)
 {
 }
 
-PA_FORCE_INLINE pa::IndexBuffer::IndexBuffer(const int startIndex, std::size_t capacity)
+PA_FORCE_INLINE pa::IndexBuffer::IndexBuffer(const std::size_t startIndex, const std::size_t capacity)
 	: m_size(capacity)
 	, m_capacity(capacity)
 {
-	m_buffer = static_cast<int*>(pa::Memory::allocate(capacity * sizeof(int)));
+	m_buffer = static_cast<std::size_t*>(pa::Memory::allocate(capacity * sizeof(std::size_t)));
 
 	// Fill with indexes
 	for (std::size_t i = 0; i < capacity; i++)
@@ -36,18 +36,18 @@ PA_FORCE_INLINE bool pa::IndexBuffer::empty() const
 	return (m_size == 0);
 }
 
-PA_FORCE_INLINE int pa::IndexBuffer::acquire()
+PA_FORCE_INLINE std::size_t pa::IndexBuffer::acquire()
 {
 	PA_ASSERTF(!empty(), "The index buffer is empty");
 
 	--m_size;
 
-	int id = *(m_buffer + m_size);
+	std::size_t id = *(m_buffer + m_size);
 
 	return id;
 }
 
-PA_FORCE_INLINE void pa::IndexBuffer::release(const int id)
+PA_FORCE_INLINE void pa::IndexBuffer::release(const std::size_t id)
 {
 	PA_ASSERTF(m_size != getCapacity(), "Cannot release index into full buffer");
 	PA_ASSERTF(id < getCapacity() && id >= 0, "Cannot release an index ({}) outside of the range", id);
@@ -57,12 +57,12 @@ PA_FORCE_INLINE void pa::IndexBuffer::release(const int id)
 	++m_size;
 }
 
-PA_FORCE_INLINE int pa::IndexBuffer::getSize() const noexcept
+PA_FORCE_INLINE std::size_t pa::IndexBuffer::getSize() const noexcept
 {
 	return m_size;
 }
 
-PA_FORCE_INLINE int pa::IndexBuffer::getCapacity() const noexcept
+PA_FORCE_INLINE std::size_t pa::IndexBuffer::getCapacity() const noexcept
 {
 	return m_capacity;
 }

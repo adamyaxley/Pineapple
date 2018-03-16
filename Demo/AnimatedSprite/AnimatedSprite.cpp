@@ -26,8 +26,8 @@ struct Creature : public pa::Object, public pa::InputHandler
 
 	void onStep(pa::Time delta) override
 	{
-		const unsigned int standingIndexes[] = {1, 4, 7};
-		const unsigned int walkingIndexes[3][4] = {{0, 1, 2, 1}, {3, 4, 5, 4}, {6, 7, 8, 7}};
+		const std::size_t standingIndexes[] = {1, 4, 7};
+		const std::size_t walkingIndexes[3][4] = {{0, 1, 2, 1}, {3, 4, 5, 4}, {6, 7, 8, 7}};
 
 		bool standing = false;
 
@@ -73,8 +73,8 @@ struct Creature : public pa::Object, public pa::InputHandler
 
 	std::unique_ptr<pa::Sprite> m_sprite;
 	pa::Vect2<int> m_increment{0, 0};
-	int m_walkingIndex{1};
-	int m_walkingSteps{0};
+	std::size_t m_walkingIndex{1};
+	std::size_t m_walkingSteps{0};
 	bool m_horizontalFlip{false};
 };
 

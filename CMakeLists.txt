@@ -188,7 +188,7 @@ if (GENERATE_TESTS)
 endif()
 
 # Demos
-if (GENERATE_DOCS)
+if (GENERATE_DEMOS)
     add_subdirectory(Demo/AnimatedSprite)
     add_subdirectory(Demo/SpaceRocks)
     add_subdirectory(Demo/HelloWorld)

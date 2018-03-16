@@ -24,8 +24,8 @@ namespace pa
 		template <typename T, typename... Args>
 		typename Pool::Ptr<T> acquire(Args&&... args);
 
-		int getSize() const noexcept;
-		int getCapacity() const noexcept;
+		std::size_t getSize() const noexcept;
+		std::size_t getCapacity() const noexcept;
 
 		void reserve(std::size_t size);
 
@@ -34,8 +34,8 @@ namespace pa
 
 		std::list<Pool> m_pools;
 
-		const int m_maxObjectSize;
-		int m_nextSize;
+		const std::size_t m_maxObjectSize;
+		std::size_t m_nextSize;
 	};
 }
 

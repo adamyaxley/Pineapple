@@ -29,7 +29,7 @@ pa::Pool::Ptr<T> pa::Pool::acquire(Args&&... args)
 	PA_ASSERTF(!m_indexBuffer.empty(), "Overallocation");
 
 	// Get unused object
-	int index = m_indexBuffer.acquire();
+	auto index = m_indexBuffer.acquire();
 	T* object = reinterpret_cast<T*>(&m_objects[index * m_maxObjectSize]);
 
 	// Construct object in place
@@ -51,7 +51,7 @@ void pa::Pool::release(T* object)
 			   "Address released is not from this pool");
 
 	// Get index of object
-	int index = (objectAddress - &m_objects[0]) / m_maxObjectSize;
+	auto index = (objectAddress - &m_objects[0]) / m_maxObjectSize;
 
 	// Call destructor
 	object->~T();

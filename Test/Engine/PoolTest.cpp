@@ -82,11 +82,12 @@ TEST(Pool, IntNew)
 
 TEST(Pool, IntPool)
 {
-	constexpr int size = 100000;
+	constexpr int size = 10000;
 
 	pa::Pool pool(sizeof(int), size);
 	pa::Pool::Ptr<int> ints[size];
 
+	ints[0] = pool.acquire<int>();
 	for (int i = 0; i < size; i++)
 	{
 		ints[i] = pool.acquire<int>();
@@ -112,7 +113,7 @@ TEST(Pool, PODNew)
 
 TEST(Pool, PODPool)
 {
-	constexpr int size = 100000;
+	constexpr int size = 10000;
 
 	pa::Pool pool(sizeof(POD), size);
 	pa::Pool::Ptr<POD> pods[size];
@@ -138,7 +139,7 @@ TEST(Pool, ConstructorIsCalled)
 
 TEST(Pool, IntDynamicPool)
 {
-	constexpr int size = 100000;
+	constexpr int size = 10000;
 
 	pa::DynamicPool pool(sizeof(int), 128);
 	pa::Pool::Ptr<int> ints[size];
