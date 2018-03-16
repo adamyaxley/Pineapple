@@ -12,6 +12,7 @@ Note: this software is ALPHA, it is not stable, it's API can and will change.
 ## Goals
 The following are the primary goals for this project:
 * Cross-Platform
+* Realtime Resource Modification
 * Modern C++
 * Intuitive and Concise API
 * Minimal Dependencies
@@ -72,6 +73,11 @@ mkdir builddir
 cd builddir
 cmake ..
 ```
+You can give a specific generator to cmake using the -G flag. The following generators are supported:
+* Win32 - "Visual Studio 15 2017"
+* Win64 - "Visual Studio 15 2017 Win64"
+* Unix - Use the default (not actively tested)
+
 Then open the generated Pineapple.sln file and hit build.
 
 Note: To run the tests within Visual Studio you will need to install the [Google Test Adapter](https://github.com/csoltenborn/GoogleTestAdapter), which can be installed via Tools -> Extensions and Updates. For Visual Studio 2017 there is an official [Test Adapter for Google Test](https://marketplace.visualstudio.com/items?itemName=VisualCPPTeam.TestAdapterforGoogleTest) that is maintained by the Visual C++ Team.
