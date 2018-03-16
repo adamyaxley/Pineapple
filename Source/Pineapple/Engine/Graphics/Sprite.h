@@ -39,7 +39,7 @@ namespace pa
 		void setVisible(bool visible);
 		bool getVisible() const;
 
-		void setFrame(unsigned int frame);
+		void setFrame(std::size_t frame);
 		std::size_t getFrame() const;
 		std::size_t getNumberOfFrames() const;
 
