@@ -214,9 +214,9 @@ void pa::MapGL::createVertexBuffer()
 
 		// Simple texture draw
 		m_vertexBuffer.addVertex(0, 0, 0, 0);
-		m_vertexBuffer.addVertex(0, getSize().y, 0, 1);
-		m_vertexBuffer.addVertex(getSize().x, 0, 1, 0);
-		m_vertexBuffer.addVertex(getSize().x, getSize().y, 1, 1);
+		m_vertexBuffer.addVertex(0, (GLfloat)getSize().y, 0, 1);
+		m_vertexBuffer.addVertex((GLfloat)getSize().x, 0, 1, 0);
+		m_vertexBuffer.addVertex((GLfloat)getSize().x, (GLfloat)getSize().y, 1, 1);
 	}
 	else
 	{

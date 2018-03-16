@@ -34,7 +34,7 @@ bool pa::FontGL::onLoad()
 		return false;
 	}
 	m_buffer = std::move(buffer.getBuffer());
-	m_fonsFont = fonsAddFontMem(m_fonsContext, getPath().asString().c_str(), m_buffer.get(), buffer.getSize(), 0 /*do not free the data*/);
+	m_fonsFont = fonsAddFontMem(m_fonsContext, getPath().asString().c_str(), m_buffer.get(), static_cast<int>(buffer.getSize()), 0 /*do not free the data*/);
 	pa::Log::info("Loaded Font: {}", getPath().asString());
 	return true;
 }
