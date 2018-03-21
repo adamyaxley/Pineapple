@@ -86,7 +86,7 @@ std::shared_ptr<pa::Texture> pa::TextureAtlas::createTexture(const char* filenam
 							int w = frame["w"].GetInt();
 							int h = frame["h"].GetInt();
 
-							return m_texture->createTexture(x, y, w, h);
+							return m_texture->createTexture({ x, y }, { w, h });
 						}
 					}
 				}

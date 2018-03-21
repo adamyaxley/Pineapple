@@ -5,13 +5,12 @@
 
 #include <Pineapple/Graphics/OpenGL/TextureSubGL.h>
 
-pa::TextureSubGL::TextureSubGL(pa::Graphics& graphics, pa::TextureGL& texture, int x1, int y1, int x2, int y2)
+pa::TextureSubGL::TextureSubGL(pa::Graphics& graphics, pa::TextureGL& texture, const Vect2<int>& from, const Vect2<int>& to)
 	: pa::TextureGL(graphics, texture.getPath())
 	, m_texture(texture)
-	, m_rect(x1, y1, x2, y2)
+	, m_rect(from.x, from.y, to.x, to.y)
 {
-	pa::Vect2<int> size(x2 - x1, y2 - y1);
-	setSize(size);
+	setSize(to - from);
 
 	if (m_texture.isLoaded())
 	{

@@ -19,9 +19,9 @@ pa::TextureGL::~TextureGL()
 {
 }
 
-std::shared_ptr<pa::Texture> pa::TextureGL::createTexture(int x, int y, int width, int height)
+std::shared_ptr<pa::Texture> pa::TextureGL::createTexture(const Vect2<int>& pos, const Vect2<int>& size)
 {
-	auto texture = std::make_shared<pa::TextureSubGL>(m_graphics, *this, x, y, x + width, y + height);
+	auto texture = std::make_shared<pa::TextureSubGL>(m_graphics, *this, pos, pos + size);
 	auto ptr = texture.get();
 	addChildDependency(ptr);
 	m_subTextures.push_back(texture);

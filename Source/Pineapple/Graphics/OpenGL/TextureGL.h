@@ -19,7 +19,7 @@ namespace pa
 		TextureGL(Graphics& graphics, const FilePath& path);
 		~TextureGL();
 
-		virtual std::shared_ptr<Texture> createTexture(int x, int y, int width, int height) override;
+		virtual std::shared_ptr<Texture> createTexture(const Vect2<int>& pos, const Vect2<int>& size) override;
 
 		void render(const Sprite& sprite);
 

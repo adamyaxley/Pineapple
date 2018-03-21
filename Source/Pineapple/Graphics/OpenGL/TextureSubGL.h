@@ -13,7 +13,7 @@ namespace pa
 	class TextureSubGL : public TextureGL
 	{
 	public:
-		TextureSubGL(Graphics& graphics, TextureGL& texture, int x1, int y1, int x2, int y2);
+		TextureSubGL(Graphics& graphics, TextureGL& texture, const Vect2<int>& from, const Vect2<int>& to);
 		~TextureSubGL();
 
 		virtual bool onLoad() override;

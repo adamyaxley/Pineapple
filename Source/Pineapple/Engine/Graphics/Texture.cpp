@@ -30,7 +30,7 @@ std::unique_ptr<pa::Sprite> pa::Texture::createSprite(const pa::Vect2<int>& fram
 	{
 		for (int x = 0; x < frameCount.x; x++)
 		{
-			auto frame = createTexture(x * frameSize.x, y * frameSize.y, frameSize.x, frameSize.y);
+			auto frame = createTexture({ x * frameSize.x, y * frameSize.y }, { frameSize.x, frameSize.y });
 			frames.push_back(frame);
 		}
 	}
