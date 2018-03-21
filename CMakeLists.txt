@@ -46,6 +46,7 @@ if (GENERATE_TESTS)
 endif()
 
 get_filename_component(PA_ROOT "." ABSOLUTE)
+set(PA_ROOT ${PA_ROOT} PARENT_SCOPE)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Build/CMake")
 
@@ -56,9 +57,6 @@ if (GENERATE_PLUGINS)
         find_package(X11 REQUIRED)
     endif()
 endif()
-
-# Header only libs checked into Ext
-set(EXT_INCLUDE_DIRS ${PA_ROOT}/Ext)
 
 function(glob_source_files _SOURCES)
     get_filename_component(_src_root_path "." ABSOLUTE)
@@ -85,6 +83,8 @@ endfunction()
 
 function(add_pineapple_app _TARGET _SOURCES)
     set( _SOURCES_LIST ${_SOURCES} ${ARGN} )
+    
+    include_directories(${PA_ROOT}/Source ${PA_ROOT}/Ext)
 
     if(WIN32)
         add_executable(${_TARGET} WIN32 ${_SOURCES_LIST})
@@ -121,7 +121,7 @@ set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS
     $<$<CONFIG:Debug>:PA_DEBUG>
 )
 
-include_directories(Source ${EXT_INCLUDE_DIRS})
+include_directories(Source Ext)
 
 if (GENERATE_DOCS)
     get_property(DOC_INCLUDE_DIRS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
