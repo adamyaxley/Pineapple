@@ -83,7 +83,7 @@ int pa::Main(pa::Arguments* arguments)
 	// Start up platform
 	pa::PlatformSettings settings;
 	settings.title = "Animated Sprite";
-	settings.graphics.size.cart(640, 480);
+	settings.graphics.size.set(640, 480);
 	auto platform = pa::Make::platform(arguments, settings);
 
 	// Load our sprite sheet

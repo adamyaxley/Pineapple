@@ -34,7 +34,7 @@
 #define PA_FORMAT_VECTOR_SET_ELEMENTS(type, name, variable) \
 	void set##name(type x, type y)                          \
 	{                                                       \
-		variable.cart(x, y);                                \
+		variable.set(x, y);                                \
 	}
 
 #define PA_FORMAT_VECTOR_SET_ALL(type, name, variable) \

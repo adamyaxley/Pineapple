@@ -36,7 +36,7 @@ namespace pa
 		}
 
 		// Cartesian set
-		void cart(const T& x, const T& y)
+		void set(const T& x, const T& y)
 		{
 			this->x = x;
 			this->y = y;

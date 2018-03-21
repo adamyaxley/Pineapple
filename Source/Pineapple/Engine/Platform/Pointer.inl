@@ -18,7 +18,7 @@ PA_FORCE_INLINE const pa::Vect2<int>& pa::Pointer::getPosition() const
 
 PA_FORCE_INLINE void pa::Pointer::setPosition(int x, int y)
 {
-	m_position.cart(x, y);
+	m_position.set(x, y);
 }
 
 PA_FORCE_INLINE bool pa::Pointer::getDown() const

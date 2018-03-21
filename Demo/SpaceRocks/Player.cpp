@@ -10,7 +10,7 @@ Respawn::Respawn(pa::World& world)
 
 void Respawn::onCreate()
 {
-	aabb.getSize().cart(100, 100);
+	aabb.getSize().set(100, 100);
 	aabb.getPosition() = getWorld().getPlatform()->getGraphics()->getSize() - aabb.getSize() / 2.f;
 	startTimer(pa::Time(2.0f),
 			   [this] {
@@ -18,7 +18,7 @@ void Respawn::onCreate()
 				   {
 					   if (!rock->getAABB().calculateSweptAABB().intersects(aabb))
 					   {
-						   getWorld().create<Player>()->getPosition().cart(320, 320);
+						   getWorld().create<Player>()->getPosition().set(320, 320);
 						   g_resource.respawn->play();
 						   destroy();
 						   break;
@@ -40,7 +40,7 @@ void Player::onCreate()
 	canShoot = true;
 	setSprite(g_resource.ship->createSprite());
 	getSprite()->setRotation(270);
-	getAABB().getSize().cart(28, 28);
+	getAABB().getSize().set(28, 28);
 }
 
 void Player::onKeyDown(pa::Key key)

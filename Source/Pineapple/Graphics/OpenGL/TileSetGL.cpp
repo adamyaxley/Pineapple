@@ -38,7 +38,7 @@ bool pa::TileSetGL::onLoad()
 			pa::Vect2<int> size(image.getSize().x, image.getSize().y);
 			setSize(size);
 
-			m_utilisedSize.cart((double)(size.x - (size.x % getTileSize().x)) / size.x,
+			m_utilisedSize.set((double)(size.x - (size.x % getTileSize().x)) / size.x,
 								(double)(size.y - (size.y % getTileSize().y)) / size.y);
 
 			pa::Log::info("Loaded TileSet: {}", getPath().asString());

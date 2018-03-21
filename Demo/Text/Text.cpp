@@ -51,7 +51,7 @@ int pa::Main(pa::Arguments* arguments)
 	// Start up platform
 	pa::PlatformSettings settings;
 	settings.title = "Pineapple - Text";
-	settings.graphics.size.cart(800, 480);
+	settings.graphics.size.set(800, 480);
 	settings.sound.use = false;
 
 	auto platform = pa::Make::platform(arguments, settings);

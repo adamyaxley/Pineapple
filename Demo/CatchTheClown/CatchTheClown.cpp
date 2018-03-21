@@ -96,7 +96,7 @@ struct Level : public pa::Object, public pa::InputHandler
 			if ((m_clown->getPosition() - getWorld().getPlatform()->getPointer().getPosition()).length() < 16)
 			{
 				m_clown->getPosition() = getWorld().getPlatform()->getGraphics()->getSize() / 2.f;
-				m_clown->getVelocity().cart(0, 0);
+				m_clown->getVelocity().set(0, 0);
 			}
 		}
 	}
@@ -112,7 +112,7 @@ int pa::Main(pa::Arguments* arguments)
 	// Start up platform
 	pa::PlatformSettings settings;
 	settings.title = "Catch The Clown";
-	settings.graphics.size.cart(640, 480);
+	settings.graphics.size.set(640, 480);
 	auto platform = pa::Make::platform(arguments, settings);
 
 	// Initialise the world

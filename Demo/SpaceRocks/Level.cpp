@@ -12,11 +12,11 @@ Level::Level(pa::World& world)
 
 void Level::onCreate()
 {
-	getWorld().create<Player>()->getPosition().cart(320, 320);
-	getWorld().create<Rock>()->getPosition().cart(64, 64);
-	getWorld().create<Rock>()->getPosition().cart(570, 64);
-	getWorld().create<Rock>()->getPosition().cart(570, 570);
-	getWorld().create<Rock>()->getPosition().cart(64, 570);
+	getWorld().create<Player>()->getPosition().set(320, 320);
+	getWorld().create<Rock>()->getPosition().set(64, 64);
+	getWorld().create<Rock>()->getPosition().set(570, 64);
+	getWorld().create<Rock>()->getPosition().set(570, 570);
+	getWorld().create<Rock>()->getPosition().set(64, 570);
 }
 
 void Level::onStep(pa::Time deltaTime)

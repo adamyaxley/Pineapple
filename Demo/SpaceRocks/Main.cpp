@@ -8,7 +8,7 @@ int pa::Main(pa::Arguments* arguments)
 	// Start up platform
 	pa::PlatformSettings settings;
 	settings.title = "Asteroids";
-	settings.graphics.size.cart(640, 640);
+	settings.graphics.size.set(640, 640);
 
 	auto platform = pa::Make::platform(arguments, settings);
 

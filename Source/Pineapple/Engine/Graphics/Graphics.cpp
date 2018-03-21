@@ -56,7 +56,7 @@ void pa::Graphics::resize(pa::Graphics::ResizeMode mode, const pa::Vect2<int>& p
 		{
 			pa::Vect2<float> viewportPos;
 
-			projectionPosition.cart(0, 0);
+			projectionPosition.set(0, 0);
 			projectionSize = u;
 
 			// Fit - resize so that the whole view fits in the screen, while keeping the aspect ratio
@@ -78,7 +78,7 @@ void pa::Graphics::resize(pa::Graphics::ResizeMode mode, const pa::Vect2<int>& p
 	else if (ResizeMode::Stretch == mode)
 	{
 		projectionSize = u;
-		projectionPosition.cart(0, 0);
+		projectionPosition.set(0, 0);
 		setViewport(0, 0, (int)p.x, (int)p.y);
 	}
 	else
