@@ -112,12 +112,13 @@ pa::Sprite::PlaybackMode pa::Sprite::getPlaybackMode() const
 	return m_flags.get(Flags::BackwardPlayback) ? PlaybackMode::Backward : PlaybackMode::Forward;
 }
 
-void pa::Sprite::pin(const pa::Sprite* sprite, pa::Vect2<float>& offset)
+void pa::Sprite::pin(const pa::Sprite& sprite, const pa::Vect2<float>& offset)
 {
-	offset.scale(sprite->getScaleConst());
-	offset.rotate(sprite->getRotation());
-	offset += sprite->getPositionConst();
-	setPosition(offset);
+	auto transformedOffset = offset;
+	transformedOffset.scale(sprite.getScaleConst());
+	transformedOffset.rotate(sprite.getRotation());
+	transformedOffset += sprite.getPositionConst();
+	setPosition(transformedOffset);
 }
 
 void pa::Sprite::render()

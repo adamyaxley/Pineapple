@@ -50,7 +50,7 @@ namespace pa
 		PlaybackMode getPlaybackMode() const;
 
 		// Pin this sprite on another sprite with the offset
-		void pin(const Sprite* sprite, Vect2<float>& offset);
+		void pin(const Sprite& sprite, const Vect2<float>& offset);
 
 		virtual void render() override;
 
