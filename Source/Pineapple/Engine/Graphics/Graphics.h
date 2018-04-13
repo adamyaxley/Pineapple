@@ -21,7 +21,7 @@ namespace pa
 
 	namespace MakeInternal
 	{
-		std::unique_ptr<Graphics> graphics(const Vect2<int>& size, const FileSystem& fileSystem);
+		std::unique_ptr<Graphics> graphics(const PlatformSettings::Graphics& settings, const FileSystem& fileSystem);
 	}
 
 	class Graphics
@@ -35,7 +35,7 @@ namespace pa
 		};
 
 		// Graphics engine start up and shut down
-		Graphics(const Vect2<int>& size, const FileSystem& fileSystem);
+		Graphics(const pa::PlatformSettings::Graphics& settings, const FileSystem& fileSystem);
 		virtual ~Graphics();
 
 		// Get size
@@ -77,7 +77,7 @@ namespace pa
 	protected:
 		Vect2<int> m_projectionPosition;
 		Vect2<int> m_size;
-		const Vect2<int> m_settingSize;
+		const PlatformSettings::Graphics m_settings;
 
 		ResourceManager m_resourceManager;
 

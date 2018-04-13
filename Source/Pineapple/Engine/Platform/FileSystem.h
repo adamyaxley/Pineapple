@@ -9,7 +9,7 @@ namespace pa
 
 	namespace MakeInternal
 	{
-		std::unique_ptr<FileSystem> fileSystem(PlatformSettings::FileSystem settings);
+		std::unique_ptr<FileSystem> fileSystem(const PlatformSettings::FileSystem& settings);
 	}
 
 	enum class FileStorage

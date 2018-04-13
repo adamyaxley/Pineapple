@@ -21,7 +21,7 @@ pa::X11Platform::X11Platform(pa::Arguments* arguments, const PlatformSettings& s
 	: pa::Platform(settings)
 	, m_dpy(nullptr)
 {
-	m_size = settings.graphics.size;
+	m_size = settings.graphics.size * settings.graphics.zoom;
 
 	Window root;
 	XSetWindowAttributes swa;
@@ -66,12 +66,12 @@ pa::X11Platform::X11Platform(pa::Arguments* arguments, const PlatformSettings& s
 	// Unique pointers
 	if (settings.graphics.use)
 	{
-		m_graphics = pa::MakeInternal::graphics(settings.graphics.size);
+		m_graphics = pa::MakeInternal::graphics(settings.graphics, *m_fileSystem.get());
 	}
 
 	if (settings.sound.use)
 	{
-		m_sound = pa::MakeInternal::sound();
+		m_sound = pa::MakeInternal::sound(*m_fileSystem.get());
 	}
 }
 

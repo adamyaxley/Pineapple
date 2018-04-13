@@ -7,13 +7,12 @@ struct Creature : public pa::Object, public pa::InputHandler
 		, pa::InputHandler(world)
 		, m_sprite(std::move(sprite))
 	{
-		m_sprite->setPosition({320, 240});
-		m_sprite->setScale(5.f);
+		m_sprite->setPosition({64, 48});
 	}
 
 	void onKeyDown(pa::Key key) override
 	{
-		const int speed = 3;
+		const int speed = 1;
 
 		switch (key)
 		{
@@ -83,7 +82,8 @@ int pa::Main(pa::Arguments* arguments)
 	// Start up platform
 	pa::PlatformSettings settings;
 	settings.title = "Animated Sprite";
-	settings.graphics.size.set(640, 480);
+	settings.graphics.size.set(128, 96);
+	settings.graphics.zoom = 5.f;
 	auto platform = pa::Make::platform(arguments, settings);
 
 	// Load our sprite sheet

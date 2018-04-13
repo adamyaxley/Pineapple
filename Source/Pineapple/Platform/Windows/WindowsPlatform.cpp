@@ -88,7 +88,7 @@ pa::WindowsPlatform::WindowsPlatform(pa::WindowsArguments* arguments, const pa::
 	, m_hWND(nullptr)
 	, m_hRC(nullptr)
 {
-	m_size = settings.graphics.size;
+	m_size = settings.graphics.size * settings.graphics.zoom;
 
 	WNDCLASSEX windowClass;
 
@@ -170,7 +170,7 @@ pa::WindowsPlatform::WindowsPlatform(pa::WindowsArguments* arguments, const pa::
 	// Unique pointers
 	if (settings.graphics.use)
 	{
-		m_graphics = pa::MakeInternal::graphics(settings.graphics.size, *m_fileSystem.get());
+		m_graphics = pa::MakeInternal::graphics(settings.graphics, *m_fileSystem.get());
 	}
 
 	if (settings.sound.use)
@@ -259,7 +259,7 @@ void pa::WindowsPlatform::setFullScreen(bool fullscreen)
 		if (m_savedWindowInfo.maximized)
 			::SendMessage(m_hWND, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 
-		m_size = m_settings.graphics.size;
+		m_size = m_settings.graphics.size * m_settings.graphics.zoom;
 	}
 }
 

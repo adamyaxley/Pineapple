@@ -30,9 +30,9 @@ namespace
 #define GLFONTSTASH_IMPLEMENTATION
 #include <gl3fontstash.h>
 
-std::unique_ptr<pa::Graphics> pa::MakeInternal::graphics(const pa::Vect2<int>& size, const pa::FileSystem& fileSystem)
+std::unique_ptr<pa::Graphics> pa::MakeInternal::graphics(const pa::PlatformSettings::Graphics& settings, const pa::FileSystem& fileSystem)
 {
-	return std::make_unique<pa::GraphicsGL>(size, fileSystem);
+	return std::make_unique<pa::GraphicsGL>(settings, fileSystem);
 }
 
 namespace
@@ -90,8 +90,8 @@ namespace
 	}
 }
 
-pa::GraphicsGL::GraphicsGL(const pa::Vect2<int>& size, const pa::FileSystem& fileSystem)
-	: pa::Graphics(size, fileSystem)
+pa::GraphicsGL::GraphicsGL(const pa::PlatformSettings::Graphics& settings, const pa::FileSystem& fileSystem)
+	: pa::Graphics(settings, fileSystem)
 {
 	pa::Log::info("Starting up graphics size: {} * {}", m_size.x, m_size.y);
 
@@ -112,7 +112,7 @@ pa::GraphicsGL::GraphicsGL(const pa::Vect2<int>& size, const pa::FileSystem& fil
 
 	glShadeModel(GL_SMOOTH);
 	glClearColor((GLclampf)0.0, (GLclampf)0.0, (GLclampf)0.0, (GLclampf)1.0);
-	setViewport(0, 0, m_size.x, m_size.y);
+	setViewport(0, 0, settings.size.x * settings.zoom, settings.size.y * settings.zoom);
 	PA_GL_CHECK_ERROR();
 
 	m_fonsContext = gl3fonsCreate(128, 128, FONS_ZERO_TOPLEFT);

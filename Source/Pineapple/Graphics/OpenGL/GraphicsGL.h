@@ -15,7 +15,7 @@ namespace pa
 	class GraphicsGL : public Graphics
 	{
 	public:
-		GraphicsGL(const Vect2<int>& size, const FileSystem& fileSystem);
+		GraphicsGL(const PlatformSettings::Graphics& settings, const FileSystem& fileSystem);
 		virtual ~GraphicsGL();
 
 		// Resource loading

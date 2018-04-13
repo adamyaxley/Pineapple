@@ -7,9 +7,9 @@
 #include <Pineapple/Engine/Graphics/Map.h>
 #include <Pineapple/Engine/Graphics/Sprite.h>
 
-pa::Graphics::Graphics(const pa::Vect2<int>& size, const pa::FileSystem& fileSystem)
-	: m_size(size)
-	, m_settingSize(size)
+pa::Graphics::Graphics(const pa::PlatformSettings::Graphics& settings, const pa::FileSystem& fileSystem)
+	: m_size(settings.size)
+	, m_settings(settings)
 	, m_fileSystem(fileSystem)
 {
 }
@@ -21,7 +21,7 @@ pa::Graphics::~Graphics()
 void pa::Graphics::resize(pa::Graphics::ResizeMode mode, const pa::Vect2<int>& platformSize)
 {
 	const pa::Vect2<float> p = platformSize;
-	const pa::Vect2<float> u = m_settingSize;
+	const pa::Vect2<float> u = m_settings.size;
 
 	pa::Vect2<float> projectionSize;
 	pa::Vect2<float> projectionPosition;

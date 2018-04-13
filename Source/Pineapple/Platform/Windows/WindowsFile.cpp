@@ -5,7 +5,7 @@
 
 #include <Pineapple/Engine/Platform/FileSystem.h>
 
-std::unique_ptr<pa::FileSystem> pa::MakeInternal::fileSystem(pa::PlatformSettings::FileSystem settings)
+std::unique_ptr<pa::FileSystem> pa::MakeInternal::fileSystem(const pa::PlatformSettings::FileSystem& settings)
 {
 	// The default file system works for Windows platforms
 	return std::make_unique<pa::FileSystem>(settings);
