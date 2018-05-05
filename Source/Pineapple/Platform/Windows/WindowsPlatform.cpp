@@ -42,7 +42,7 @@ namespace
 
 		if (wglSwapIntervalEXT)
 		{
-			wglSwapIntervalEXT(sync ? 1 : 0);
+			wglSwapIntervalEXT(sync ? -1 /* adaptive VSync */: 0 /* no VSync */);
 		}
 	}
 
