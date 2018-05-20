@@ -12,6 +12,13 @@ namespace pa
 	class Dependency
 	{
 	public:
+		Dependency() = default;
+		~Dependency() = default;
+		Dependency(const Dependency& copy) = delete;
+		Dependency(Dependency&& move) = delete;
+		Dependency& operator=(const Dependency& assignment) = delete;
+		Dependency& operator=(Dependency&& assignment) = delete;
+
 		using Handle = std::list<Dependency*>::const_iterator;
 
 		void notifyDependency(Dependency* parent);
@@ -28,6 +35,7 @@ namespace pa
 		}
 
 	private:
+
 		std::list<Dependency*> m_dependencies;
 	};
 }
