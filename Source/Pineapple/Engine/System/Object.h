@@ -7,11 +7,10 @@
 
 #include <Pineapple/Engine/Container/Bitfield.h>
 #include <Pineapple/Engine/System/Time.h>
+#include <Pineapple/Engine/System/World.h>
 
 namespace pa
 {
-	class World;
-
 	class Object
 	{
 		// Non-copyable and non-assignable

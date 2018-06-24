@@ -9,11 +9,13 @@
 #include <Pineapple/Engine/System/Input.h>
 #include <Pineapple/Engine/System/ObjectStore.h>
 #include <Pineapple/Engine/System/Time.h>
-#include <Pineapple/Engine/System/EnableChildList.h>
 #include <functional>
 
 namespace pa
 {
+	template <typename T>
+	class EnableChildList;
+
 	/// \brief A World manages the lifetime and interaction of all objects that have been created inside it. 
 	class World
 	{

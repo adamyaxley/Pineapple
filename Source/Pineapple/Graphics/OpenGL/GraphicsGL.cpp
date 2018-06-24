@@ -28,7 +28,11 @@ namespace
 #define FONS_SCRATCH_FULL_BACKUP(x, u) fonsScratchFullBackup(x, u)
 #include <fontstash.h>
 #define GLFONTSTASH_IMPLEMENTATION
-#include <gl3fontstash.h>
+#ifdef PA_OPENGLES1
+#	include <glfontstash.h>
+#else
+#	include <gl3fontstash.h>
+#endif
 
 std::unique_ptr<pa::Graphics> pa::MakeInternal::graphics(const pa::PlatformSettings::Graphics& settings, const pa::FileSystem& fileSystem)
 {
@@ -107,6 +111,7 @@ pa::GraphicsGL::GraphicsGL(const pa::PlatformSettings::Graphics& settings, const
 {
 	pa::Log::info("Starting up graphics size: {} * {}", m_size.x, m_size.y);
 
+#if !defined(PA_OPENGLES1)
 	if (!gladLoadGL())
 	{
 		pa::Log::info("Failed to init GLAD");
@@ -116,9 +121,10 @@ pa::GraphicsGL::GraphicsGL(const pa::PlatformSettings::Graphics& settings, const
 	{
 		pa::Log::info("Successfully inited GLAD");
 	}
-	
-#ifdef GLAD_DEBUG
-	glad_set_post_callback(pa_glad_post_callback);
+
+	#ifdef GLAD_DEBUG
+		glad_set_post_callback(pa_glad_post_callback);
+	#endif
 #endif
 
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
@@ -131,7 +137,11 @@ pa::GraphicsGL::GraphicsGL(const pa::PlatformSettings::Graphics& settings, const
 	setViewport(0, 0, settings.size.x * settings.zoom, settings.size.y * settings.zoom);
 	PA_GL_CHECK_ERROR();
 
+#ifdef PA_OPENGLES1
+	m_fonsContext = glfonsCreate(128, 128, FONS_ZERO_TOPLEFT);
+#else
 	m_fonsContext = gl3fonsCreate(128, 128, FONS_ZERO_TOPLEFT);
+#endif
 	fonsSetErrorCallback(m_fonsContext, handleFontstashError, m_fonsContext);
 }
 
@@ -140,7 +150,11 @@ pa::GraphicsGL::~GraphicsGL()
 #ifdef PA_OPENGLES2
 	ensureDeferredResourcesAreDestroyed();
 #endif
+#ifdef PA_OPENGLES1
+	glfonsDelete(m_fonsContext);
+#else
 	gl3fonsDelete(m_fonsContext);
+#endif
 }
 
 std::shared_ptr<pa::Texture> pa::GraphicsGL::createTexture(const char* path, pa::FileStorage storage)
@@ -194,7 +208,7 @@ void pa::GraphicsGL::render()
 #endif
 
 // Depth Buffer
-#ifdef PA_OPENGLES
+#if defined(PA_OPENGLES1) || defined(PA_OPENGLES2)
 	glClearDepthf(1.0f);
 #else
 	glClearDepth(1.0f);
@@ -214,7 +228,7 @@ void pa::GraphicsGL::render()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-#ifdef PA_OPENGLES
+#if defined(PA_OPENGLES1) || defined(PA_OPENGLES2)
 	glOrthof((GLfloat)m_projectionPosition.x, (GLfloat)m_size.x, (GLfloat)m_size.y, (GLfloat)m_projectionPosition.y,
 			 -1000.0f, 1000.0f);
 #else

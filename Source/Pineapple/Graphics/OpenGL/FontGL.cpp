@@ -9,6 +9,7 @@
 #include <Pineapple/Graphics/OpenGL/TextGL.h>
 #include <Pineapple/Graphics/OpenGL/UtilGL.h>
 #include <fontstash.h>
+#include <memory>
 
 pa::FontGL::FontGL(pa::Graphics& graphics, FONScontext* fonsContext, const pa::FilePath& path)
 	: pa::Font(path)

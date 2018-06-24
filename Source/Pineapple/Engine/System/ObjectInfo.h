@@ -6,9 +6,10 @@
 #pragma once
 
 #include <Pineapple/Engine/System/Counter.h>
-#include <Pineapple/Engine/System/Object.h>
 #include <Pineapple/Engine/System/Time.h>
+#include <Pineapple/Engine/Util/Macro.h>
 #include <vector>
+#include <memory>
 
 namespace pa
 {

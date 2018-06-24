@@ -1,9 +1,9 @@
 #pragma once
 
+#include <Pineapple/Engine/System/World.h>
+
 namespace pa
 {
-	class World;
-	
 	template <typename T>
 	class EnableChildList
 	{

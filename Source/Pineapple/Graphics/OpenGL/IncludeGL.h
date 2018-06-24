@@ -6,7 +6,7 @@
 #pragma once
 
 #if defined(__ANDROID__) || defined(__APPLE__)
-	#define PA_OPENGLES
+	//#define PA_OPENGLES2 already defined hard
 #endif
 
 #ifdef _MSC_VER
@@ -14,22 +14,14 @@
 	#include <windows.h>
 #endif
 
-#ifdef PA_OPENGLES
+#ifdef PA_OPENGLES2
 	#ifdef __APPLE__
-		#include <OpenGLES/ES1/gl.h>
+		#include <OpenGLES/ES1/gl.h> // TODO wrong
 	#else
-		#ifdef PA_OPENGLES2
-			#include <GLES2/gl2.h>
-		#else
-			#include <GLES/gl.h>
-		#endif
+		#include <GLES2/gl2.h>
 	#endif
-	#ifndef PA_NO_UTIL_GL_FTGL
-		#pragma clang diagnostic push
-		#pragma clang diagnostic ignored "-Wdeprecated-register"
-		#include <FTGL/ftgles.h>
-		#pragma clang diagnostic pop
-	#endif
+#elif defined (PA_OPENGLES1)
+#	include <GLES/gl.h>
 #else
 	#include <glad/glad.h>
 #endif
