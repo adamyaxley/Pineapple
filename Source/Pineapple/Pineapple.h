@@ -36,6 +36,7 @@
 
 // Sound
 #include <Pineapple/Engine/Sound/Effect.h>
+#include <Pineapple/Engine/Sound/Music.h>
 #include <Pineapple/Engine/Sound/Sound.h>
 
 // Physics
