@@ -17,7 +17,7 @@ namespace pa
 		void stepMotion(Time deltaTime);
 
 		Vect2<float> calculatePosition(float time) const;
-#if 0
+
 		float calculateXSpeedAtX(float x) const;
 
 		float calculateXPosition(float time) const;
@@ -47,7 +47,7 @@ namespace pa
 										 float& time2) const;
 
 		float getDirection();
-#endif
+
 		PA_FORMAT_VECTOR_REAL(Position, m_position)
 		PA_FORMAT_VECTOR_REAL(Velocity, m_velocity)
 		PA_FORMAT_VECTOR_REAL(Acceleration, m_acceleration)
