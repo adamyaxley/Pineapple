@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Pineapple/Platform/Android/android_native_app_glue.h>
+#include <android_native_app_glue.h>
 #include <Pineapple/Engine/Container/Vect2.h>
 
 #include <EGL/egl.h>

@@ -21,7 +21,7 @@ extern "C"
 		pa::AndroidBridge::setNativeActivity(state->activity);
 
 		// Make sure glue isn't stripped
-		//app_dummy(); No longer necessary https://github.com/android-ndk/ndk/issues/381
+		app_dummy(); //No longer necessary https://github.com/android-ndk/ndk/issues/381
 
 		if (!g_enteredAndroidMain)
 		{
