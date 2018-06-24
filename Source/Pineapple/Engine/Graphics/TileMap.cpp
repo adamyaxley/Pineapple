@@ -24,3 +24,4 @@ void pa::TileMap::set(int x, int y, pa::Tile tile)
 
 	m_tileData[y * m_size.x + x] = tile;
 }
+
