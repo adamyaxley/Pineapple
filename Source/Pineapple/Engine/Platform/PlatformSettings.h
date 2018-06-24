@@ -23,7 +23,7 @@ namespace pa
 		{
 			bool use = true;
 			Vect2<int> size;
-			float zoom;
+			float zoom{ 1.f };
 		} graphics;
 
 		struct Sound
