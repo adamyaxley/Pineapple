@@ -72,6 +72,19 @@ std::string pa::FileBuffer::createString() const
 	return string;
 }
 
+void pa::FileBuffer::copyFromString(std::string string)
+{
+	clear();
+	allocate(string.size());
+	memcpy(getBuffer().get(), string.c_str(), getSize());
+}
+
+void pa::FileBuffer::clear()
+{
+	m_buffer = nullptr;
+	m_size = 0;
+}
+
 namespace
 {
 	std::string combinePaths(const std::string& path1, const std::string& path2)

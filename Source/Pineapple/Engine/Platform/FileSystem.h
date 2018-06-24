@@ -38,6 +38,8 @@ namespace pa
 		const std::unique_ptr<unsigned char[]>& getBuffer() const;
 		std::size_t getSize() const;
 		std::string createString() const;
+		void copyFromString(std::string string);
+		void clear();
 
 	private:
 		std::unique_ptr<unsigned char[]> m_buffer;
