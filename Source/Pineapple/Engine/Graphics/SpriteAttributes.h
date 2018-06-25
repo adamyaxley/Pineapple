@@ -28,6 +28,9 @@ namespace pa
 		void setRotation(float radians);
 		float getRotation() const;
 
+		void setRotationDegrees(float degrees);
+		float getRotationDegrees() const;
+
 		void setColour(const Colour& colour);
 		Colour& getColour();
 		const Colour& getColour() const;

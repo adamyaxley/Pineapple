@@ -4,6 +4,7 @@
 ------------------------------------------------------------------------------*/
 
 #include <Pineapple/Engine/Graphics/SpriteAttributes.h>
+#include <Pineapple/Engine/Util/Macro.h>
 
 pa::SpriteAttributes::SpriteAttributes(const Vect2<int>& size)
 	: m_position(0.f, 0.f)
@@ -34,6 +35,16 @@ void pa::SpriteAttributes::setRotation(float radians)
 float pa::SpriteAttributes::getRotation() const
 {
 	return m_rotation;
+}
+
+void pa::SpriteAttributes::setRotationDegrees(float degrees)
+{
+	m_rotation = (float)((degrees)* PA_PI / 180.0f);
+}
+
+float pa::SpriteAttributes::getRotationDegrees() const
+{
+	return (float)((m_rotation) * 180.0f / PA_PI);
 }
 
 void pa::SpriteAttributes::setColour(const pa::Colour& colour)
