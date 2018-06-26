@@ -51,13 +51,15 @@ void pa::TextGL::render()
 			glm::scale(glm::mat4(1.f), glm::vec3(2.f / m_graphics.getSize().x, -2.f / m_graphics.getSize().y, 2.f));
 
 		// Build the entire transform
-		glm::mat4 transform = proj * glm::translate(glm::mat4(1.f), glm::vec3(getPosition().x, getPosition().y,
+		glm::mat4 transform = proj * glm::translate(glm::mat4(1.f), glm::vec3(getPosition().x - m_graphics.getTextView().x, getPosition().y - m_graphics.getTextView().y,
 																			  0)) * // <todo> getPriority()))// *
 							  glm::scale(glm::mat4(1.f), glm::vec3(getScale().x, getScale().y, 1.f)) *
 							  glm::rotate(glm::mat4(1.f), getRotation(), glm::vec3(0.f, 0.f, 1.f)) *
 							  glm::translate(glm::mat4(1.f), glm::vec3(-getOrigin().x, -getOrigin().y, 0));
 
 		fonsSetColor(fs, outlineColour);
+
+		gl3fonsDepth(fs, -((float)getPriority() - 1000.f) / 2000.f);
 
 		// Outline <todo> do this in a shader
 		for (int i = -getOutline(); i <= getOutline(); i++)

@@ -90,6 +90,18 @@ namespace
 	}
 }
 
+namespace
+{
+	void pa_glad_post_callback(const char *name, void *funcptr, int len_args, ...) {
+		GLenum error_code;
+		error_code = glad_glGetError();
+
+		if (error_code != GL_NO_ERROR) {
+			pa::Log::info("ERROR {} in {}", (int)error_code, name);
+		}
+	}
+}
+
 pa::GraphicsGL::GraphicsGL(const pa::PlatformSettings::Graphics& settings, const pa::FileSystem& fileSystem)
 	: pa::Graphics(settings, fileSystem)
 {
@@ -104,6 +116,10 @@ pa::GraphicsGL::GraphicsGL(const pa::PlatformSettings::Graphics& settings, const
 	{
 		pa::Log::info("Successfully inited GLAD");
 	}
+	
+#ifdef GLAD_DEBUG
+	glad_set_post_callback(pa_glad_post_callback);
+#endif
 
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 
