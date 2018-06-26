@@ -75,43 +75,46 @@ void pa::MapGL::render()
 	getPosition().x += getScroll().x;
 	getPosition().y += getScroll().y;
 
-	// Enable 2d textures
-	glEnable(GL_TEXTURE_2D);
+	if (getVisible())
+	{
+		// Enable 2d textures
+		glEnable(GL_TEXTURE_2D);
 
-	// Use the tileset
-	glBindTexture(GL_TEXTURE_2D, m_tileSet.getGLObject());
+		// Use the tileset
+		glBindTexture(GL_TEXTURE_2D, m_tileSet.getGLObject());
 
-	glMatrixMode(GL_MODELVIEW);
-	// Load a new drawing matrix
-	glPushMatrix();
-	glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		// Load a new drawing matrix
+		glPushMatrix();
+		glLoadIdentity();
 
-	// Alpha blending
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		// Alpha blending
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// Move in front or behind sprites
-	glTranslatef(0, 0, (GLfloat)getPriority());
+		// Move in front or behind sprites
+		glTranslatef(0, 0, (GLfloat)getPriority());
 
-	// Translate to the view
-	glTranslatef(-static_cast<GLfloat>(m_graphics.getMapView().x), -static_cast<GLfloat>(m_graphics.getMapView().y),
-				 0.0f);
+		// Translate to the view
+		glTranslatef(-static_cast<GLfloat>(m_graphics.getMapView().x), -static_cast<GLfloat>(m_graphics.getMapView().y),
+			0.0f);
 
-	// Set the drawing colour
-	glColor4f((GLfloat)getColour().R, (GLfloat)getColour().G, (GLfloat)getColour().B, (GLfloat)getColour().A);
+		// Set the drawing colour
+		glColor4f((GLfloat)getColour().R, (GLfloat)getColour().G, (GLfloat)getColour().B, (GLfloat)getColour().A);
 
-	// Choose correct drawing function
-	(this->*g_drawFuncArray[getHWrap()][getVWrap()])(getPosition(), m_vertexBuffer);
+		// Choose correct drawing function
+		(this->*g_drawFuncArray[getHWrap()][getVWrap()])(getPosition(), m_vertexBuffer);
 
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	// Refresh the drawing matrix
-	glPopMatrix();
+		// Refresh the drawing matrix
+		glPopMatrix();
 
-	// Disable 2d textures
-	glDisable(GL_TEXTURE_2D);
+		// Disable 2d textures
+		glDisable(GL_TEXTURE_2D);
 
-	PA_GL_CHECK_ERROR();
+		PA_GL_CHECK_ERROR();
+	}
 }
 
 void pa::MapGL::drawMap(pa::Vect2<float> pos, const pa::VertexBuffer2DGL& buffer) const
