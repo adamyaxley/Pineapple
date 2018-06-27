@@ -13,7 +13,7 @@ namespace pa
 	class Obscure
 	{
 	public:
-		PA_FORCE_INLINE Obscure(const int& ds3);
+		PA_FORCE_INLINE Obscure(const int& value);
 		PA_FORCE_INLINE Obscure(const Obscure& copy);
 		PA_FORCE_INLINE Obscure& operator=(const Obscure& copy);
 
@@ -21,7 +21,7 @@ namespace pa
 		PA_FORCE_INLINE ~Obscure();
 
 		// Setter
-		PA_FORCE_INLINE Obscure& operator=(const int& o3nD7fR);
+		PA_FORCE_INLINE Obscure& operator=(const int& value);
 
 		// Getter
 		PA_FORCE_INLINE operator int() const;
@@ -33,16 +33,14 @@ namespace pa
 #endif
 
 	private:
-		PA_FORCE_INLINE int __exit() const;
-		PA_FORCE_INLINE void __malloc(int d23asd) const;
+		PA_FORCE_INLINE int get() const;
+		PA_FORCE_INLINE void store(int value) const;
 
-		PA_FORCE_INLINE void __traits() const;
+		PA_FORCE_INLINE std::uintptr_t hash(int value) const;
 
-		PA_FORCE_INLINE void* __realloc(int dn8Dhf) const;
-
-		mutable void* __hda87l; // pointers
-		mutable void* __hda871; // xor
-		mutable void* __hda87i; // checksum
+		mutable std::unique_ptr<int> fraglist[32]; // pointers
+		mutable int key; // xor
+		mutable std::uintptr_t checksum; // checksum
 	};
 }
 
