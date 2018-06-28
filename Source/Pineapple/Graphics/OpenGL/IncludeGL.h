@@ -5,13 +5,10 @@
 
 #pragma once
 
-#ifdef _MSC_VER
-	#define WIN32_LEAN_AND_MEAN
-	#include <windows.h>
-#endif
-
 #ifdef PA_OPENGLES1
-	#ifdef __APPLE__
+	#if defined(_WINDOWS)
+		#include <glad/glad.h> // GLES1
+	#elif defined(__APPLE__)
 		#include <OpenGLES/ES1/gl.h>
 	#else
 		#include <GLES/gl.h>
