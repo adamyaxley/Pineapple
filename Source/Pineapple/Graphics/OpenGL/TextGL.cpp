@@ -14,7 +14,7 @@
 #	define FONS_RGBA glfonsRGBA
 #else
 #	include <gl3fontstash.h>
-#	define FONS_RGBA gl3fonsRBGA
+#	define FONS_RGBA gl3fonsRGBA
 #endif
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>

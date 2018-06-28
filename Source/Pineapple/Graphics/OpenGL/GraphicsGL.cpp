@@ -147,7 +147,7 @@ pa::GraphicsGL::GraphicsGL(const pa::PlatformSettings::Graphics& settings, const
 
 pa::GraphicsGL::~GraphicsGL()
 {
-#ifdef PA_OPENGLES2
+#ifndef PA_OPENGLES1
 	ensureDeferredResourcesAreDestroyed();
 #endif
 #ifdef PA_OPENGLES1
@@ -180,7 +180,7 @@ std::shared_ptr<pa::Font> pa::GraphicsGL::createFont(const char* path, pa::FileS
 
 std::shared_ptr<pa::Shader> pa::GraphicsGL::createShader(pa::ShaderType type, const char* path, pa::FileStorage storage)
 {
-#ifdef PA_OPENGLES2
+#ifndef PA_OPENGLES1
 	auto shader = std::make_shared<pa::ShaderGL>(type, pa::FilePath(m_fileSystem, storage, path));
 	getResourceManager().add(shader);
 	return shader;
@@ -191,7 +191,7 @@ std::shared_ptr<pa::Shader> pa::GraphicsGL::createShader(pa::ShaderType type, co
 
 std::shared_ptr<pa::Program> pa::GraphicsGL::createProgram()
 {
-#ifdef PA_OPENGLES2
+#ifndef PA_OPENGLES1
 	auto program = std::make_shared<pa::ProgramGL>();
 	getResourceManager().addPlainDependency(program);
 	return program;
@@ -203,12 +203,12 @@ std::shared_ptr<pa::Program> pa::GraphicsGL::createProgram()
 void pa::GraphicsGL::render()
 {
 // pa::Log::info("pa::Graphics begin");
-#ifdef PA_OPENGLES2
+#ifndef PA_OPENGLES1
 	glUseProgram(0);
 #endif
 
 // Depth Buffer
-#if defined(PA_OPENGLES1) || defined(PA_OPENGLES2)
+#ifdef PA_OPENGLES1
 	glClearDepthf(1.0f);
 #else
 	glClearDepth(1.0f);
@@ -221,14 +221,14 @@ void pa::GraphicsGL::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	PA_GL_CHECK_ERROR();
 
-#ifdef PA_OPENGLES2
+#ifndef PA_OPENGLES1
 	setupDeferredFrameBufferForRendering();
 #endif
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-#if defined(PA_OPENGLES1) || defined(PA_OPENGLES2)
+#ifdef PA_OPENGLES1
 	glOrthof((GLfloat)m_projectionPosition.x, (GLfloat)m_size.x, (GLfloat)m_size.y, (GLfloat)m_projectionPosition.y,
 			 -1000.0f, 1000.0f);
 #else
@@ -244,7 +244,7 @@ void pa::GraphicsGL::render()
 	m_renderSystem.renderUnordered();
 	m_renderSystem.renderOrdered();
 
-#ifdef PA_OPENGLES2
+#ifndef PA_OPENGLES1
 	drawDeferredTexture();
 #endif
 }
@@ -254,7 +254,7 @@ void pa::GraphicsGL::setViewport(int x, int y, int width, int height)
 	glViewport((GLint)x, (GLint)y, (GLint)width, (GLint)height);
 }
 
-#ifdef PA_OPENGLES2
+#ifndef PA_OPENGLES1
 void pa::GraphicsGL::ensureDeferredFrameBufferIsCreated()
 {
 	if (m_deferredFrameBuffer == 0)
@@ -381,4 +381,4 @@ void pa::GraphicsGL::drawDeferredTexture()
 		PA_GL_CHECK_ERROR();
 	}
 }
-#endif // PA_OPENGLES2
+#endif

@@ -38,7 +38,7 @@ namespace pa
 		};
 
 	private:
-#ifdef PA_OPENGLES2
+#ifndef PA_OPENGLES1
 		void ensureDeferredFrameBufferIsCreated();
 		void ensureDeferredTextureIsCreated();
 		void ensureDeferredResourcesAreCreated();
