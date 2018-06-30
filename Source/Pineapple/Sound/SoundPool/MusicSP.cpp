@@ -37,7 +37,7 @@ bool pa::MusicSP::onUnload()
 {
 	pa::ScopedEnvJNI env;
 
-	env.get()->CallStaticVoidMethod(m_binding.classObject, m_binding.unload);
+	env.get()->CallStaticVoidMethod(m_binding.classObject, m_binding.unload, m_soundId);
 	env.handleExceptions();
 	m_soundId = -1;
 
@@ -48,7 +48,7 @@ void pa::MusicSP::play()
 {
 	pa::ScopedEnvJNI env;
 
-	env.get()->CallStaticIntMethod(m_binding.classObject, m_binding.play, m_soundId);
+	env.get()->CallStaticVoidMethod(m_binding.classObject, m_binding.play, m_soundId);
 	env.handleExceptions();
 }
 
@@ -56,7 +56,7 @@ void pa::MusicSP::loop()
 {
 	pa::ScopedEnvJNI env;
 
-	env.get()->CallStaticIntMethod(m_binding.classObject, m_binding.loop, m_soundId);
+	env.get()->CallStaticVoidMethod(m_binding.classObject, m_binding.loop, m_soundId);
 	env.handleExceptions();
 }
 
@@ -64,7 +64,7 @@ void pa::MusicSP::stop()
 {
 	pa::ScopedEnvJNI env;
 
-	env.get()->CallStaticIntMethod(m_binding.classObject, m_binding.stop, m_soundId);
+	env.get()->CallStaticVoidMethod(m_binding.classObject, m_binding.stop, m_soundId);
 	env.handleExceptions();
 }
 
@@ -72,7 +72,7 @@ void pa::MusicSP::pause()
 {
 	pa::ScopedEnvJNI env;
 
-	env.get()->CallStaticIntMethod(m_binding.classObject, m_binding.pause, m_soundId);
+	env.get()->CallStaticVoidMethod(m_binding.classObject, m_binding.pause, m_soundId);
 	env.handleExceptions();
 }
 
@@ -80,6 +80,6 @@ void pa::MusicSP::resume()
 {
 	pa::ScopedEnvJNI env;
 
-	env.get()->CallStaticIntMethod(m_binding.classObject, m_binding.resume, m_soundId);
+	env.get()->CallStaticVoidMethod(m_binding.classObject, m_binding.resume, m_soundId);
 	env.handleExceptions();
 }
