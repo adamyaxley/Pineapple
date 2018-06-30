@@ -23,8 +23,6 @@ namespace pa
 
 		bool hasInitialised() { return m_hasInitialised; }
 		void initialise() { m_hasInitialised = true; }
-		const Vect2<int>& getPlatformSize() const { return m_platformSize; }
-		void setPlatformSize(const Vect2<int>& size) { m_platformSize = size; }
 
 		bool createDisplay();
 		bool createSurface();
@@ -38,7 +36,7 @@ namespace pa
 		void clearBuffer();
 		void swapBuffers();
 
-		Vect2<int>& getSize() { return m_size; }
+		const Vect2<int>& getSurfaceSize() { return m_surfaceSize; }
 
 		void setHasWindow(bool state);
 		bool getHasWindow() const;
@@ -54,8 +52,7 @@ namespace pa
 
 		bool m_hasWindow;
 		bool m_hasFocus;
-		Vect2<int> m_size;
-		Vect2<int> m_platformSize;
+		Vect2<int> m_surfaceSize;
 
 		bool m_hasInitialised;
 		//SavedState m_state;

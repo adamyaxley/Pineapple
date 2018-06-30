@@ -94,7 +94,7 @@ pa::AndroidPlatform::AndroidPlatform(pa::AndroidArguments* arguments, const pa::
 
 	//getGraphics()->resizeKeepAspectRatio(width, height);
 
-	m_engine.setPlatformSize(settings.graphics.size);
+	//m_engine.setPlatformSize(settings.graphics.size);
 	m_engine.initialise();
 }
 
@@ -270,7 +270,7 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 		}
 
 		// Now check that the surface we created is correct
-		if (m_engine.getSize().x < m_engine.getSize().y)
+		if (m_engine.getSurfaceSize().x < m_engine.getSurfaceSize().y)
 		{
 			// Portrait, not what we want
 			pa::Log::info("Detected portrait mode, terminating and waiting for landscape");
@@ -283,10 +283,10 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 			// Set up graphics
 			m_graphics = pa::MakeInternal::graphics(m_settings.graphics, *m_fileSystem.get());
 
-			if (m_engine.hasInitialised())
+			//if (m_engine.hasInitialised())
 			{
 				// Restore platform size if we are resuming the app
-				getGraphics()->resize(pa::Graphics::ResizeMode::Fill, m_engine.getPlatformSize()); // TODO correct this
+				getGraphics()->resize(pa::Graphics::ResizeMode::FillMin, m_engine.getSurfaceSize()); // TODO correct this
 			}
 			getGraphics()->getResourceManager().restoreState();
 			m_engine.setHasWindow(true); // Set that we have got the correct window
@@ -336,17 +336,16 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 		break;
 	case APP_CMD_DESTROY:
 		pa::Log::info("APP_CMD_DESTROY");
-		/*getGraphics()->getResourceManager().unloadAndDeleteAll();
-		getSound()->getResourceManager().unloadAndDeleteAll();
+		getGraphics()->getResourceManager().unloadAll();
+		getSound()->getResourceManager().unloadAll();
 		m_engine.destroyContext();
 		m_engine.destroySurface();
 		m_engine.destroyDisplay();
-		getGraphics()->shutdown();*/
 		break;
 	case APP_CMD_CONFIG_CHANGED:
 		pa::Log::info("APP_CMD_CONFIG_CHANGED");
 		//if (!m_engine.isLandscapeMode())
-		if (m_engine.getSize().x < m_engine.getSize().y) // We are in portrait
+		if (m_engine.getSurfaceSize().x < m_engine.getSurfaceSize().y) // We are in portrait
 		{
 			//sleep(100);
 			//m_engine.clearBuffer();

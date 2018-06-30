@@ -8,7 +8,7 @@ pa::AndroidEngine::AndroidEngine() :
 	//m_sensorEventQueue(NULL),
 	m_hasWindow(false),
 	m_hasFocus(false),
-	m_size(0, 0),
+	m_surfaceSize(0, 0),
 	m_hasInitialised(false),
 	m_display(EGL_NO_DISPLAY),
 	m_surface(EGL_NO_SURFACE),
@@ -60,11 +60,11 @@ bool pa::AndroidEngine::createDisplay()
 
 		if (eglInitialize(m_display, &major, &minor) == EGL_TRUE)
 		{
-			pa::Log::info("Initialized EGL %d.%d", major, minor);
+			pa::Log::info("Initialized EGL {}.{}", major, minor);
 		}
 		else
 		{
-			pa::Log::info("Failed to initialize EGL %d.%d", major, minor);
+			pa::Log::info("Failed to initialize EGL {}.{}", major, minor);
 			return false;
 		}
 
@@ -85,7 +85,7 @@ bool pa::AndroidEngine::createDisplay()
 			eglGetConfigAttrib(m_display, m_config, EGL_SAMPLES, &samples);
 			eglGetConfigAttrib(m_display, m_config, EGL_SAMPLE_BUFFERS, &sampleBuffers);
 
-			pa::Log::info("Chosen EGL config: (RGBA: %d %d %d %d Z: %d AA: %d (%d buffers)", red, green, blue, alpha, depth, samples, sampleBuffers);
+			pa::Log::info("Chosen EGL config: (RGBA: {} {} {} {} Z: {} AA: {} ({} buffers)", red, green, blue, alpha, depth, samples, sampleBuffers);
 		}
 		else
 		{
@@ -162,10 +162,10 @@ bool pa::AndroidEngine::createContext()
 			return false;
 		}
 
-		if (eglQuerySurface(m_display, m_surface, EGL_WIDTH, &m_size.x) == EGL_TRUE &&
-			eglQuerySurface(m_display, m_surface, EGL_HEIGHT, &m_size.y) == EGL_TRUE)
+		if (eglQuerySurface(m_display, m_surface, EGL_WIDTH, &m_surfaceSize.x) == EGL_TRUE &&
+			eglQuerySurface(m_display, m_surface, EGL_HEIGHT, &m_surfaceSize.y) == EGL_TRUE)
 		{
-			pa::Log::info("Surface size: %d * %d", m_size.x, m_size.y);
+			pa::Log::info("Surface size: {} * {}", m_surfaceSize.x, m_surfaceSize.y);
 		}
 		else
 		{
@@ -283,10 +283,10 @@ bool pa::AndroidEngine::isLandscapeMode()
 {
 	if (m_app != NULL && m_app->window != NULL)
 	{
-		pa::Log::info("Engine size: (%d, %d) Window size: (%d, %d)", getSize().x, getSize().y, ANativeWindow_getWidth(m_app->window), ANativeWindow_getHeight(m_app->window));
+		pa::Log::info("Engine Surface size: ({}, {}) Window size: ({}, {})", getSurfaceSize().x, getSurfaceSize().y, ANativeWindow_getWidth(m_app->window), ANativeWindow_getHeight(m_app->window));
 		return
-			(getSize().x == ANativeWindow_getWidth(m_app->window)) &&
-			(getSize().y == ANativeWindow_getHeight(m_app->window));
+			(getSurfaceSize().x == ANativeWindow_getWidth(m_app->window)) &&
+			(getSurfaceSize().y == ANativeWindow_getHeight(m_app->window));
 	}
 	else
 	{

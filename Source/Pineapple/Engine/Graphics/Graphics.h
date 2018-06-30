@@ -30,7 +30,9 @@ namespace pa
 		enum class ResizeMode
 		{
 			Stretch,
-			Fill,
+			FillCenter,
+			FillMin,
+			FillMax,
 			Fit
 		};
 
