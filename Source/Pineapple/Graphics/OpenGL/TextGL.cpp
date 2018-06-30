@@ -12,9 +12,11 @@
 #ifdef PA_OPENGLES1
 #	include <glfontstash.h>
 #	define FONS_RGBA glfonsRGBA
+#	define FONS_DEPTH /* TODO */
 #else
 #	include <gl3fontstash.h>
 #	define FONS_RGBA gl3fonsRGBA
+#	define FONS_DEPTH gl3fonsDepth
 #endif
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -69,7 +71,7 @@ void pa::TextGL::render()
 
 		fonsSetColor(fs, outlineColour);
 
-		gl3fonsDepth(fs, -((float)getPriority() - 1000.f) / 2000.f);
+		FONS_DEPTH(fs, -((float)getPriority() - 1000.f) / 2000.f);
 
 		// Outline <todo> do this in a shader
 		for (int i = -getOutline(); i <= getOutline(); i++)

@@ -110,7 +110,7 @@ function(add_pineapple_app _TARGET _SOURCES)
 	if(ANDROID)
 		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
 		add_library(${_TARGET} SHARED ${_SOURCES_LIST})
-		target_link_libraries(${_TARGET} -Wl,--whole-archive paAndroid -Wl,--no-whole-archive paOpenGLES1 paSoundPool paEngine native_app_glue ${ANDROID_LIB} ${LOG_LIB} ${EGL_LIB} ${GLESV1_CM_LIB})
+		target_link_libraries(${_TARGET} -Wl,--whole-archive paAndroid -Wl,--no-whole-archive paOpenGLES1 paSoundPool paEngine ${ANDROID_LIB} ${LOG_LIB} ${EGL_LIB} ${GLESV1_CM_LIB})
 	endif()
     
     if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/pineapple.json)

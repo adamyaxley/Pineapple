@@ -94,6 +94,7 @@ namespace
 	}
 }
 
+#ifdef GLAD_DEBUG
 namespace
 {
 	void pa_glad_post_callback(const char *name, void *funcptr, int len_args, ...) {
@@ -105,6 +106,7 @@ namespace
 		}
 	}
 }
+#endif
 
 pa::GraphicsGL::GraphicsGL(const pa::PlatformSettings::Graphics& settings, const pa::FileSystem& fileSystem)
 	: pa::Graphics(settings, fileSystem)
