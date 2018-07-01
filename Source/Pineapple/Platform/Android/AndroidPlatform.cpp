@@ -218,8 +218,8 @@ int32_t pa::AndroidPlatform::handleInputEvent(android_app* app, AInputEvent* inp
 			float y = AMotionEvent_getY(inputEvent, 0);
 
 			// Scale values in case we have a window which is smaller than the platform resolution
-			x *= (float)getGraphics()->getSize().x / getSize().x;
-			y *= (float)getGraphics()->getSize().y / getSize().y;
+			x *= (float)m_graphics->getSize().x / (float)m_engine.getSurfaceSize().x;
+			y *= (float)m_graphics->getSize().y / (float)m_engine.getSurfaceSize().y;
 
 			m_pointer.setPosition(x, y);
 			break;
@@ -286,7 +286,7 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 			//if (m_engine.hasInitialised())
 			{
 				// Restore platform size if we are resuming the app
-				getGraphics()->resize(pa::Graphics::ResizeMode::FillMin, m_engine.getSurfaceSize()); // TODO correct this
+				getGraphics()->resize(pa::Graphics::ResizeMode::FillMin, m_engine.getSurfaceSize()); // TODO set this from graphics setting
 			}
 			getGraphics()->getResourceManager().restoreState();
 			m_engine.setHasWindow(true); // Set that we have got the correct window
