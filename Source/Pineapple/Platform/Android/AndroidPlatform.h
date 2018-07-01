@@ -36,5 +36,7 @@ namespace pa
 		void resendWindowAppCommands();
 
 		AndroidEngine m_engine;
+
+		bool m_setPointerUpOnNextStep;
 	};
 }

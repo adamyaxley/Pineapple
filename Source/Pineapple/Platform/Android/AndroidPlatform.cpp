@@ -63,6 +63,7 @@ namespace
 
 pa::AndroidPlatform::AndroidPlatform(pa::AndroidArguments* arguments, const pa::PlatformSettings& settings)
 	: pa::Platform(settings)
+	, m_setPointerUpOnNextStep(false)
 {
 	auto state = arguments->getState();
 	state->userData = this;
@@ -131,6 +132,12 @@ void pa::AndroidPlatform::pollEvents()
 
 	int timeout = m_engine.isAnimating() ? 0 : -1;
 	bool waitingForEvents = true;
+
+	if (m_setPointerUpOnNextStep)
+	{
+		m_pointer.setDown(false);
+		m_setPointerUpOnNextStep = false;
+	}
 
 	while (waitingForEvents)
 	{
@@ -227,7 +234,7 @@ int32_t pa::AndroidPlatform::handleInputEvent(android_app* app, AInputEvent* inp
 		//case AMOTION_EVENT_ACTION_POINTER_UP:
 		case AMOTION_EVENT_ACTION_UP:
 		{
-			m_pointer.setDown(false);
+			m_setPointerUpOnNextStep = true;
 			//int index = (actionFlags & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT; 
 			//int pid = AMotionEvent_getPointerId(inputEvent, index); 
 
