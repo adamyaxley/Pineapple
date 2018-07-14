@@ -12,11 +12,9 @@
 #ifdef PA_OPENGLES1
 #	include <glfontstash.h>
 #	define FONS_RGBA glfonsRGBA
-#	define FONS_DEPTH /* TODO */
 #else
 #	include <gl3fontstash.h>
 #	define FONS_RGBA gl3fonsRGBA
-#	define FONS_DEPTH gl3fonsDepth
 #endif
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -65,13 +63,15 @@ void pa::TextGL::render()
 							  glm::scale(glm::mat4(1.f), glm::vec3(getScale().x, getScale().y, 1.f)) *
 							  glm::rotate(glm::mat4(1.f), getRotation(), glm::vec3(0.f, 0.f, 1.f)) *
 							  glm::translate(glm::mat4(1.f), glm::vec3(-getOrigin().x, -getOrigin().y, 0));
+
+		gl3fonsDepth(fs, -((float)getPriority() - 1000.f) / 2000.f);
 #else
-		const auto position = getPosition() - getOrigin();
+		const auto position = (getPosition() - getOrigin()) - m_graphics.getTextView();
+
+		glTranslatef(0.f, 0.f, (float)getPriority());
 #endif
 
 		fonsSetColor(fs, outlineColour);
-
-		FONS_DEPTH(fs, -((float)getPriority() - 1000.f) / 2000.f);
 
 		// Outline <todo> do this in a shader
 		for (int i = -getOutline(); i <= getOutline(); i++)

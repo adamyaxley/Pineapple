@@ -46,8 +46,9 @@ static int glfons__renderCreate(void* userPtr, int width, int height)
 	gl->width = width;
 	gl->height = height;
 	glBindTexture(GL_TEXTURE_2D, gl->tex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, gl->width, gl->height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, gl->width, gl->height, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	return 1;
 }
 
@@ -64,22 +65,32 @@ static void glfons__renderUpdate(void* userPtr, int* rect, const unsigned char* 
 	int h = rect[3] - rect[1];
 
 	if (gl->tex == 0) return;
-	//glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
+
+	GLint alignment;
+	glGetIntegerv(GL_UNPACK_ALIGNMENT, &alignment);
 	glBindTexture(GL_TEXTURE_2D, gl->tex);
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
-	//glPixelStorei(GL_UNPACK_ROW_LENGTH, gl->width);
-	//glPixelStorei(GL_UNPACK_SKIP_PIXELS, rect[0]);
-	//glPixelStorei(GL_UNPACK_SKIP_ROWS, rect[1]);
-	data += rect[0] * 1; // GL_ALPHA;
-	data += rect[1] * gl->width;
-	glTexSubImage2D(GL_TEXTURE_2D, 0, rect[0], rect[1], w, h, GL_ALPHA,GL_UNSIGNED_BYTE, data);
-	//glPopClientAttrib();
+	data = &data[gl->width * rect[1]];
+
+	auto size = gl->width * h;
+	std::vector<unsigned char> luminanceAlphaBuffer;
+	luminanceAlphaBuffer.resize(size * 2);
+
+	for (int i = 0; i < size; i++)
+	{
+		luminanceAlphaBuffer[i * 2] = data[i];
+		luminanceAlphaBuffer[i * 2 + 1] = 255;
+	}
+
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, rect[1], gl->width, h, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, &luminanceAlphaBuffer[0]);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, alignment);
 }
 
 static void glfons__renderDraw(void* userPtr, const float* verts, const float* tcoords, const unsigned int* colors, int nverts)
 {
 	GLFONScontext* gl = (GLFONScontext*)userPtr;
 	if (gl->tex == 0) return;
+
 	glBindTexture(GL_TEXTURE_2D, gl->tex);
 	glEnable(GL_TEXTURE_2D);
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -96,6 +107,8 @@ static void glfons__renderDraw(void* userPtr, const float* verts, const float* t
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
+
+	PA_GL_CHECK_ERROR();
 }
 
 static void glfons__renderDelete(void* userPtr)
