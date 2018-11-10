@@ -1,6 +1,7 @@
 #pragma once
 
 #include <android/native_activity.h>
+#include <android_native_app_glue.h>
 
 namespace pa
 {
@@ -8,7 +9,9 @@ namespace pa
 	{
 		ANativeActivity* getNativeActivity();
 
-		void setNativeActivity(ANativeActivity* activity);
+		android_app* getAndroidApp();
+
+		void setAndroidApp(android_app* state);
 
 		const char* getInternalDataPath();
 	}

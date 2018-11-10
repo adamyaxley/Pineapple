@@ -18,7 +18,7 @@ extern "C"
 	{
 		pa::Log::info("Entered android_main");
 
-		pa::AndroidBridge::setNativeActivity(state->activity);
+		pa::AndroidBridge::setAndroidApp(state);
 
 		// Make sure glue isn't stripped
 		app_dummy(); //No longer necessary https://github.com/android-ndk/ndk/issues/381
@@ -86,12 +86,6 @@ pa::AndroidPlatform::AndroidPlatform(pa::AndroidArguments* arguments, const pa::
 
 	// Wait until the display has been initialised
 	pollEvents();
-
-	// Set up Google play game services
-	/*gpg::AndroidInitialization::android_main(state);
-	gpg::AndroidPlatformConfiguration platform_configuration;
-	platform_configuration.SetActivity(state->activity->clazz);
-	paGooglePlay::init(platform_configuration);*/
 
 	//getGraphics()->resizeKeepAspectRatio(width, height);
 

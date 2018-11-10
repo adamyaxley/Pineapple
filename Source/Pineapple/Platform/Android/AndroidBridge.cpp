@@ -1,15 +1,20 @@
 #include <Pineapple/Platform/Android/AndroidBridge.h>
 
-static ANativeActivity* g_androidBridgeNativeActivity = nullptr;
+static android_app* g_androidBridgeAndroidApp = nullptr;
 
 ANativeActivity* pa::AndroidBridge::getNativeActivity()
 {
-	return g_androidBridgeNativeActivity;
+	return g_androidBridgeAndroidApp->activity;
 }
 
-void pa::AndroidBridge::setNativeActivity(ANativeActivity* activity)
+android_app * pa::AndroidBridge::getAndroidApp()
 {
-	g_androidBridgeNativeActivity = activity;
+	return g_androidBridgeAndroidApp;
+}
+
+void pa::AndroidBridge::setAndroidApp(android_app* state)
+{
+	g_androidBridgeAndroidApp = state;
 }
 
 const char* pa::AndroidBridge::getInternalDataPath()
