@@ -153,10 +153,12 @@ void pa::AndroidPlatform::pollEvents()
 		}
 
 		// Check if we are exiting.
-		if (m_engine.getApp()->destroyRequested != 0) // TODO: tear down everything
+		if (m_engine.getApp()->destroyRequested != 0)
 		{
-			//handleCommand(m_engine.getApp(), APP_CMD_TERM_WINDOW);
 			pa::Log::info("Destroy Requested");
+			pa::Event quitEvent;
+			quitEvent.type = pa::Event::Type::Quit;
+			m_input.events.push_back(quitEvent);
 			return;
 		}
 
