@@ -2,8 +2,8 @@
 #include <Pineapple/Engine/Sound/Sound.h>
 #include <Pineapple/Platform/Android/ScopedEnvJNI.h>
 
-pa::MusicSP::MusicSP(Sound& sound, const FilePath& path, const pa::BindingMusicSP& binding)
-	: pa::Music(sound, path)
+pa::MusicSP::MusicSP(const FilePath& path, const pa::BindingMusicSP& binding)
+	: pa::Music(path)
 	, m_binding(binding)
 	, m_soundId(-1)
 {}

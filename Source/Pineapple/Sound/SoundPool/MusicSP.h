@@ -10,7 +10,7 @@ namespace pa
 	{
 	public:
 
-		MusicSP(Sound& sound, const FilePath& path, const BindingMusicSP& binding);
+		MusicSP(const FilePath& path, const BindingMusicSP& binding);
 		~MusicSP();
 
 		virtual bool onLoad() override;

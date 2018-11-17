@@ -13,7 +13,7 @@ namespace pa
 	class Music : public Resource
 	{
 	public:
-		Music(Sound& sound, const FilePath& path);
+		Music(const FilePath& path);
 		~Music();
 
 		virtual void play() = 0;
@@ -21,9 +21,5 @@ namespace pa
 		virtual void stop() = 0;
 		virtual void pause() = 0;
 		virtual void resume() = 0;
-
-	private:
-		Sound& m_sound;
-		Sound::Handle m_handle;
 	};
 }

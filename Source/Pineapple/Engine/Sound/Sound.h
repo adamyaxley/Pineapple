@@ -53,14 +53,14 @@ namespace pa
 
 	private:
 		virtual std::shared_ptr<Effect> createNativeEffect(const FilePath& path) = 0;
-		virtual std::shared_ptr<Music> createNativeMusic(Sound& sound, const FilePath& path) = 0;
+		virtual std::shared_ptr<Music> createNativeMusic(const FilePath& path) = 0;
 
 		ResourceManager m_resourceManager;
 
 		bool m_musicEnabled = true;
 		bool m_effectEnabled = true;
 
-		std::list<Music*> m_musicList;
+		std::vector<std::shared_ptr<pa::Music>> m_musicList;
 
 		const FileSystem& m_fileSystem;
 	};

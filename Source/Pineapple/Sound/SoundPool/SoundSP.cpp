@@ -102,9 +102,9 @@ std::shared_ptr<pa::Effect> pa::SoundPool::createNativeEffect(const pa::FilePath
 	return effect;
 }
 
-std::shared_ptr<pa::Music> pa::SoundPool::createNativeMusic(pa::Sound& sound, const pa::FilePath& path)
+std::shared_ptr<pa::Music> pa::SoundPool::createNativeMusic(const pa::FilePath& path)
 {
-	auto music = std::make_shared<pa::MusicSP>(sound, path, g_bindingMusicSP);
+	auto music = std::make_shared<pa::MusicSP>(path, g_bindingMusicSP);
 
 	return music;
 }

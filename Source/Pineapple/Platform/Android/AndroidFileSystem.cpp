@@ -82,6 +82,5 @@ pa::FileResult pa::AndroidFileSystem::write(const pa::FilePath& path, const pa::
 
 pa::FileResult pa::AndroidFileSystem::getModificationTime(const pa::FilePath& path, std::chrono::system_clock::time_point& modificationTime) const
 {
-	pa::Log::info("FileSystem::getModificationTime is not supported on Android ({})", path.asString());
 	return pa::FileResult::AccessDenied;
 }

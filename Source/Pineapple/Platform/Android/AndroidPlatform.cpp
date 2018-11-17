@@ -281,8 +281,11 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 		}
 		else
 		{
-			// Set up graphics
-			m_graphics = pa::MakeInternal::graphics(m_settings.graphics, *m_fileSystem.get());
+			if (!m_graphics)
+			{
+				// Set up graphics
+				m_graphics = pa::MakeInternal::graphics(m_settings.graphics, *m_fileSystem.get());
+			}
 
 			//if (m_engine.hasInitialised())
 			{
