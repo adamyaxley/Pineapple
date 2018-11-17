@@ -37,9 +37,9 @@ extern "C"
 			pa::Log::info("Ignoring second android_main entry");
 		}
 
-		pa::Log::info("Finishing activity in android_main");
+		//pa::Log::info("Finishing activity in android_main");
 
-		ANativeActivity_finish(state->activity);
+		//ANativeActivity_finish(state->activity);
 
 		pa::Log::info("Leaving android_main");
 		g_enteredAndroidMain = false;
@@ -96,10 +96,11 @@ pa::AndroidPlatform::AndroidPlatform(pa::AndroidArguments* arguments, const pa::
 pa::AndroidPlatform::~AndroidPlatform()
 {
 	m_engine.setHasFocus(false);
+	ANativeActivity_finish(m_engine.getApp()->activity);
 
-	m_sound.reset();
+	/*m_sound.reset();
 	m_graphics.reset();
-	m_fileSystem.reset();
+	m_fileSystem.reset();*/
 
 	// Need to keep polling for events until destroy thing is seen
 	pollEvents();
