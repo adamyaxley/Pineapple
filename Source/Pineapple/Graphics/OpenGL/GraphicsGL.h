@@ -18,6 +18,8 @@ namespace pa
 		GraphicsGL(const PlatformSettings::Graphics& settings, const FileSystem& fileSystem);
 		virtual ~GraphicsGL();
 
+		virtual void resume() override;
+
 		// Resource loading
 		virtual std::shared_ptr<Texture> createTexture(const char* path, FileStorage storage) override;
 		virtual std::shared_ptr<TileSet> createTileSet(const char* path, int tileWidth, int tileHeight, FileStorage storage) override;
@@ -49,7 +51,11 @@ namespace pa
 		GLuint m_deferredFrameBuffer = 0;
 		GLuint m_deferredTexture = 0;
 #endif
+		void initGL();
 
+		void ensureFonsContextIsCreated();
+		void ensureFonsContextIsDestroyed();
+		void resetFonsContext();
 		FONScontext* m_fonsContext;
 	};
 }

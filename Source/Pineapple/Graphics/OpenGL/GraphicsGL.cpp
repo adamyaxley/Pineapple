@@ -110,6 +110,7 @@ namespace
 
 pa::GraphicsGL::GraphicsGL(const pa::PlatformSettings::Graphics& settings, const pa::FileSystem& fileSystem)
 	: pa::Graphics(settings, fileSystem)
+	, m_fonsContext(nullptr)
 {
 	pa::Log::info("Starting up graphics size: {} * {}", m_size.x, m_size.y);
 
@@ -129,22 +130,8 @@ pa::GraphicsGL::GraphicsGL(const pa::PlatformSettings::Graphics& settings, const
 	#endif
 #endif
 
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-
-	// Maps use Triangle Strips, so this is needed to remove 2 backwards triangles at the end of each row of a map
-	glEnable(GL_CULL_FACE);
-
-	glShadeModel(GL_SMOOTH);
-	glClearColor((GLclampf)0.0, (GLclampf)0.0, (GLclampf)0.0, (GLclampf)1.0);
-	setViewport(0, 0, settings.size.x * settings.zoom, settings.size.y * settings.zoom);
-	PA_GL_CHECK_ERROR();
-
-#ifdef PA_OPENGLES1
-	m_fonsContext = glfonsCreate(128, 128, FONS_ZERO_TOPLEFT);
-#else
-	m_fonsContext = gl3fonsCreate(128, 128, FONS_ZERO_TOPLEFT);
-#endif
-	fonsSetErrorCallback(m_fonsContext, handleFontstashError, m_fonsContext);
+	initGL();
+	ensureFonsContextIsCreated();
 }
 
 pa::GraphicsGL::~GraphicsGL()
@@ -152,11 +139,13 @@ pa::GraphicsGL::~GraphicsGL()
 #ifndef PA_OPENGLES1
 	ensureDeferredResourcesAreDestroyed();
 #endif
-#ifdef PA_OPENGLES1
-	glfonsDelete(m_fonsContext);
-#else
-	gl3fonsDelete(m_fonsContext);
-#endif
+	ensureFonsContextIsDestroyed();
+}
+
+void pa::GraphicsGL::resume()
+{
+	initGL();
+	resetFonsContext();
 }
 
 std::shared_ptr<pa::Texture> pa::GraphicsGL::createTexture(const char* path, pa::FileStorage storage)
@@ -384,3 +373,47 @@ void pa::GraphicsGL::drawDeferredTexture()
 	}
 }
 #endif
+
+void pa::GraphicsGL::initGL()
+{
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+
+	// Maps use Triangle Strips, so this is needed to remove 2 backwards triangles at the end of each row of a map
+	glEnable(GL_CULL_FACE);
+
+	glShadeModel(GL_SMOOTH);
+	glClearColor((GLclampf)0.0, (GLclampf)0.0, (GLclampf)0.0, (GLclampf)1.0);
+	setViewport(0, 0, m_settings.size.x * m_settings.zoom, m_settings.size.y * m_settings.zoom);
+	PA_GL_CHECK_ERROR();
+}
+
+void pa::GraphicsGL::ensureFonsContextIsCreated()
+{
+	if (!m_fonsContext)
+	{
+#ifdef PA_OPENGLES1
+		m_fonsContext = glfonsCreate(128, 128, FONS_ZERO_TOPLEFT);
+#else
+		m_fonsContext = gl3fonsCreate(128, 128, FONS_ZERO_TOPLEFT);
+#endif
+		fonsSetErrorCallback(m_fonsContext, handleFontstashError, m_fonsContext);
+	}
+}
+
+void pa::GraphicsGL::ensureFonsContextIsDestroyed()
+{
+	if (m_fonsContext)
+	{
+#ifdef PA_OPENGLES1
+		glfonsDelete(m_fonsContext);
+#else
+		gl3fonsDelete(m_fonsContext);
+#endif
+		m_fonsContext = nullptr;
+	}
+}
+
+void pa::GraphicsGL::resetFonsContext()
+{
+	fonsResetAtlas(m_fonsContext, 128, 128);
+}

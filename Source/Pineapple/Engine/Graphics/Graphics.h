@@ -61,6 +61,8 @@ namespace pa
 		void resize(ResizeMode mode, const Vect2<int>& platformSize);
 		void setProjection(int x, int y, int x2, int y2);
 
+		virtual void resume() = 0;
+
 		// Resource loading
 		virtual std::shared_ptr<Texture> createTexture(const char* path, FileStorage storage = FileStorage::UserAsset) = 0;
 		virtual std::shared_ptr<TileSet> createTileSet(const char* path, int tileWidth, int tileHeight, FileStorage storage = FileStorage::UserAsset) = 0;

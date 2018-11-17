@@ -42,10 +42,7 @@ bool pa::FontGL::onLoad()
 
 bool pa::FontGL::onUnload()
 {
-	// <todo> Not sure what to do here
-	// fons__freeFont(m_fonsFont);
-	// m_fonsContext->nfonts--;
-
+	// <todo> We can't unload individual fonts at the moment using fontstash
 	return true;
 }
 
