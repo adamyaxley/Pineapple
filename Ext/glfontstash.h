@@ -78,8 +78,8 @@ static void glfons__renderUpdate(void* userPtr, int* rect, const unsigned char* 
 
 	for (int i = 0; i < size; i++)
 	{
-		luminanceAlphaBuffer[i * 2] = data[i];
-		luminanceAlphaBuffer[i * 2 + 1] = 255;
+		luminanceAlphaBuffer[i * 2] = 255;
+		luminanceAlphaBuffer[i * 2 + 1] = data[i];
 	}
 
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, rect[1], gl->width, h, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, &luminanceAlphaBuffer[0]);
