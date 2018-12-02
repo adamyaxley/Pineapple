@@ -35,6 +35,13 @@ void pa::TextGL::render()
 {
 	if ((getText() != nullptr) && getVisible() && m_font.isLoaded())
 	{
+#ifdef PA_OPENGLES1
+		// Load a new drawing matrix
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glLoadIdentity();
+#endif
+
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -100,6 +107,8 @@ void pa::TextGL::render()
 		fonsDrawText(fs, 0, 0, getText(), nullptr);
 #else
 		fonsDrawText(fs, position.x, position.y, getText(), nullptr);
+
+		glPopMatrix();
 #endif
 
 		PA_GL_CHECK_ERROR();
