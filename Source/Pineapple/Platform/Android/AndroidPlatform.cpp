@@ -277,10 +277,11 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 		if (m_engine.getSurfaceSize().x < m_engine.getSurfaceSize().y)
 		{
 			// Portrait, not what we want
-			pa::Log::info("Detected portrait mode, terminating and waiting for landscape");
+			pa::Log::info("Detected portrait mode, re-sending APP_CMD_CONFIG_CHANGED");
 			m_engine.destroyContext();
 			m_engine.destroySurface();
 			m_engine.destroyDisplay();
+			handleAppCommand(app, APP_CMD_CONFIG_CHANGED);
 		}
 		else
 		{
