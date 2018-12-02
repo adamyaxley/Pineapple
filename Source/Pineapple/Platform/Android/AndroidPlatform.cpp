@@ -192,14 +192,6 @@ void pa::AndroidPlatform::openUrl(const char* url)
 	util.openUrl(url);
 }
 
-void pa::AndroidPlatform::resendWindowAppCommands()
-{
-	// http://stackoverflow.com/questions/12702868/how-to-force-landscape-mode-with-ndk-using-pure-c-codes?rq=1
-	pa::Log::info("Re initialising because the config has changed");
-	handleAppCommand(m_engine.getApp(), APP_CMD_TERM_WINDOW);
-	handleAppCommand(m_engine.getApp(), APP_CMD_INIT_WINDOW);
-}
-
 int32_t pa::AndroidPlatform::handleInputEvent(android_app* app, AInputEvent* inputEvent)
 {
 	if (AInputEvent_getType(inputEvent) == AINPUT_EVENT_TYPE_MOTION)
@@ -260,48 +252,50 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 	{
 	case APP_CMD_INIT_WINDOW:
 		pa::Log::info("APP_CMD_INIT_WINDOW");
-		if (!m_engine.createDisplay())
+		while (!m_engine.getHasWindow())
 		{
-			pa::Log::info("Failed to create the display");
-		}
-		if (!m_engine.createSurface())
-		{
-			pa::Log::info("Failed to create the surface");
-		}
-		if (!m_engine.createContext())
-		{
-			pa::Log::info("Failed to create the context");
-		}
-
-		// Now check that the surface we created is correct
-		if (m_engine.getSurfaceSize().x < m_engine.getSurfaceSize().y)
-		{
-			// Portrait, not what we want
-			pa::Log::info("Detected portrait mode, re-sending APP_CMD_CONFIG_CHANGED");
-			m_engine.destroyContext();
-			m_engine.destroySurface();
-			m_engine.destroyDisplay();
-			handleAppCommand(app, APP_CMD_CONFIG_CHANGED);
-		}
-		else
-		{
-			if (!m_graphics)
+			if (!m_engine.createDisplay())
 			{
-				// Set up graphics
-				m_graphics = pa::MakeInternal::graphics(m_settings.graphics, *m_fileSystem.get());
+				pa::Log::info("Failed to create the display");
+			}
+			if (!m_engine.createSurface())
+			{
+				pa::Log::info("Failed to create the surface");
+			}
+
+			// Now check that the surface we created is correct
+			if (!m_engine.isLandscapeMode())
+			{
+				// Portrait, not what we want
+				// http://stackoverflow.com/questions/12702868/how-to-force-landscape-mode-with-ndk-using-pure-c-codes?rq=1
+				pa::Log::info("Detected portrait mode, re-sending APP_CMD_CONFIG_CHANGED");
+				m_engine.destroySurface();
+				m_engine.destroyDisplay();
+				continue;
 			}
 			else
 			{
-				m_graphics->resume();
-			}
+				if (!m_engine.createContext())
+				{
+					pa::Log::info("Failed to create the context");
+				}
 
-			//if (m_engine.hasInitialised())
-			{
+				if (!m_graphics)
+				{
+					// Set up graphics
+					m_graphics = pa::MakeInternal::graphics(m_settings.graphics, *m_fileSystem.get());
+				}
+				else
+				{
+					m_graphics->resume();
+				}
+
 				// Restore platform size if we are resuming the app
 				getGraphics()->resize(pa::Graphics::ResizeMode::FillMin, m_engine.getSurfaceSize()); // TODO set this from graphics setting
+				getGraphics()->getResourceManager().restoreState();
+
+				m_engine.setHasWindow(true); // Set that we have got the correct window
 			}
-			getGraphics()->getResourceManager().restoreState();
-			m_engine.setHasWindow(true); // Set that we have got the correct window
 		}
 		break;
 	case APP_CMD_TERM_WINDOW:
@@ -356,13 +350,6 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 		break;
 	case APP_CMD_CONFIG_CHANGED:
 		pa::Log::info("APP_CMD_CONFIG_CHANGED");
-		//if (!m_engine.isLandscapeMode())
-		if (m_engine.getSurfaceSize().x < m_engine.getSurfaceSize().y) // We are in portrait
-		{
-			//sleep(100);
-			//m_engine.clearBuffer();
-			resendWindowAppCommands();
-		}
 		break;
 	}
 }

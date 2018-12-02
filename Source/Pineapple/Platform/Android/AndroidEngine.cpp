@@ -135,6 +135,18 @@ bool pa::AndroidEngine::createSurface()
 	{
 		pa::Log::info("Creating surface");
 		m_surface = eglCreateWindowSurface(m_display, m_config, m_app->window, NULL);
+
+		if (eglQuerySurface(m_display, m_surface, EGL_WIDTH, &m_surfaceSize.x) == EGL_TRUE &&
+			eglQuerySurface(m_display, m_surface, EGL_HEIGHT, &m_surfaceSize.y) == EGL_TRUE)
+		{
+			pa::Log::info("Surface size: {} * {}", m_surfaceSize.x, m_surfaceSize.y);
+		}
+		else
+		{
+			pa::Log::info("Failed to get the size of the surface");
+			m_surfaceSize.set(0, 0);
+			return false;
+		}
 	}
 	else
 	{
@@ -159,17 +171,6 @@ bool pa::AndroidEngine::createContext()
 		else
 		{
 			pa::Log::info("Failed to make the context current");
-			return false;
-		}
-
-		if (eglQuerySurface(m_display, m_surface, EGL_WIDTH, &m_surfaceSize.x) == EGL_TRUE &&
-			eglQuerySurface(m_display, m_surface, EGL_HEIGHT, &m_surfaceSize.y) == EGL_TRUE)
-		{
-			pa::Log::info("Surface size: {} * {}", m_surfaceSize.x, m_surfaceSize.y);
-		}
-		else
-		{
-			pa::Log::info("Failed to get the size of the surface");
 			return false;
 		}
 	}
@@ -210,6 +211,7 @@ bool pa::AndroidEngine::destroySurface()
 		{
 			m_surface = EGL_NO_SURFACE;
 			pa::Log::info("Successfully destroyed the surface");
+			m_surfaceSize.set(0, 0);
 		}
 		else
 		{
@@ -281,7 +283,7 @@ bool pa::AndroidEngine::isAnimating()
 
 bool pa::AndroidEngine::isLandscapeMode()
 {
-	if (m_app != NULL && m_app->window != NULL)
+	/*if (m_app != NULL && m_app->window != NULL)
 	{
 		pa::Log::info("Engine Surface size: ({}, {}) Window size: ({}, {})", getSurfaceSize().x, getSurfaceSize().y, ANativeWindow_getWidth(m_app->window), ANativeWindow_getHeight(m_app->window));
 		return
@@ -291,5 +293,6 @@ bool pa::AndroidEngine::isLandscapeMode()
 	else
 	{
 		return false;
-	}
+	}*/
+	return (m_surfaceSize.x != 0 && m_surfaceSize.y != 0 && m_surfaceSize.x > m_surfaceSize.y);
 }

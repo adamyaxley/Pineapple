@@ -33,8 +33,6 @@ namespace pa
 
 		std::vector<Event> m_otherEvents;
 
-		void resendWindowAppCommands();
-
 		AndroidEngine m_engine;
 
 		bool m_setPointerUpOnNextStep;
