@@ -268,7 +268,7 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 			{
 				// Portrait, not what we want
 				// http://stackoverflow.com/questions/12702868/how-to-force-landscape-mode-with-ndk-using-pure-c-codes?rq=1
-				pa::Log::info("Detected portrait mode, re-sending APP_CMD_CONFIG_CHANGED");
+				pa::Log::info("Detected portrait mode, re-creating surface");
 				m_engine.destroySurface();
 				m_engine.destroyDisplay();
 				continue;
