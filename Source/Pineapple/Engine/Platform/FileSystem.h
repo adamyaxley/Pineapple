@@ -59,9 +59,12 @@ namespace pa
 
 		FileResult getModificationTime(std::chrono::system_clock::time_point& modificationTime) const;
 
+		FileStorage getStorage() const;
+
 	private:
 		const FileSystem& m_fileSystem;
 		const std::string m_path;
+		const FileStorage m_storage;
 	};
 
 	// Overridable virtual functions for special platform

@@ -9,7 +9,13 @@
 #include <Pineapple/Graphics/OpenGL/TextGL.h>
 #include <Pineapple/Graphics/OpenGL/UtilGL.h>
 #include <fontstash.h>
-#include <gl3fontstash.h>
+#ifdef PA_OPENGLES1
+#	include <glfontstash.h>
+#	define FONS_RGBA glfonsRGBA
+#else
+#	include <gl3fontstash.h>
+#	define FONS_RGBA gl3fonsRGBA
+#endif
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -29,13 +35,20 @@ void pa::TextGL::render()
 {
 	if ((getText() != nullptr) && getVisible() && m_font.isLoaded())
 	{
+#ifdef PA_OPENGLES1
+		// Load a new drawing matrix
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glLoadIdentity();
+#endif
+
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		unsigned int colour = gl3fonsRGBA((unsigned char)(getColour().R * 255), (unsigned char)(getColour().G * 255),
+		unsigned int colour = FONS_RGBA((unsigned char)(getColour().R * 255), (unsigned char)(getColour().G * 255),
 										  (unsigned char)(getColour().B * 255), (unsigned char)(getColour().A * 255));
 		unsigned int outlineColour =
-			gl3fonsRGBA((unsigned char)(getOutlineColour().R * 255), (unsigned char)(getOutlineColour().G * 255),
+			FONS_RGBA((unsigned char)(getOutlineColour().R * 255), (unsigned char)(getOutlineColour().G * 255),
 						(unsigned char)(getOutlineColour().B * 255), (unsigned char)(getOutlineColour().A * 255));
 
 		auto fs = m_font.getFonsContext();
@@ -45,6 +58,7 @@ void pa::TextGL::render()
 		fonsSetSize(fs, (float)m_font.getSize());
 		fonsSetAlign(fs, FONS_ALIGN_TOP);
 
+#ifndef PA_OPENGLES1
 		// Set the projection matrix
 		glm::mat4 proj =
 			glm::translate(glm::mat4(1.f), glm::vec3(-1.f, 1.f, -1.f)) *
@@ -57,9 +71,14 @@ void pa::TextGL::render()
 							  glm::rotate(glm::mat4(1.f), getRotation(), glm::vec3(0.f, 0.f, 1.f)) *
 							  glm::translate(glm::mat4(1.f), glm::vec3(-getOrigin().x, -getOrigin().y, 0));
 
-		fonsSetColor(fs, outlineColour);
-
 		gl3fonsDepth(fs, -((float)getPriority() - 1000.f) / 2000.f);
+#else
+		const auto position = (getPosition() - getOrigin()) - m_graphics.getTextView();
+
+		glTranslatef(0.f, 0.f, (float)getPriority());
+#endif
+
+		fonsSetColor(fs, outlineColour);
 
 		// Outline <todo> do this in a shader
 		for (int i = -getOutline(); i <= getOutline(); i++)
@@ -71,18 +90,26 @@ void pa::TextGL::render()
 					continue;
 				}
 
+#ifndef PA_OPENGLES1
 				glm::mat4 outlineTransform = glm::translate(transform, glm::vec3(i, j, 0.f));
 				gl3fonsProjection(fs, glm::value_ptr(outlineTransform));
-
-				// Draw text
 				fonsDrawText(fs, 0, 0, getText(), nullptr);
+#else
+				fonsDrawText(fs, position.x + i, position.y + j, getText(), nullptr);
+#endif
 			}
 		}
 
-		gl3fonsProjection(fs, glm::value_ptr(transform));
-
 		fonsSetColor(fs, colour);
+
+#ifndef PA_OPENGLES1
+		gl3fonsProjection(fs, glm::value_ptr(transform));
 		fonsDrawText(fs, 0, 0, getText(), nullptr);
+#else
+		fonsDrawText(fs, position.x, position.y, getText(), nullptr);
+
+		glPopMatrix();
+#endif
 
 		PA_GL_CHECK_ERROR();
 	}

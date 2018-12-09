@@ -5,14 +5,9 @@
 
 #include <Pineapple/Engine/Sound/Music.h>
 
-pa::Music::Music(pa::Sound& sound, const pa::FilePath& path)
+pa::Music::Music(const pa::FilePath& path)
 	: pa::Resource(path)
-	, m_sound(sound)
-{
-	m_handle = m_sound.registerMusic(this);
-}
+{}
 
 pa::Music::~Music()
-{
-	m_sound.unregisterMusic(m_handle);
-}
+{}

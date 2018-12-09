@@ -21,7 +21,7 @@ namespace pa
 
 		virtual std::shared_ptr<Texture> createTexture(const Vect2<int>& pos, const Vect2<int>& size) override;
 
-		void render(const Sprite& sprite);
+		void render(const Sprite& sprite) override;
 
 		GLuint getGLObject() const;
 

@@ -24,7 +24,7 @@ namespace pa
 
 		void createVertexBuffer();
 
-		bool setup();
+		bool setup() override;
 		virtual void render() override;
 
 	private:

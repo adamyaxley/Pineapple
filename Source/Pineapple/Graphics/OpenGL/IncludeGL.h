@@ -5,30 +5,13 @@
 
 #pragma once
 
-#if defined(__ANDROID__) || defined(__APPLE__)
-	#define PA_OPENGLES
-#endif
-
-#ifdef _MSC_VER
-	#define WIN32_LEAN_AND_MEAN
-	#include <windows.h>
-#endif
-
-#ifdef PA_OPENGLES
-	#ifdef __APPLE__
+#ifdef PA_OPENGLES1
+	#if defined(_WINDOWS)
+		#include <glad/glad.h> // GLES1
+	#elif defined(__APPLE__)
 		#include <OpenGLES/ES1/gl.h>
 	#else
-		#ifdef PA_OPENGLES2
-			#include <GLES2/gl2.h>
-		#else
-			#include <GLES/gl.h>
-		#endif
-	#endif
-	#ifndef PA_NO_UTIL_GL_FTGL
-		#pragma clang diagnostic push
-		#pragma clang diagnostic ignored "-Wdeprecated-register"
-		#include <FTGL/ftgles.h>
-		#pragma clang diagnostic pop
+		#include <GLES/gl.h>
 	#endif
 #else
 	#include <glad/glad.h>

@@ -31,6 +31,7 @@ namespace pa
 		}
 		virtual void onQuit()
 		{
+			m_world.end();
 		}
 
 	private:
