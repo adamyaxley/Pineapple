@@ -1,6 +1,7 @@
 #include <Pineapple/Platform/Android/AndroidPlatform.h>
 #include <Pineapple/Platform/Android/AndroidUtil.h>
 #include <Pineapple/Platform/Android/AndroidBridge.h>
+#include <Pineapple/Platform/Android/ScopedEnvJNI.h>
 #include <android/sensor.h>
 #include <memory>
 
@@ -23,26 +24,29 @@ extern "C"
 		// Make sure glue isn't stripped
 		app_dummy(); //No longer necessary https://github.com/android-ndk/ndk/issues/381
 
-		if (!g_enteredAndroidMain)
+		if (g_enteredAndroidMain)
 		{
-			g_enteredAndroidMain = true;
-
-			auto arguments = std::make_unique<pa::AndroidArguments>(state);
-
-			pa::Log::info("Entering main");
-			pa::Main(arguments.get());
-		}
-		else
-		{
-			pa::Log::info("Ignoring second android_main entry");
+			pa::Log::info("Error: Entering android_main for a second time. This is not supported in Pineapple. Please add android:launchMode=\"singleInstance\" to your AndroidManifest.xml");
+			return;
 		}
 
-		//pa::Log::info("Finishing activity in android_main");
+		g_enteredAndroidMain = true;
 
-		//ANativeActivity_finish(state->activity);
+		auto arguments = std::make_unique<pa::AndroidArguments>(state);
+
+		pa::Log::info("Entering main");
+		pa::Main(arguments.get());
+
+		ANativeActivity_finish(state->activity);
 
 		pa::Log::info("Leaving android_main");
 		g_enteredAndroidMain = false;
+
+		pa::Log::info("FinishMe");
+		pa::ScopedEnvJNI jni;
+		jclass activityClass = jni.get()->GetObjectClass(state->activity->clazz);
+		jmethodID FinishHim = jni.get()->GetMethodID(activityClass, "FinishMe", "()V");
+		jni.get()->CallVoidMethod(state->activity->clazz, FinishHim);
 	}
 }
 
@@ -103,7 +107,11 @@ pa::AndroidPlatform::~AndroidPlatform()
 	m_fileSystem.reset();*/
 
 	// Need to keep polling for events until destroy thing is seen
-	pollEvents();
+	if (m_engine.getApp()->destroyRequested == 0)
+	{
+		pa::Log::info("Waiting for destroyRequested");
+		pollEvents();
+	}
 }
 
 void pa::AndroidPlatform::idle()
@@ -314,12 +322,15 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 			m_engine.destroyDisplay();
 			m_engine.setHasWindow(false);
 		}
+		m_engine.setHasFocus(false);
 		break;
 	case APP_CMD_GAINED_FOCUS:
 		pa::Log::info("APP_CMD_GAINED_FOCUS");
+		m_engine.setHasFocus(true);
 		break;
 	case APP_CMD_LOST_FOCUS:
 		pa::Log::info("APP_CMD_LOST_FOCUS");
+		m_engine.setHasFocus(false);
 		break;
 	case APP_CMD_START:
 		pa::Log::info("APP_CMD_START");
@@ -327,7 +338,6 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 	case APP_CMD_RESUME:
 		pa::Log::info("APP_CMD_RESUME");
 		getSound()->resumeMusic();
-		m_engine.setHasFocus(true);
 		break;
 	case APP_CMD_SAVE_STATE:
 		pa::Log::info("APP_CMD_SAVE_STATE");
@@ -335,7 +345,6 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 	case APP_CMD_PAUSE:
 		pa::Log::info("APP_CMD_PAUSE");
 		getSound()->pauseMusic();
-		m_engine.setHasFocus(false);
 		break;
 	case APP_CMD_STOP:
 		pa::Log::info("APP_CMD_STOP");

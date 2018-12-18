@@ -278,7 +278,7 @@ void pa::AndroidEngine::setHasFocus(bool state)
 
 bool pa::AndroidEngine::isAnimating()
 {
-	return m_hasWindow && m_hasFocus;
+	return m_hasFocus;
 }
 
 bool pa::AndroidEngine::isLandscapeMode()
