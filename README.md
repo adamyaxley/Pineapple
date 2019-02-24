@@ -56,16 +56,21 @@ There are three types of plugins: Platform, Graphics and Sound. The interface fo
 
 Currently the following plugins are provided:
 * Platform
-  * paWindows - Win32 application
+  * Windows - Win32 application 32/64bit (tested on Windows 10)
+  * X11 - Unix with X Window System (tested on Ubuntu)
+  * Android - Native application with some java code (tested with NDK r18b)
 * Graphics
-  * paOpenGL - OpenGL rendering (uses [glad](https://github.com/Dav1dde/glad), [stb_image/stb_truetype](https://github.com/nothings/stb), [fontstash](https://github.com/memononen/fontstash) and [glm](https://github.com/g-truc/glm))
+  * OpenGL - OpenGL rendering (uses [glad](https://github.com/Dav1dde/glad), [stb_image/stb_truetype](https://github.com/nothings/stb), [fontstash](https://github.com/memononen/fontstash) and [glm](https://github.com/g-truc/glm))
+    * OpenGL 4.1 (Compatibility mode) on Windows and Unix
+    * OpenGLES 1.0 on Android
 * Sound
-  * paFMOD - FMOD backend (requires FMOD)
+  * FMOD - FMOD wrapper (requires FMOD installation)
+  * SoundPool - Android SoundPool wrapper
 
 ## Build
 To build the source, demos and tests you will need the following:
 * [CMake](https://cmake.org/) 3.8
-* [FMOD](http://www.fmod.org/download) (required for the paFMOD sound plugin)
+* [FMOD](http://www.fmod.org/download) (required for the FMOD sound plugin)
 
 It is recommended to do an out of source build, to avoid polluting the source tree. Run the following:
 ```
@@ -78,7 +83,7 @@ You can give a specific generator to cmake using the -G flag. The following gene
 * Win64 - "Visual Studio 15 2017 Win64"
 * Unix - Use the default (not actively tested)
 
-Then open the generated Pineapple.sln file and hit build.
+For Android use Android Studio to load the root Pineapple CMakeLists.txt file.
 
 Note: To run the tests within Visual Studio you will need to install the [Google Test Adapter](https://github.com/csoltenborn/GoogleTestAdapter), which can be installed via Tools -> Extensions and Updates. For Visual Studio 2017 there is an official [Test Adapter for Google Test](https://marketplace.visualstudio.com/items?itemName=VisualCPPTeam.TestAdapterforGoogleTest) that is maintained by the Visual C++ Team.
 

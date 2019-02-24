@@ -7,6 +7,7 @@
 
 #include <Pineapple/Engine/Graphics/Texture.h>
 #include <Pineapple/Engine/System/World.h>
+#include <Pineapple/Engine/System/Object.h>
 
 namespace pa
 {

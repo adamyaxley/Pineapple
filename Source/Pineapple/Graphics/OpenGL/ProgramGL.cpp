@@ -3,7 +3,7 @@
   This software is licensed under the Zlib license (see license.txt for details)
 ------------------------------------------------------------------------------*/
 
-#ifdef PA_OPENGLES2
+#ifndef PA_OPENGLES1
 
 	#include <Pineapple/Engine/Platform/Platform.h>
 	#include <Pineapple/Engine/Graphics/Shader.h>

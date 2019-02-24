@@ -23,31 +23,57 @@ void pa::Graphics::resize(pa::Graphics::ResizeMode mode, const pa::Vect2<int>& p
 	const pa::Vect2<float> p = platformSize;
 	const pa::Vect2<float> u = m_settings.size;
 
+	const bool isFillMode = ResizeMode::FillCenter == mode || ResizeMode::FillMin == mode || ResizeMode::FillMax == mode;
+
 	pa::Vect2<float> projectionSize;
 	pa::Vect2<float> projectionPosition;
 
-	if (ResizeMode::Fill == mode || ResizeMode::Fit == mode)
+	if (isFillMode || ResizeMode::Fit == mode)
 	{
 		pa::Log::info("Resizing keeping aspect ratio: {} * {} -> {} * {}", (int)u.x, (int)u.y, (int)p.x, (int)p.y);
 
 		float platformRatio = p.y / p.x;
 		float graphicsRatio = u.y / u.x;
 
-		if (ResizeMode::Fill == mode)
+		if (isFillMode)
 		{
 			if (platformRatio > graphicsRatio)
 			{
 				projectionSize.x = (graphicsRatio / platformRatio) * u.x;
 				projectionSize.y = u.y;
-				projectionPosition.x = (u.x - projectionSize.x) / 2;
 				projectionPosition.y = 0;
+
+				switch (mode)
+				{
+				case ResizeMode::FillCenter:
+					projectionPosition.x = (u.x - projectionSize.x) / 2;
+					break;
+				case ResizeMode::FillMin:
+					projectionPosition.x = 0;
+					break;
+				case ResizeMode::FillMax:
+					projectionPosition.x = u.x - projectionSize.x;
+					break;
+				}
 			}
 			else
 			{
 				projectionSize.x = u.x;
 				projectionSize.y = (platformRatio / graphicsRatio) * u.y;
 				projectionPosition.x = 0;
-				projectionPosition.y = (u.y - projectionSize.y) / 2;
+
+				switch (mode)
+				{
+				case ResizeMode::FillCenter:
+					projectionPosition.y = (u.y - projectionSize.y) / 2;
+					break;
+				case ResizeMode::FillMin:
+					projectionPosition.y = 0;
+					break;
+				case ResizeMode::FillMax:
+					projectionPosition.y = u.y - projectionSize.y;
+					break;
+				}
 			}
 
 			setViewport(0, 0, (int)p.x, (int)p.y);

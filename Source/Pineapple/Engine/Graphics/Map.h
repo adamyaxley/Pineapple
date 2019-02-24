@@ -33,6 +33,10 @@ namespace pa
 		bool getVWrap() const;
 		bool getHWrap() const;
 
+		// Visible
+		void setVisible(bool visible);
+		bool getVisible() const;
+
 		// Colour
 		void setColour(const Colour& colour);
 		Colour& getColour();
@@ -48,6 +52,7 @@ namespace pa
 		{
 			HWrap,
 			VWrap,
+			Invisible,
 			is_enum_bitfield
 		};
 

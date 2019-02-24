@@ -5,13 +5,14 @@
 
 #pragma once
 
-#include <Pineapple/Engine/System/Object.h>
 #include <Pineapple/Engine/System/ObjectInfo.h>
 #include <Pineapple/Engine/System/Time.h>
 #include <vector>
 
 namespace pa
 {
+	class Object;
+
 	class ObjectStore
 	{
 	public:

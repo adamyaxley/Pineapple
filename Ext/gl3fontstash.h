@@ -28,6 +28,7 @@
 FONScontext* gl3fonsCreate(int width, int height, int flags);
 void gl3fonsDelete(FONScontext* ctx);
 void gl3fonsProjection(FONScontext* ctx, GLfloat *mat);
+void gl3fonsDepth(FONScontext* ctx, GLfloat depth);
 
 unsigned int gl3fonsRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 
@@ -46,8 +47,10 @@ struct GLFONScontext {
 	GLuint	vbo;					// Our Vertex Buffer Object
 	GLuint	shader;					// Our shader program
 	GLfloat	projMat[16];			// Projection matrix
+	GLfloat depth;
 	GLuint	texture_uniform;		// Uniform for our texture sampler
 	GLuint	projMat_uniform;		// Uniform for our projection matrix
+	GLuint  depth_uniform;
 	int width, height;
 };
 typedef struct GLFONScontext GLFONScontext;
@@ -56,6 +59,7 @@ typedef struct GLFONScontext GLFONScontext;
 char vertexShaderText[] ="#version 330\r\n\
 \r\n\
 uniform mat4 projMat;\r\n\
+uniform float depth;\r\n\
 \r\n\
 layout(location = 0) in vec2 vert;\r\n\
 layout(location = 1) in vec2 coord;\r\n\
@@ -65,8 +69,7 @@ out vec2 T;\r\n\
 out vec4 C;\r\n\
 \r\n\
 void main() {\r\n\
-	gl_Position = projMat * vec4(vert.x,vert.y, 1.0, 1.0);\r\n\
-//	gl_Position = vec4((vert.x / 512.0) - 1.0, 1.0 - (vert.y / 386.0), 0.0, 1.0);\r\n\
+	gl_Position = projMat * vec4(vert.x,vert.y, depth, 1.0);\r\n\
 	T = coord;\r\n\
 	C = color;\r\n\
 }";
@@ -217,6 +220,7 @@ static int gl3fons__renderCreate(void* userPtr, int width, int height)
 	// get our uniforms
 	gl->texture_uniform = glGetUniformLocation(gl->shader, "texture0");
 	gl->projMat_uniform = glGetUniformLocation(gl->shader, "projMat");
+	gl->depth_uniform = glGetUniformLocation(gl->shader, "depth");
 	
 	// setup our projection matrix as an identity matrix
 	for (i = 0; i < 16; i++) gl->projMat[i] = 0.0;
@@ -247,6 +251,7 @@ static int gl3fons__renderCreate(void* userPtr, int width, int height)
 	glBindTexture(GL_TEXTURE_2D, gl->tex);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, gl->width, gl->height, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	return 1;
 }
 
@@ -294,6 +299,9 @@ static void gl3fons__renderDraw(void* userPtr, const float* verts, const float* 
 	
 	// init our projection matrix
 	glUniformMatrix4fv(gl->projMat_uniform, 1, false, gl->projMat);
+
+	// init depth
+	glUniform1f(gl->depth_uniform, gl->depth);
 	
 	// bind our vao
 	glBindVertexArray(gl->vao);
@@ -330,6 +338,7 @@ static void gl3fons__renderDelete(void* userPtr)
 	
 	gl->texture_uniform = 0;
 	gl->projMat_uniform = 0;
+	gl->depth_uniform = 0;
 	if (gl->shader != 0) {
 		glDeleteProgram(gl->shader);
 		gl->shader = 0;
@@ -397,6 +406,12 @@ void gl3fonsProjection(FONScontext* ctx, GLfloat *mat)
 	for (i = 0; i < 16; i++) {
 		gl->projMat[i] = mat[i];
 	}
+}
+
+void gl3fonsDepth(FONScontext* ctx, GLfloat depth)
+{
+	GLFONScontext* gl = (GLFONScontext*)(ctx->params.userPtr);
+	gl->depth = depth;
 }
 
 unsigned int gl3fonsRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a)

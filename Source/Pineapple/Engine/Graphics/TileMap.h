@@ -27,6 +27,10 @@ namespace pa
 
 		void set(int x, int y, Tile tile);
 
+		// Sets from a 1D array which contains the tiles row-by-row
+		template <std::size_t N>
+		void setFromArray(Tile (&tiles)[N]);
+
 	private:
 		PA_FORMAT_VECTOR_VAR(int, Size, m_size);
 
@@ -34,3 +38,5 @@ namespace pa
 		std::vector<Tile> m_tileData;
 	};
 }
+
+#include <Pineapple/Engine/Graphics/TileMap.inl>

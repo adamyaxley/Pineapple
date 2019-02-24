@@ -6,8 +6,8 @@
 #include <Pineapple/Sound/FMOD/MusicFMOD.h>
 #include <Pineapple/Sound/FMOD/UtilFMOD.h>
 
-pa::MusicFMOD::MusicFMOD(pa::Sound& sound, FMOD::System* system, const pa::FilePath& path)
-	: pa::Music(sound, path)
+pa::MusicFMOD::MusicFMOD(FMOD::System* system, const pa::FilePath& path)
+	: pa::Music(path)
 	, m_system(system)
 	, m_sound(nullptr)
 	, m_channel(nullptr)

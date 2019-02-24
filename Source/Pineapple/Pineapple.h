@@ -18,6 +18,7 @@
 #include <Pineapple/Engine/Platform/Platform.h>
 #include <Pineapple/Engine/System/InputHandler.h>
 #include <Pineapple/Engine/System/Object.h>
+#include <Pineapple/Engine/System/EnableChildList.h>
 #include <Pineapple/Engine/System/TimerHandler.h>
 #include <Pineapple/Engine/System/World.h>
 #include <Pineapple/Engine/Util/Macro.h>
@@ -36,6 +37,7 @@
 
 // Sound
 #include <Pineapple/Engine/Sound/Effect.h>
+#include <Pineapple/Engine/Sound/Music.h>
 #include <Pineapple/Engine/Sound/Sound.h>
 
 // Physics

@@ -30,24 +30,31 @@ std::shared_ptr<pa::Effect> pa::Sound::createEffect(const char* path, pa::FileSt
 
 std::shared_ptr<pa::Music> pa::Sound::createMusic(const char* path, pa::FileStorage storage)
 {
-	auto music = createNativeMusic(*this, pa::FilePath(m_fileSystem, storage, path));
+	auto music = createNativeMusic(pa::FilePath(m_fileSystem, storage, path));
 	m_resourceManager.add(music);
+	m_musicList.push_back(music);
 	return music;
 }
 
 void pa::Sound::pauseMusic()
 {
-	for (auto&& music : m_musicList)
+	for (auto music : m_musicList)
 	{
-		music->pause();
+		if (music->isLoaded())
+		{
+			music->pause();
+		}
 	}
 }
 
 void pa::Sound::resumeMusic()
 {
-	for (auto&& music : m_musicList)
+	for (auto music : m_musicList)
 	{
-		music->resume();
+		if (music->isLoaded())
+		{
+			music->resume();
+		}
 	}
 }
 
@@ -78,14 +85,4 @@ bool pa::Sound::getMusicEnabled()
 bool pa::Sound::getEffectEnabled()
 {
 	return m_effectEnabled;
-}
-
-pa::Sound::Handle pa::Sound::registerMusic(pa::Music* music)
-{
-	return m_musicList.insert(m_musicList.cend(), music);
-}
-
-void pa::Sound::unregisterMusic(pa::Sound::Handle handle)
-{
-	m_musicList.erase(handle);
 }

@@ -13,7 +13,11 @@ namespace _paInternal
 		auto logger = spdlog::get("pineapple");
 		if (!logger)
 		{
+#ifdef __ANDROID__
+			logger = spdlog::android_logger("pineapple", "PINEAPPLE");
+#else
 			logger = spdlog::stdout_color_mt("pineapple");
+#endif
 		}
 		logger->info(str);
 	}

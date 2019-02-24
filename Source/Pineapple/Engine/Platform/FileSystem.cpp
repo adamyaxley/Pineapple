@@ -72,6 +72,19 @@ std::string pa::FileBuffer::createString() const
 	return string;
 }
 
+void pa::FileBuffer::copyFromString(std::string string)
+{
+	clear();
+	allocate(string.size());
+	memcpy(getBuffer().get(), string.c_str(), getSize());
+}
+
+void pa::FileBuffer::clear()
+{
+	m_buffer = nullptr;
+	m_size = 0;
+}
+
 namespace
 {
 	std::string combinePaths(const std::string& path1, const std::string& path2)
@@ -104,6 +117,7 @@ namespace
 pa::FilePath::FilePath(const pa::FileSystem& fileSystem, pa::FileStorage storage, const std::string& path)
 	: m_fileSystem(fileSystem)
 	, m_path(makeFilePath(fileSystem, storage, path))
+	, m_storage(storage)
 {
 }
 
@@ -125,6 +139,11 @@ pa::FileResult pa::FilePath::write(const FileBuffer& buffer) const
 pa::FileResult pa::FilePath::getModificationTime(std::chrono::system_clock::time_point& modificationTime) const
 {
 	return m_fileSystem.getModificationTime(*this, modificationTime);
+}
+
+pa::FileStorage pa::FilePath::getStorage() const
+{
+	return m_storage;
 }
 
 pa::FileSystem::FileSystem(pa::PlatformSettings::FileSystem settings)

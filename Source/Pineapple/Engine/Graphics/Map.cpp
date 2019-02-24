@@ -38,6 +38,16 @@ bool pa::Map::getHWrap() const
 	return m_flags.getBool(Flags::HWrap);
 }
 
+void pa::Map::setVisible(bool visible)
+{
+	visible ? m_flags.clear(Flags::Invisible) : m_flags.set(Flags::Invisible);
+}
+
+bool pa::Map::getVisible() const
+{
+	return !m_flags.getBool(Flags::Invisible);
+}
+
 void pa::Map::setColour(const pa::Colour& colour)
 {
 	m_colour = colour;

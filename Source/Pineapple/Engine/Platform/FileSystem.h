@@ -38,6 +38,8 @@ namespace pa
 		const std::unique_ptr<unsigned char[]>& getBuffer() const;
 		std::size_t getSize() const;
 		std::string createString() const;
+		void copyFromString(std::string string);
+		void clear();
 
 	private:
 		std::unique_ptr<unsigned char[]> m_buffer;
@@ -57,9 +59,12 @@ namespace pa
 
 		FileResult getModificationTime(std::chrono::system_clock::time_point& modificationTime) const;
 
+		FileStorage getStorage() const;
+
 	private:
 		const FileSystem& m_fileSystem;
 		const std::string m_path;
+		const FileStorage m_storage;
 	};
 
 	// Overridable virtual functions for special platform

@@ -16,7 +16,6 @@ void pa::Particle::stepMotion(Time deltaTime)
 	m_position += (initialVelocity + m_velocity) * (deltaTime.count() * 0.5f);
 }
 
-#if 0
 pa::Vect2<float> pa::Particle::calculatePosition(float time) const
 {
 	// s = ut + .5 * at^2
@@ -155,5 +154,3 @@ int pa::Particle::calculateTimeForDisplacement(float displacement, float velocit
 		}
 	}
 }
-
-#endif
