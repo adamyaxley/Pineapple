@@ -25,6 +25,9 @@ namespace pa
 		};
 
 		Sprite(RenderSystem& renderSystem, std::vector<std::shared_ptr<Texture>>& frames, int priority);
+		Sprite(const Sprite& copy) = delete;
+		Sprite& operator=(const Sprite& assignment) = delete;
+
 		virtual ~Sprite()
 		{
 		}
