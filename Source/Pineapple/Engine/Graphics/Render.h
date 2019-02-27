@@ -18,7 +18,7 @@ namespace pa
 			Ordered
 		};
 
-		Render(RenderSystem& renderSystem, pa::Render::Type renderType, int priority);
+		Render(RenderSystem& renderSystem, Type renderType, int priority);
 		~Render();
 
 		int getPriority() const;
@@ -31,7 +31,7 @@ namespace pa
 
 		RenderSystem::Handle m_handle;
 
-		const pa::Render::Type m_renderType;
+		const Type m_renderType;
 		int m_priority;
 	};
 }
