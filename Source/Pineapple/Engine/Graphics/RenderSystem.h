@@ -14,10 +14,15 @@ namespace pa
 	class RenderSystem
 	{
 	public:
+
+		friend Render;
+
 		using Handle = std::list<Render*>::const_iterator;
 
 		void renderUnordered();
 		void renderOrdered();
+
+	private:
 
 		Handle registerOrdered(Render* renderable);
 		void unregisterOrdered(const Handle handle);
@@ -25,7 +30,6 @@ namespace pa
 		Handle registerUnordered(Render* renderable);
 		void unregisterUnordered(const Handle handle);
 
-	private:
 		std::list<Render*> m_unorderedList;
 		std::list<Render*> m_orderedList;
 	};
