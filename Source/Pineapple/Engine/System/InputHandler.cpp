@@ -17,6 +17,11 @@ pa::InputHandler::~InputHandler()
 	m_world.unregisterPreStepInstancesCallback(m_callbackIterator);
 }
 
+pa::World& pa::InputHandler::getInputHandlerWorld()
+{
+	return m_world;
+}
+
 // Process instances
 void pa::InputHandler::process(const pa::Input& input)
 {

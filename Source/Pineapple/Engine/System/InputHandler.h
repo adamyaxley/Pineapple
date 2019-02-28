@@ -16,6 +16,9 @@ namespace pa
 		InputHandler(World& world);
 		~InputHandler();
 
+		// Access world
+		World& getInputHandlerWorld();
+
 		// User definable events
 		virtual void onKeyPress(Key)
 		{
