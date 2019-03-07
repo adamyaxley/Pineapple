@@ -13,11 +13,12 @@ namespace pa
 
 		virtual bool onLoad() override;
 		virtual bool onUnload() override;
+		virtual bool onSave() override;
 
-		const std::string& getData() const;
+		std::string& getString();
 
 	private:
 
-		std::string m_data;
+		std::string m_string;
 	};
 }

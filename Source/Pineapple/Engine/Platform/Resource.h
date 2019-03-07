@@ -46,6 +46,8 @@ namespace pa
 
 		std::chrono::system_clock::time_point getLastLoadTime() const;
 
+		void save();
+
 		// Get memory usage
 		// int getMemory();
 
@@ -57,6 +59,9 @@ namespace pa
 
 		// Release all memory for this resource
 		virtual bool onUnload() = 0;
+
+		// Save this resource back to the file
+		virtual bool onSave() { return true;  }
 
 		// Protected so only ResourceManager can delete it
 		virtual ~Resource();

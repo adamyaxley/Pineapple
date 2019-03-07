@@ -15,19 +15,33 @@ bool pa::StringResource::onLoad()
 		pa::Log::info("{}: {}", pa::FileSystem::getResultString(result), getPath().asString());
 		return false;
 	}
-	m_data = buffer.createString();
+	m_string = buffer.createString();
 	pa::Log::info("Loaded String Resource: {}", getPath().asString());
 	return true;
 }
 
 bool pa::StringResource::onUnload()
 {
-	m_data.clear();
-	m_data.shrink_to_fit();
+	m_string.clear();
+	m_string.shrink_to_fit();
 	return true;
 }
 
-const std::string& pa::StringResource::getData() const
+bool pa::StringResource::onSave()
 {
-	return m_data;
+	pa::FileBuffer buffer;
+	buffer.copyFromString(m_string);
+	auto result = getPath().write(buffer);
+	if (result != pa::FileResult::Success)
+	{
+		pa::Log::info("{}: {}", pa::FileSystem::getResultString(result), getPath().asString());
+		return false;
+	}
+
+	return true;
+}
+
+std::string& pa::StringResource::getString()
+{
+	return m_string;
 }

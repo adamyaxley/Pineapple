@@ -82,6 +82,22 @@ std::chrono::system_clock::time_point pa::Resource::getLastLoadTime() const
 	return m_lastLoadTime;
 }
 
+void pa::Resource::save()
+{
+	m_lastLoadTime = std::chrono::system_clock::now();
+
+	if (onSave())
+	{
+		m_loadState = pa::ResourceLoadState::SuccessfullyLoaded;
+		notifyChildDependencies();
+	}
+	else
+	{
+		m_loadState = pa::ResourceLoadState::FailedToLoad;
+		pa::Log::info("Failed to save {}", getPath().asString());
+	}
+}
+
 const pa::FilePath& pa::Resource::getPath() const
 {
 	return m_path;
