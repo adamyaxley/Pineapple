@@ -64,13 +64,13 @@ Currently the following plugins are provided:
     * OpenGL 4.1 (Compatibility mode) on Windows and Unix
     * OpenGLES 1.0 on Android
 * Sound
-  * FMOD - FMOD wrapper (requires FMOD installation)
+  * FMOD - FMOD wrapper (requires FMOD Studio API installation, tested on Windows 10, Ubuntu)
   * SoundPool - Android SoundPool wrapper
 
 ## Build
 To build the source, demos and tests you will need the following:
 * [CMake](https://cmake.org/) 3.8
-* [FMOD](http://www.fmod.org/download) (required for the FMOD sound plugin)
+* [FMOD Studio API](http://www.fmod.org/download) - required for the FMOD Sound plugin
 
 It is recommended to do an out of source build, to avoid polluting the source tree. Run the following:
 ```
