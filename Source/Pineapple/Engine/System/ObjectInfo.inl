@@ -27,6 +27,7 @@ template <typename T>
 void pa::ObjectInfo<T>::clearAllInstances()
 {
 	m_instanceList.clear();
+	m_childList.clear();
 }
 
 template <typename T>

@@ -326,3 +326,19 @@ TEST(World, RegisterChildren)
 	ASSERT_EQ(world.getList<Derived>().size(), 0u);
 	ASSERT_EQ(world.getChildList<Derived>().size(), 0u);
 }
+
+TEST(World, ResetNextStepChildren)
+{
+	pa::World world;
+
+	world.create<Base>();
+
+	ASSERT_EQ(1u, world.getList<Base>().size());
+	ASSERT_EQ(1u, world.getChildList<Base>().size());
+
+	world.resetNextStep<Base>();
+	world.step(pa::Time(0));
+
+	ASSERT_EQ(1u, world.getList<Base>().size());
+	ASSERT_EQ(1u, world.getChildList<Base>().size());
+}
