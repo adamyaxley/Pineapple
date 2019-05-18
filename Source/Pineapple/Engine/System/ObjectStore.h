@@ -37,7 +37,7 @@ namespace pa
 		std::vector<int> getObjectIds() const;
 		ObjectInfoBase& getObjectInfo(int id);
 
-		void deleteAllInstances();
+		void clearAllInstances();
 
 		void removeDeadInstances();
 

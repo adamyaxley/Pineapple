@@ -23,7 +23,7 @@ pa::World::World()
 pa::World::~World()
 {
 	// Delete the instances so that they de-register any callbacks with the world first
-	m_objectStore.deleteAllInstances();
+	m_objectStore.clearAllInstances();
 }
 
 bool pa::World::step(Time deltaTime, const pa::Input& input)
@@ -104,7 +104,7 @@ void pa::World::changeScene()
 	// If the screen needs to be changed
 	if (m_nextSceneLambda != nullptr)
 	{
-		m_objectStore.deleteAllInstances();
+		m_objectStore.clearAllInstances();
 		m_nextSceneLambda();
 
 		m_nextSceneLambda = nullptr;

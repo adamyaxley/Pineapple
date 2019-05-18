@@ -130,7 +130,7 @@ TEST(ObjectStore, DeleteDeadInstances)
 	ASSERT_EQ(4u, objectStore.getList<TestObject1>().size() + objectStore.getList<TestObject2>().size());
 }
 
-TEST(ObjectStore, DeleteAllInstances)
+TEST(ObjectStore, ClearAllInstances)
 {
 	pa::ObjectStore objectStore;
 
@@ -143,7 +143,7 @@ TEST(ObjectStore, DeleteAllInstances)
 
 	ASSERT_EQ(6u, objectStore.getList<TestObject1>().size() + objectStore.getList<TestObject2>().size());
 
-	objectStore.deleteAllInstances();
+	objectStore.clearAllInstances();
 
 	ASSERT_EQ(0u, objectStore.getList<TestObject1>().size() + objectStore.getList<TestObject2>().size());
 }

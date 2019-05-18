@@ -11,7 +11,6 @@ pa::ObjectStore::ObjectStore()
 
 pa::ObjectStore::~ObjectStore()
 {
-	deleteAllInstances();
 }
 
 std::vector<int> pa::ObjectStore::getObjectIds() const
@@ -24,7 +23,7 @@ pa::ObjectInfoBase& pa::ObjectStore::getObjectInfo(int id)
 	return *m_objectInfos[id].get();
 }
 
-void pa::ObjectStore::deleteAllInstances()
+void pa::ObjectStore::clearAllInstances()
 {
 	for (auto&& id : getObjectIds())
 	{
