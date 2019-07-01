@@ -1,11 +1,3 @@
-//
-//  ThreadSignal.cpp
-//  IOS
-//
-//  Created by apple on 04/08/2014.
-//  Copyright (c) 2014 Pineapple. All rights reserved.
-//
-
 #include <Pineapple/Core/Util/Macro.h>
 
 template <int N>

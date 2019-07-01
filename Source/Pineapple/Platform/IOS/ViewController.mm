@@ -1,11 +1,3 @@
-//
-//  paViewController.m
-//  paIOS
-//
-//  Created by apple on 10/08/2014.
-//  Copyright (c) 2014 Pineapple. All rights reserved.
-//
-
 #import "paViewController.h"
 
 #include <Pineapple/Platform/IOS/paIOSBridge.h>
@@ -80,12 +72,12 @@
 	x *= xRatio;
 	y *= yRatio;
 	
-	paIOSBridge::setTouchPosition((int)x, (int)y);
+	pa::IOSBridge::setTouchPosition((int)x, (int)y);
 }
 
 - (void)unregisterTouches:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	paIOSBridge::clearTouchPosition();
+	pa::IOSBridge::clearTouchPosition();
 }
 
 // TODO fix multitouch bugs
@@ -112,11 +104,11 @@
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-	paIOSBridge::getFrameStartThreadSignal().sync();
+	pa::IOSBridge::getFrameStartThreadSignal().sync();
 	
-	paGraphics::render();
+	pa::Graphics::render();
 	
-	paIOSBridge::getFrameEndThreadSignal().sync();
+	pa::IOSBridge::getFrameEndThreadSignal().sync();
 }
 
 #pragma mark - GLKViewControllerDelegate

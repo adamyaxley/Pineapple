@@ -11,13 +11,11 @@
 //  Copyright (c) 2014 Pineapple. All rights reserved.
 //
 
-#ifndef PA_INCLUDE_IOS_BRIDGE
-	#define PA_INCLUDE_IOS_BRIDGE
+#pragma once
+#include <string>
 
-	#include <string>
-
-	#include <Pineapple/Platform/IOS/ThreadSignal.h>
-	#import <OpenGLES/EAGL.h>
+#include <Pineapple/Platform/IOS/ThreadSignal.h>
+#import <OpenGLES/EAGL.h>
 
 namespace pa
 {
@@ -43,8 +41,7 @@ namespace pa
 		const Vect2<int>& getUserSize();
 
 		std::string getRoot();
-		std::string makeAssetPath(const char* path);
+		std::string getAssetPath();
+		std::string getInternalPath();
 	}
-
-#endif
 }

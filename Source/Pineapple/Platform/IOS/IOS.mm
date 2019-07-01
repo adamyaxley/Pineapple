@@ -1,7 +1,7 @@
 #include <Pineapple/Core/Platform/paPlatform.hpp>
 #include <Pineapple/Graphics/Base/paGraphics.hpp>
 #include <Pineapple/Platform/IOS/AppDelegate.h>
-#include <Pineapple/Platform/IOS/paIOSBridge.h>
+#include <Pineapple/Platform/IOS/IOSBridge.h>
 
 #include <cstdlib>
 #include <sys/time.h>
@@ -11,20 +11,20 @@
 #import <Foundation/Foundation.h>
 #import <QuartzCore/CAAnimation.h>
 
-#define PA_NO_UTIL_GL_FTGL
-#include <Pineapple/Graphics/OpenGL/paUtilGL.hpp>
+std::shared_ptr<pa::Platform> pa::Make::platform(pa::Arguments* arguments, const pa::PlatformSettings& settings)
+{
+	return std::make_shared<pa::IOSPlatform>(settings);
+}
 
 namespace
 {
-    paLinkedList<paEvent> g_events;
-	
 	pthread_t g_applicationThread;
 	
-	void* paMainThread(void*)
+	void* UIMainThread(void*)
 	{
-		paMain();
+		pa::Main();
 		
-		return PA_NULL;
+		return nullptr;
 	}
 }
 
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 	
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 	
-	result = pthread_create(&g_applicationThread, &attr, &paMainThread, PA_NULL);
+	result = pthread_create(&g_applicationThread, &attr, &UIMainThread, PA_NULL);
 	
 	@autoreleasepool
 	{
@@ -51,90 +51,54 @@ int main(int argc, char* argv[])
 }
 
 // Startup and shutdown
-bool paPlatform::startup(int width, int height, const char* title, unsigned int flags)
+pa::IOSPlatform::IOSPlatform(const PlatformSettings& settings)
 {
-	paIOSBridge::setUserSize(width, height);
+	pa::IOSBridge::setUserSize(settings.graphics.size.x, settings.graphics.size.y);
 		
 	// wait until app has loaded
-	paIOSBridge::getInitThreadSignal().sync();
+	pa::IOSBridge::getInitThreadSignal().sync();
 	
 	// Create shared context for loading textures and other resources
-	EAGLContext* sharedContext = [[EAGLContext alloc] initWithAPI:[paIOSBridge::getUIContext() API] sharegroup:[paIOSBridge::getUIContext() sharegroup]];
+	EAGLContext* sharedContext = [[EAGLContext alloc] initWithAPI:[pa::IOSBridge::getUIContext() API] sharegroup:[pa::IOSBridge::getUIContext() sharegroup]];
 	
 	if (!sharedContext)
 	{
-		paPlatform::print("sharedContext is null");
+		pa::Log::info("sharedContext is null");
 	}
 	
 	if (![EAGLContext setCurrentContext:sharedContext])
 	{
-		paPlatform::print("Could not set current sharedContext after init");
+		pa::Log::info("Could not set current sharedContext after init");
 	}
 	
 	// Resize our window to fit what the user gave us
+	// TODO this should be done when graphics is inititialised
 	paGraphics::resizeKeepAspectRatio(width, height);
-	
-	return true;
 }
 
-bool paPlatform::shutdown()
+pa::IOSPlatform::~IOSPlatform()
 {
     // issue exit TODO
     
     // join app thread
-	return true;
-}
-
-// Get input from user
-void paPlatform::pollEvents()
-{
-    
-}
-
-paLinkedList<paEvent>& paPlatform::getEvents()
-{
-    return g_events;
-}
-
-paDeviceState paPlatform::queryDevice(paDeviceEnum)
-{
-	return paIOSBridge::getTouchPosition();
-}
-
-// Threading
-void paPlatform::async(void(*)(void))
-{
-    // not implemented
 }
 
 // Idle
-void paPlatform::idle()
+void pa::IOSPlatform::idle()
 {
 	// Use barriers to allow the UI thread to render at the correct time.
-    paIOSBridge::getFrameStartThreadSignal().sync();
-	paIOSBridge::getFrameEndThreadSignal().sync();
+    pa::IOSBridge::getFrameStartThreadSignal().sync();
+	pa::IOSBridge::getFrameEndThreadSignal().sync();
 }
 
-// Utility
-double paPlatform::getTime()
+// Get input from user
+void pa::IOSPlatform::pollEvents()
 {
-    /*timeval time;
-    gettimeofday(&time, PA_NULL);
-    
-    return (double)time.tv_sec + (double)time.tv_usec / 1.0e06;*/
-	
-	//return CACurrentMediaTime();
-	
-	return (1.0 / 60.0) * getTicks();
-}
-
-int paPlatform::random()
-{
-    return rand();
+    // TODO?
 }
 
 // Intent
-void paPlatform::openUrl(const char* url)
+void pa::IOSPlatform::openUrl(const char* url)
 {
 	NSString* string = [NSString stringWithUTF8String:url];
 	
@@ -142,37 +106,4 @@ void paPlatform::openUrl(const char* url)
 		
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:string]];
 	});
-}
-
-// Memory
-void* paPlatform::allocate(unsigned long size)
-{
-    return malloc(size);
-}
-
-void paPlatform::deallocate(void* ptr)
-{
-    free(ptr);
-}
-
-void* paPlatform::reallocate(void* ptr, unsigned long size)
-{
-    return realloc(ptr, size);
-}
-
-// Standard print with formatting
-int paPlatform::print(const char* format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    NSLogv([NSString stringWithUTF8String:format], args);
-    va_end(args);
-    
-    return 0; // Need to return how many chars printed
-}
-
-// Debugging
-void paPlatform::breakpoint()
-{
-    
 }

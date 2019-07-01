@@ -11,89 +11,89 @@
 
 namespace
 {
-	paThreadSignal<2> g_initThreadSignal;
-	paThreadSignal<2> g_frameStartThreadSignal;
-	paThreadSignal<2> g_frameEndThreadSignal;
-	paThreadSignal<2> g_destroyThreadSignal;
+	pa::ThreadSignal<2> g_initThreadSignal;
+	pa::ThreadSignal<2> g_frameStartThreadSignal;
+	pa::ThreadSignal<2> g_frameEndThreadSignal;
+	pa::ThreadSignal<2> g_destroyThreadSignal;
 	
 	EAGLContext* g_context = nil;
 	
-	paDeviceState g_touch;
+	pa::DeviceState g_touch;
 	
-	paVect2<int> g_deviceSize;
-	paVect2<int> g_userSize;
+	pa::Vect2<int> g_deviceSize;
+	pa::Vect2<int> g_userSize;
 }
 
-paThreadSignal<2>& paIOSBridge::getInitThreadSignal()
+pa::ThreadSignal<2>& pa::IOSBridge::getInitThreadSignal()
 {
 	return g_initThreadSignal;
 }
 
-paThreadSignal<2>& paIOSBridge::getFrameStartThreadSignal()
+pa::ThreadSignal<2>& pa::IOSBridge::getFrameStartThreadSignal()
 {
 	return g_frameStartThreadSignal;
 }
 
-paThreadSignal<2>& paIOSBridge::getFrameEndThreadSignal()
+pa::ThreadSignal<2>& pa::IOSBridge::getFrameEndThreadSignal()
 {
 	return g_frameEndThreadSignal;
 }
 
-paThreadSignal<2>& paIOSBridge::getDestroyThreadSignal()
+pa::ThreadSignal<2>& pa::IOSBridge::getDestroyThreadSignal()
 {
 	return g_destroyThreadSignal;
 }
 
-void paIOSBridge::setUIContext(EAGLContext* context)
+void pa::IOSBridge::setUIContext(EAGLContext* context)
 {
 	g_context = context;
 }
 
-EAGLContext* paIOSBridge::getUIContext()
+EAGLContext* pa::IOSBridge::getUIContext()
 {
 	return g_context;
 }
 
-void paIOSBridge::setTouchPosition(int x, int y)
+void pa::IOSBridge::setTouchPosition(int x, int y)
 {
 	g_touch.z = 1;
 	
 	g_touch.x = x;
 	g_touch.y = y;
 }
-void paIOSBridge::clearTouchPosition()
+void pa::IOSBridge::clearTouchPosition()
 {
 	g_touch.z = 0;
 }
 
-paDeviceState& paIOSBridge::getTouchPosition()
+pa::DeviceState& pa::IOSBridge::getTouchPosition()
 {
 	return g_touch;
 }
 
-void paIOSBridge::setDeviceSize(int x, int y)
+void pa::IOSBridge::setDeviceSize(int x, int y)
 {
 	g_deviceSize.x = x;
 	g_deviceSize.y = y;
 }
 
-const paVect2<int>& paIOSBridge::getDeviceSize()
+const pa::Vect2<int>& pa::IOSBridge::getDeviceSize()
 {
 	return g_deviceSize;
 }
 
-void paIOSBridge::setUserSize(int x, int y)
+void pa::IOSBridge::setUserSize(int x, int y)
 {
 	g_userSize.x = x;
 	g_userSize.y = y;
 }
 
-const paVect2<int>& paIOSBridge::getUserSize()
+const pa::Vect2<int>& pa::IOSBridge::getUserSize()
 {
 	return g_userSize;
 }
 
-std::string paIOSBridge::getRoot()
+std::string pa::IOSBridge::getRoot()
 {
 	NSString* bundle = [[NSBundle mainBundle] bundlePath];
 	const char* root = [bundle fileSystemRepresentation];
@@ -102,10 +102,16 @@ std::string paIOSBridge::getRoot()
 	return rootString;
 }
 
-std::string paIOSBridge::makeAssetPath(const char* path)
+std::string pa::IOSBridge::getAssetPath()
 {
 	std::string root = getRoot();
 	root += "/Assets/";
-	root += path;
+	return root;
+}
+
+std::string pa::IOSBridge::getInternalPath()
+{
+	std::string root = getRoot();
+	root += "/Internal/";
 	return root;
 }
