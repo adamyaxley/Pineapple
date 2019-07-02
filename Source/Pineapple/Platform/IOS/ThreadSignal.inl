@@ -1,5 +1,3 @@
-#include <Pineapple/Core/Util/Macro.h>
-
 template <int N>
 pa::ThreadSignal<N>::ThreadSignal()
 	: m_count(0)

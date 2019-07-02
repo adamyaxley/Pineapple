@@ -1,5 +1,5 @@
-#include <Pineapple/Core/Platform/paPlatform.hpp>
-#include <Pineapple/Graphics/Base/paGraphics.hpp>
+#include <Pineapple/Graphics/Base/Graphics.h>
+#include <Pineapple/Platform/IOS/IOSPlatform.h>
 #include <Pineapple/Platform/IOS/AppDelegate.h>
 #include <Pineapple/Platform/IOS/IOSBridge.h>
 
@@ -20,7 +20,7 @@ namespace
 {
 	pthread_t g_applicationThread;
 	
-	void* UIMainThread(void*)
+	void* applicationThreadFunc(void*)
 	{
 		pa::Main();
 		
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 	
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 	
-	result = pthread_create(&g_applicationThread, &attr, &UIMainThread, PA_NULL);
+	result = pthread_create(&g_applicationThread, &attr, &applicationThreadFunc, nullptr);
 	
 	@autoreleasepool
 	{
@@ -50,13 +50,18 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-// Startup and shutdown
 pa::IOSPlatform::IOSPlatform(const PlatformSettings& settings)
+	: pa::Platform(settings)
 {
-	pa::IOSBridge::setUserSize(settings.graphics.size.x, settings.graphics.size.y);
+	m_fileSystem = pa::MakeInternal::fileSystem(settings.fileSystem);
+
+	pa::IOSBridge::setPlatform(this);
 		
-	// wait until app has loaded
-	pa::IOSBridge::getInitThreadSignal().sync();
+	// Notify that the platform has loaded
+	pa::IOSBridge::getPlatformInitThreadSignal().sync();
+
+	// Wait until graphics has loaded
+	pa::IOSBridge::getGraphicsInitThreadSignal().sync();
 	
 	// Create shared context for loading textures and other resources
 	EAGLContext* sharedContext = [[EAGLContext alloc] initWithAPI:[pa::IOSBridge::getUIContext() API] sharegroup:[pa::IOSBridge::getUIContext() sharegroup]];
@@ -70,10 +75,6 @@ pa::IOSPlatform::IOSPlatform(const PlatformSettings& settings)
 	{
 		pa::Log::info("Could not set current sharedContext after init");
 	}
-	
-	// Resize our window to fit what the user gave us
-	// TODO this should be done when graphics is inititialised
-	paGraphics::resizeKeepAspectRatio(width, height);
 }
 
 pa::IOSPlatform::~IOSPlatform()
@@ -103,7 +104,17 @@ void pa::IOSPlatform::openUrl(const char* url)
 	NSString* string = [NSString stringWithUTF8String:url];
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
-		
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:string]];
 	});
+}
+
+void pa::IOSPlatform::makeGraphics(int surfaceWidth, int surfaceHeight);
+{
+	if (!m_graphics)
+	{
+		m_graphics = pa::MakeInternal::graphics(m_settings.graphics, *m_fileSystem.get());
+	}
+
+	m_size.set(surfaceWidth, surfaceHeight);
+	m_graphics->resize(pa::Graphics::ResizeMode::FillMin, m_size); // TODO set this from graphics setting
 }

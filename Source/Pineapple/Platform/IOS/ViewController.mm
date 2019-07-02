@@ -1,7 +1,7 @@
-#import "paViewController.h"
+#import "ViewController.h"
 
-#include <Pineapple/Platform/IOS/paIOSBridge.h>
-#include <Pineapple/Graphics/Base/paGraphics.hpp>
+#include <Pineapple/Platform/IOS/IOSBridge.h>
+#include <Pineapple/Graphics/Base/Graphics.hpp>
 
 @implementation paViewController
 
@@ -12,14 +12,14 @@
 	[super viewDidLoad];
 	// Not called for some reason, because im not loading from a nib file?
 	
-	paPlatform::print("viewDidLoad");
+	pa::Log::info("viewDidLoad");
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
 	
-	paPlatform::print("viewDidAppear animated=%s", animated ? "T" : "F");
+	pa::Log::info("viewDidAppear animated=%s", animated ? "T" : "F");
 }
 
 - (NSUInteger)supportedInterfaceOrientations
@@ -41,7 +41,7 @@
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
 	// COPY PASTA FOR NOW
-	paPlatform::print("didRotateFromInterfaceOrientation");
+	pa::Log::info("didRotateFromInterfaceOrientation");
 	
 	// grab the window frame and adjust it for orientation
 	UIView *rootView = [[[UIApplication sharedApplication] keyWindow]
@@ -49,11 +49,7 @@
 	CGRect originalFrame = [[UIScreen mainScreen] bounds];
 	CGRect adjustedFrame = [rootView convertRect:originalFrame fromView:nil];
 	
-	paIOSBridge::setDeviceSize(adjustedFrame.size.width, adjustedFrame.size.height);
-	
-	// Start up graphics
-	paGraphics::resize(adjustedFrame.size.width, adjustedFrame.size.height);
-    paGraphics::resizeKeepAspectRatio(paIOSBridge::getUserSize().x, paIOSBridge::getUserSize().y);
+	pa::IOSBridge::getPlatform()->makeGraphics(adjustedFrame.size.width, adjustedFrame.size.height);
 }
 
 - (void)registerTouches:(NSSet *)touches withEvent:(UIEvent *)event
@@ -66,8 +62,11 @@
 	float x = location.x;
 	float y = location.y;
 	
-	float xRatio = (float)paGraphics::getSize().x / (float)paIOSBridge::getDeviceSize().x;
-	float yRatio = (float)paGraphics::getSize().y / (float)paIOSBridge::getDeviceSize().y;
+	auto graphicsSize = pa::IOSBridge::getPlatform()->getGraphics()->getSize();
+	auto platformSize = pa::IOSBridge::getPlatform()->getSize();
+
+	float xRatio = (float)graphicsSize.x / (float)platformSize.x;
+	float yRatio = (float)graphicsSize.y / (float)platformSize.y;
 	
 	x *= xRatio;
 	y *= yRatio;
@@ -106,7 +105,7 @@
 {
 	pa::IOSBridge::getFrameStartThreadSignal().sync();
 	
-	pa::Graphics::render();
+	pa::IOSBridge::getPlatform()->getGraphics()->render();
 	
 	pa::IOSBridge::getFrameEndThreadSignal().sync();
 }

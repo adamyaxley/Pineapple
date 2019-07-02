@@ -1,19 +1,13 @@
-//
-//  paIOSBridge.cpp
-//  paIOS
-//
-//  Created by apple on 03/08/2014.
-//  Copyright (c) 2014 Pineapple. All rights reserved.
-//
-
-#include <Pineapple/Platform/IOS/paIOSBridge.h>
-#include <Pineapple/Core/Platform/paEvent.hpp>
+#include <Pineapple/Platform/IOS/IOSBridge.h>
 
 namespace
 {
-	pa::ThreadSignal<2> g_initThreadSignal;
+	pa::ThreadSignal<2> g_platformInitThreadSignal;
+	pa::ThreadSignal<2> g_graphicsInitThreadSignal;
+
 	pa::ThreadSignal<2> g_frameStartThreadSignal;
 	pa::ThreadSignal<2> g_frameEndThreadSignal;
+
 	pa::ThreadSignal<2> g_destroyThreadSignal;
 	
 	EAGLContext* g_context = nil;
@@ -22,11 +16,18 @@ namespace
 	
 	pa::Vect2<int> g_deviceSize;
 	pa::Vect2<int> g_userSize;
+
+	pa::IOSPlatform* g_platform = nullptr;
 }
 
-pa::ThreadSignal<2>& pa::IOSBridge::getInitThreadSignal()
+pa::ThreadSignal<2>& pa::IOSBridge::getPlatformInitThreadSignal()
 {
-	return g_initThreadSignal;
+	return g_platformInitThreadSignal;
+}
+
+pa::ThreadSignal<2>& pa::IOSBridge::getGraphicsInitThreadSignal()
+{
+	return g_graphicsInitThreadSignal;
 }
 
 pa::ThreadSignal<2>& pa::IOSBridge::getFrameStartThreadSignal()
@@ -71,26 +72,14 @@ pa::DeviceState& pa::IOSBridge::getTouchPosition()
 	return g_touch;
 }
 
-void pa::IOSBridge::setDeviceSize(int x, int y)
+void pa::IOSBridge::setPlatform(pa::IOSPlatform* platform)
 {
-	g_deviceSize.x = x;
-	g_deviceSize.y = y;
+	g_platform = platform;
 }
 
-const pa::Vect2<int>& pa::IOSBridge::getDeviceSize()
+pa::IOSPlatform* pa::IOSBridge::getPlatform()
 {
-	return g_deviceSize;
-}
-
-void pa::IOSBridge::setUserSize(int x, int y)
-{
-	g_userSize.x = x;
-	g_userSize.y = y;
-}
-
-const pa::Vect2<int>& pa::IOSBridge::getUserSize()
-{
-	return g_userSize;
+	return g_platform;
 }
 
 std::string pa::IOSBridge::getRoot()

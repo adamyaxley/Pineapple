@@ -1,29 +1,21 @@
-/*------------------------------------------------------------------------------
-  Pineapple Game Engine - Copyright (c) 2011-2017 Adam Yaxley
-  This software is licensed under the Zlib license (see license.txt for details)
-------------------------------------------------------------------------------*/
-
-//
-//  IOSBridge.h
-//  IOS
-//
-//  Created by apple on 03/08/2014.
-//  Copyright (c) 2014 Pineapple. All rights reserved.
-//
-
 #pragma once
 #include <string>
 
 #include <Pineapple/Platform/IOS/ThreadSignal.h>
+#include <Pineapple/Platform/IOS/IOSPlatform.h>
+
 #import <OpenGLES/EAGL.h>
 
 namespace pa
 {
 	namespace IOSBridge
 	{
-		ThreadSignal<2>& getInitThreadSignal();
+		ThreadSignal<2>& getPlatformInitThreadSignal();
+		ThreadSignal<2>& getGraphicsInitThreadSignal();
+
 		ThreadSignal<2>& getFrameStartThreadSignal();
 		ThreadSignal<2>& getFrameEndThreadSignal();
+
 		ThreadSignal<2>& getDestroyThreadSignal();
 
 		void setUIContext(EAGLContext* context);
@@ -34,11 +26,8 @@ namespace pa
 
 		DeviceState& getTouchPosition();
 
-		void setDeviceSize(int x, int y);
-		const Vect2<int>& getDeviceSize();
-
-		void setUserSize(int x, int y);
-		const Vect2<int>& getUserSize();
+		void setPlatform(pa::IOSPlatform* platform);
+		pa::IOSPlatform* getPlatform();
 
 		std::string getRoot();
 		std::string getAssetPath();

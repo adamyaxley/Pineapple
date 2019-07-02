@@ -23,8 +23,11 @@ namespace pa
 		// Intent
 		virtual void openUrl(const char* url) override;
 
+		// Create the graphics (called from the UI thread)
+		void makeGraphics(int surfaceWidth, int surfaceHeight);
+
 	private:
 
-		std::vector<Event> m_otherEvents;
+		//std::vector<Event> m_otherEvents;
 	};
 }
