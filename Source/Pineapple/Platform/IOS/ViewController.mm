@@ -71,12 +71,13 @@
 	x *= xRatio;
 	y *= yRatio;
 	
-	pa::IOSBridge::setTouchPosition((int)x, (int)y);
+	pa::IOSBridge::getPlatform()->getPointer().setDown(true);
+	pa::IOSBridge::getPlatform()->getPointer().setPosition(x, y);
 }
 
 - (void)unregisterTouches:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	pa::IOSBridge::clearTouchPosition();
+	pa::IOSBridge::getPlatform()->getPointer().setDown(false);
 }
 
 // TODO fix multitouch bugs

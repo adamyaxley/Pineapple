@@ -21,11 +21,6 @@ namespace pa
 		void setUIContext(EAGLContext* context);
 		EAGLContext* getUIContext();
 
-		void setTouchPosition(int x, int y);
-		void clearTouchPosition();
-
-		DeviceState& getTouchPosition();
-
 		void setPlatform(pa::IOSPlatform* platform);
 		pa::IOSPlatform* getPlatform();
 

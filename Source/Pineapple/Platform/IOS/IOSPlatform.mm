@@ -13,6 +13,7 @@
 
 std::shared_ptr<pa::Platform> pa::Make::platform(pa::Arguments* arguments, const pa::PlatformSettings& settings)
 {
+	// arguments will be nullptr
 	return std::make_shared<pa::IOSPlatform>(settings);
 }
 
@@ -22,7 +23,7 @@ namespace
 	
 	void* applicationThreadFunc(void*)
 	{
-		pa::Main();
+		pa::Main(nullptr);
 		
 		return nullptr;
 	}
@@ -117,4 +118,9 @@ void pa::IOSPlatform::makeGraphics(int surfaceWidth, int surfaceHeight);
 
 	m_size.set(surfaceWidth, surfaceHeight);
 	m_graphics->resize(pa::Graphics::ResizeMode::FillMin, m_size); // TODO set this from graphics setting
+}
+
+pa::Pointer& pa::IOSPlatform::getPointer()
+{
+	return m_pointer;
 }

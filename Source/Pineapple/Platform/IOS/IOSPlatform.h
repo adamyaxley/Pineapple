@@ -26,6 +26,9 @@ namespace pa
 		// Create the graphics (called from the UI thread)
 		void makeGraphics(int surfaceWidth, int surfaceHeight);
 
+		// Espose pointer (called from the UI thread - ViewController)
+		Pointer& getPointer();
+
 	private:
 
 		//std::vector<Event> m_otherEvents;

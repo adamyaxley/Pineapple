@@ -11,11 +11,6 @@ namespace
 	pa::ThreadSignal<2> g_destroyThreadSignal;
 	
 	EAGLContext* g_context = nil;
-	
-	pa::DeviceState g_touch;
-	
-	pa::Vect2<int> g_deviceSize;
-	pa::Vect2<int> g_userSize;
 
 	pa::IOSPlatform* g_platform = nullptr;
 }
@@ -53,23 +48,6 @@ void pa::IOSBridge::setUIContext(EAGLContext* context)
 EAGLContext* pa::IOSBridge::getUIContext()
 {
 	return g_context;
-}
-
-void pa::IOSBridge::setTouchPosition(int x, int y)
-{
-	g_touch.z = 1;
-	
-	g_touch.x = x;
-	g_touch.y = y;
-}
-void pa::IOSBridge::clearTouchPosition()
-{
-	g_touch.z = 0;
-}
-
-pa::DeviceState& pa::IOSBridge::getTouchPosition()
-{
-	return g_touch;
 }
 
 void pa::IOSBridge::setPlatform(pa::IOSPlatform* platform)
