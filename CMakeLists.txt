@@ -46,7 +46,12 @@ if (GENERATE_TESTS)
 endif()
 
 get_filename_component(PA_ROOT "." ABSOLUTE)
-set(PA_ROOT ${PA_ROOT} PARENT_SCOPE)
+get_directory_property(hasParent PARENT_DIRECTORY)
+if (hasParent)
+    set(PA_ROOT ${PA_ROOT} PARENT_SCOPE)
+else()
+    set(PA_ROOT ${PA_ROOT})
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Build/CMake")
 
