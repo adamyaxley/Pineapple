@@ -1,7 +1,6 @@
 #import "ViewController.h"
 
 #include <Pineapple/Platform/IOS/IOSBridge.h>
-#include <Pineapple/Graphics/Base/Graphics.hpp>
 
 @implementation paViewController
 

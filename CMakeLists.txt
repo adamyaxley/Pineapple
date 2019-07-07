@@ -80,6 +80,7 @@ function(glob_source_files _SOURCES)
         "${_src_root_path}/*.c*"
         "${_src_root_path}/*.h*"
         "${_src_root_path}/*.inl"
+        "${_src_root_path}/*.mm"
     )
     set(${_SOURCES} ${_glob_sources} PARENT_SCOPE)
 endfunction()
@@ -106,7 +107,7 @@ function(add_pineapple_app _TARGET _SOURCES)
         target_link_libraries(${_TARGET} paEngine paWindows paFMOD paOpenGL Opengl32.lib ${FMOD_LIBRARIES})
     endif()
     
-    if(UNIX AND NOT ANDROID)
+    if(UNIX AND NOT ANDROID AND NOT IOS)
         add_executable(${_TARGET} ${_SOURCES_LIST})
         target_link_libraries(${_TARGET} paX11 paFMOD paOpenGL paEngine ${X11_LIBRARIES} pthread dl ${FMOD_LIBRARIES})
         set_property(TARGET ${_TARGET} APPEND PROPERTY INCLUDE_DIRECTORIES ${X11_INCLUDE_DIRS})
@@ -116,6 +117,11 @@ function(add_pineapple_app _TARGET _SOURCES)
         set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
         add_library(${_TARGET} SHARED ${_SOURCES_LIST})
         target_link_libraries(${_TARGET} -Wl,--whole-archive paAndroid -Wl,--no-whole-archive paOpenGLES1 paSoundPool paEngine ${ANDROID_LIB} ${LOG_LIB} ${EGL_LIB} ${GLESV1_CM_LIB})
+    endif()
+
+    if(IOS)
+        add_executable(${_TARGET} ${_SOURCES_LIST})
+        target_link_libraries(${_TARGET} paIOS paFMOD paOpenGLES1 paEngine pthread dl ${FMOD_LIBRARIES})
     endif()
     
     if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/pineapple.json)
@@ -189,7 +195,7 @@ if (GENERATE_PLUGINS)
         set_target_properties (paFMOD PROPERTIES FOLDER Plugins)
     endif()
 
-    if (UNIX AND NOT ANDROID)
+    if (UNIX AND NOT ANDROID AND NOT IOS)
         add_subdirectory(Source/Pineapple/Platform/X11)
         add_subdirectory(Source/Pineapple/Graphics/OpenGL)
         add_subdirectory(Source/Pineapple/Sound/FMOD)
@@ -205,6 +211,15 @@ if (GENERATE_PLUGINS)
         set_target_properties (paAndroid PROPERTIES FOLDER Plugins)
         set_target_properties (paOpenGLES1 PROPERTIES FOLDER Plugins)
         set_target_properties (paSoundPool PROPERTIES FOLDER Plugins)
+    endif()
+
+    if (IOS)
+        add_subdirectory(Source/Pineapple/Platform/IOS)
+        add_subdirectory(Source/Pineapple/Graphics/OpenGL)
+        add_subdirectory(Source/Pineapple/Sound/FMOD)
+        set_target_properties (paIOS PROPERTIES FOLDER Plugins)
+        set_target_properties (paOpenGL PROPERTIES FOLDER Plugins)
+        set_target_properties (paFMOD PROPERTIES FOLDER Plugins)
     endif()
 endif()
 

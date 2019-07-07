@@ -1,5 +1,5 @@
 #include <Pineapple/Engine/Platform/FileSystem.h>
-#include <Pineapple/Platform/IOS/paIOSBridge.h>
+#include <Pineapple/Platform/IOS/IOSBridge.h>
 
 std::unique_ptr<pa::FileSystem> pa::MakeInternal::fileSystem(const pa::PlatformSettings::FileSystem& settings)
 {
@@ -10,7 +10,7 @@ std::unique_ptr<pa::FileSystem> pa::MakeInternal::fileSystem(const pa::PlatformS
 	iosSettings.engineAssetPath = iosSettings.userAssetPath;
 
 	// Set the IOS internal data path
-	iosSettings.internalPath = pa::IOSBridge::getInternalDataPath();
+	iosSettings.internalPath = pa::IOSBridge::getInternalPath();
 
 	return std::make_unique<pa::FileSystem>(iosSettings);
 }

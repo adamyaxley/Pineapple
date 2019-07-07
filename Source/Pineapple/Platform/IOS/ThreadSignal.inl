@@ -17,9 +17,11 @@ pa::ThreadSignal<N>::~ThreadSignal()
 	// pthread_barrier_destroy(&m_barr); // return is int, do some error handling...
 	// sem_destroy(&m_mutex);
 	// sem_destroy(&m_barrier);
-	dispatch_release(m_mutex);
-	dispatch_release(m_barrier);
-	dispatch_release(m_barrier2);
+    
+	// release' is unavailable: not available in automatic reference counting mode
+	//dispatch_release(m_mutex);
+	//dispatch_release(m_barrier);
+	//dispatch_release(m_barrier2);
 }
 
 template <int N>

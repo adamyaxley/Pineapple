@@ -1,6 +1,6 @@
 #import <GLKit/GLKit.h>
 
-@interface ViewController : GLKViewController<GLKViewDelegate>
+@interface paViewController : GLKViewController<GLKViewDelegate>
 
 - (void)registerTouches:(NSSet*)touches withEvent:(UIEvent*)event;
 

@@ -1,11 +1,9 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 
-#include <Pineapple/Graphics/Base/Graphics.hpp>
-#include <Pineapple/Graphics/OpenGL/UtilGL.hpp>
 #include <Pineapple/Platform/IOS/IOSBridge.h>
 
-@implementation AppDelegate
+@implementation paAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -53,7 +51,7 @@
 	CGRect adjustedFrame = [rootView convertRect:originalFrame fromView:nil];
 
 	pa::IOSBridge::getPlatform()->makeGraphics(adjustedFrame.size.width, adjustedFrame.size.height);
-	PA_GL_CHECK_ERROR();
+	//PA_GL_CHECK_ERROR();
 
 	// Notify that graphics has loaded
 	pa::IOSBridge::getGraphicsInitThreadSignal().sync();

@@ -1,5 +1,3 @@
-#include <Pineapple/Graphics/Base/Graphics.h>
-#include <Pineapple/Platform/IOS/IOSPlatform.h>
 #include <Pineapple/Platform/IOS/AppDelegate.h>
 #include <Pineapple/Platform/IOS/IOSBridge.h>
 
@@ -44,7 +42,7 @@ int main(int argc, char* argv[])
 	
 	@autoreleasepool
 	{
-		UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
+		UIApplicationMain(argc, argv, nil, NSStringFromClass([paAppDelegate class]));
 	}
 	
 	// Will never execute since UIApplicationMain never returns
@@ -109,7 +107,7 @@ void pa::IOSPlatform::openUrl(const char* url)
 	});
 }
 
-void pa::IOSPlatform::makeGraphics(int surfaceWidth, int surfaceHeight);
+void pa::IOSPlatform::makeGraphics(int surfaceWidth, int surfaceHeight)
 {
 	if (!m_graphics)
 	{

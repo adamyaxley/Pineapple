@@ -16,10 +16,10 @@
 
 //@class ViewController;
 
-@interface AppDelegate : UIResponder<UIApplicationDelegate>
+@interface paAppDelegate : UIResponder<UIApplicationDelegate>
 
-@property(strong) UIWindow* window;
+@property(nullable, nonatomic, strong) UIWindow* window;
 
-@property(strong) EAGLContext* context;
+@property(nullable, strong) EAGLContext* context;
 
 @end
