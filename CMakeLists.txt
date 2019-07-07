@@ -60,7 +60,7 @@ if (GENERATE_PLUGINS)
         find_package(FMOD REQUIRED)
     endif()
 
-    if(UNIX AND NOT ANDROID)
+    if(UNIX AND NOT ANDROID AND NOT IOS)
         find_package(X11 REQUIRED)
     endif()
     
