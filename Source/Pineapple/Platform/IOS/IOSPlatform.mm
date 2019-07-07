@@ -54,8 +54,10 @@ pa::IOSPlatform::IOSPlatform(const PlatformSettings& settings)
 {
 	m_fileSystem = pa::MakeInternal::fileSystem(settings.fileSystem);
 
+	m_sound = pa::MakeInternal::sound(*m_fileSystem.get());
+
 	pa::IOSBridge::setPlatform(this);
-		
+	
 	// Notify that the platform has loaded
 	pa::IOSBridge::getPlatformInitThreadSignal().sync();
 

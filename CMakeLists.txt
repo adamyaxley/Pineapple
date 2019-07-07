@@ -121,7 +121,7 @@ function(add_pineapple_app _TARGET _SOURCES)
 
     if(IOS)
         add_executable(${_TARGET} ${_SOURCES_LIST})
-        target_link_libraries(${_TARGET} paIOS paFMOD paOpenGLES1 paEngine pthread dl ${FMOD_LIBRARIES} "-framework OpenGLES" "-framework GLKit" "-framework UIKit" "-framework QuartzCore" "-framework Foundation")
+        target_link_libraries(${_TARGET} paIOS paFMOD paOpenGLES1 paEngine pthread dl ${FMOD_LIBRARIES} "-framework OpenGLES" "-framework GLKit" "-framework UIKit" "-framework QuartzCore" "-framework Foundation" "-framework AVFoundation" "-framework AudioToolbox")
     endif()
     
     if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/pineapple.json)
