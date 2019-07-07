@@ -75,6 +75,8 @@ namespace pa
 		FileSystem(const FileSystem&) = default;
 		FileSystem(FileSystem&&) = default;
 
+		virtual ~FileSystem() {}
+
 		static const char* getResultString(FileResult result);
 
 		const PlatformSettings::FileSystem& getSettings() const;

@@ -67,7 +67,7 @@ pa::Pool& pa::DynamicPool::getFreePool()
 {
 	// Find the first free pool <todo> use reverse iterator
 	auto freePool =
-		std::find_if(m_pools.rbegin(), m_pools.rend(), [this](const pa::Pool& pool) { return pool.getSize() > 0; });
+		std::find_if(m_pools.rbegin(), m_pools.rend(), [](const pa::Pool& pool) { return pool.getSize() > 0; });
 
 	if (freePool != m_pools.rend())
 	{

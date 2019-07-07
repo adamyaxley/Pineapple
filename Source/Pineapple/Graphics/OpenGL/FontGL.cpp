@@ -14,10 +14,10 @@
 pa::FontGL::FontGL(pa::Graphics& graphics, FONScontext* fonsContext, const pa::FilePath& path)
 	: pa::Font(path)
 	, m_graphics(graphics)
-	, m_fonsContext(fonsContext)
 	, m_buffer(nullptr)
-	, m_faceSize(12)
-	, m_fonsFont(FONS_INVALID)
+    , m_faceSize(12)
+    , m_fonsContext(fonsContext)
+    , m_fonsFont(FONS_INVALID)
 {
 }
 

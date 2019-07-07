@@ -12,9 +12,9 @@
 #include <stb_image.h>
 
 pa::ImageGL::ImageGL(const pa::Resource& resource)
-	: m_size(0, 0)
-	, m_data(nullptr)
-	, m_resource(resource)
+	: m_resource(resource)
+    , m_size(0, 0)
+    , m_data(nullptr)
 {
 }
 
