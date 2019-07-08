@@ -78,7 +78,9 @@ std::string pa::IOSBridge::getAssetPath()
 
 std::string pa::IOSBridge::getInternalPath()
 {
-	std::string root = getRoot();
-	root += "/Internal/";
-	return root;
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *documentsDirectory = [paths objectAtIndex:0];
+	const char* documents = [documentsDirectory fileSystemRepresentation];
+	std::string documentsString(documents);
+	return documentsString;
 }
