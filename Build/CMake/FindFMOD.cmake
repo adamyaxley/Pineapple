@@ -17,6 +17,9 @@ ENDIF (FMOD_LIBRARIES AND FMOD_INCLUDE_DIRS)
 
 #UNSET(FMOD_INCLUDE_SEARCH_DIRS CACHE)
 #UNSET(FMOD_LIBRARY_SEARCH_DIRS CACHE)
+#UNSET(FMOD_LIBRARY_DIRS CACHE)
+#UNSET(FMOD_LIBRARIES CACHE)
+#UNSET(FMOD_INCLUDE_DIRS CACHE)
 
 SET(FMOD_INCLUDE_SEARCH_DIRS
 	${INCLUDE_SEARCH_DIRS}
@@ -29,6 +32,7 @@ SET(FMOD_INCLUDE_SEARCH_DIRS
 	/opt/fmodex/include
 	"C:\\Program Files (x86)\\FMOD SoundSystem\\FMOD Studio API Windows\\api\\lowlevel\\inc"
 	"~/FMOD\ Programmers\ API/api/core/inc"
+	"~/FMOD\ Programmers\ API/api/lowlevel/inc"
 	CACHE STRING ""
 )
 
@@ -45,6 +49,7 @@ SET(FMOD_LIBRARY_SEARCH_DIRS
 	/opt/fmodex/lib64
 	"C:\\Program Files (x86)\\FMOD SoundSystem\\FMOD Studio API Windows\\api\\lowlevel\\lib"
 	"~/FMOD\ Programmers\ API/api/core/lib"
+	"~/FMOD\ Programmers\ API/api/lowlevel/lib"
 	CACHE STRING ""
 )
 
