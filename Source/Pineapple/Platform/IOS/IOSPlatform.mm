@@ -88,6 +88,8 @@ pa::IOSPlatform::~IOSPlatform()
 // Idle
 void pa::IOSPlatform::idle()
 {
+    m_sound->update();
+    
 	// Use barriers to allow the UI thread to render at the correct time.
     pa::IOSBridge::getFrameStartThreadSignal().sync();
 	pa::IOSBridge::getFrameEndThreadSignal().sync();
