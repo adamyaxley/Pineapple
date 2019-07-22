@@ -383,7 +383,7 @@ void pa::GraphicsGL::initGL()
 
 	glShadeModel(GL_SMOOTH);
 	glClearColor((GLclampf)0.0, (GLclampf)0.0, (GLclampf)0.0, (GLclampf)1.0);
-	setViewport(0, 0, m_settings.size.x * m_settings.zoom, m_settings.size.y * m_settings.zoom);
+	setViewport(0, 0, (GLfloat)m_settings.size.x * (GLfloat)m_settings.zoom, (GLfloat)m_settings.size.y * (GLfloat)m_settings.zoom);
 	PA_GL_CHECK_ERROR();
 }
 
