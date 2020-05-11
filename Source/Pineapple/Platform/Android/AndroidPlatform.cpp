@@ -5,6 +5,11 @@
 #include <android/sensor.h>
 #include <memory>
 
+#ifdef PA_ANDROID_SWAPPY
+#   include <swappy/swappyGL.h>
+#   include <swappy/swappyGL_extra.h>
+#endif
+
 std::shared_ptr<pa::Platform> pa::Make::platform(pa::Arguments* arguments, const pa::PlatformSettings& settings)
 {
 	auto androidArguments = static_cast<pa::AndroidArguments*>(arguments);
@@ -32,6 +37,13 @@ extern "C"
 
 		g_enteredAndroidMain = true;
 
+#ifdef PA_ANDROID_SWAPPY
+		{
+			pa::ScopedEnvJNI jni;
+			SwappyGL_init(jni.get(), state->activity->clazz);
+		}
+#endif
+
 		auto arguments = std::make_unique<pa::AndroidArguments>(state);
 
 		pa::Log::info("Entering main");
@@ -41,6 +53,10 @@ extern "C"
 
 		pa::Log::info("Leaving android_main");
 		g_enteredAndroidMain = false;
+
+#ifdef PA_ANDROID_SWAPPY
+		SwappyGL_destroy();
+#endif
 
 		pa::Log::info("FinishMe");
 		pa::ScopedEnvJNI jni;

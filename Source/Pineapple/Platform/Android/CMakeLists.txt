@@ -8,4 +8,9 @@ list(APPEND PA_ANDROID_SOURCES ${ANDROID_NDK}/sources/android/native_app_glue/an
 source_group(native_app_glue ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c)
 
 add_library(paAndroid ${PA_ANDROID_SOURCES})
-target_include_directories(paAndroid PRIVATE ${ANDROID_NDK}/sources/android/native_app_glue)
+set_property(TARGET paAndroid APPEND PROPERTY INCLUDE_DIRECTORIES ${ANDROID_NDK}/sources/android/native_app_glue)
+
+if(DEFINED ANDROID_GAME_LIB)
+    set_property(TARGET paAndroid APPEND PROPERTY INCLUDE_DIRECTORIES ${ANDROID_GAME_INCLUDE_DIRS})
+    set_property(TARGET paAndroid APPEND PROPERTY COMPILE_DEFINITIONS PA_ANDROID_SWAPPY)
+endif()

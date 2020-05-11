@@ -1,6 +1,10 @@
 #include <Pineapple/Platform/Android/AndroidEngine.h>
 #include <Pineapple/Engine/Platform/Log.h>
 
+#ifdef PA_ANDROID_SWAPPY
+#    include <swappy/swappyGL.h>
+#endif
+
 pa::AndroidEngine::AndroidEngine() :
 	m_app(NULL),
 	//m_sensorManager(NULL),
@@ -257,7 +261,11 @@ void pa::AndroidEngine::swapBuffers()
 {
 	if (m_display != EGL_NO_DISPLAY && m_surface != EGL_NO_SURFACE)
 	{
+#ifdef PA_ANDROID_SWAPPY
+		SwappyGL_swap(m_display, m_surface);
+#else
 		eglSwapBuffers(m_display, m_surface);
+#endif
 	}
 }
 
