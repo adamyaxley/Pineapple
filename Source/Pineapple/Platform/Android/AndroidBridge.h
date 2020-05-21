@@ -14,5 +14,7 @@ namespace pa
 		void setAndroidApp(android_app* state);
 
 		const char* getInternalDataPath();
+
+		JNIEnv* getEnv();
 	}
 }

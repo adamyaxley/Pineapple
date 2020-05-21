@@ -1,7 +1,7 @@
 #include <Pineapple/Platform/Android/AndroidPlatform.h>
 #include <Pineapple/Platform/Android/AndroidUtil.h>
 #include <Pineapple/Platform/Android/AndroidBridge.h>
-#include <Pineapple/Platform/Android/ScopedEnvJNI.h>
+#include <Pineapple/Platform/Android/AndroidJNI.h>
 #include <android/sensor.h>
 #include <memory>
 
@@ -37,11 +37,19 @@ extern "C"
 
 		g_enteredAndroidMain = true;
 
+        pa::AndroidJNI::initGlobalJniVariables(state->activity->vm);
+		auto env = pa::AndroidJNI::attachCurrentThreadIfNeeded();
+
 #ifdef PA_ANDROID_SWAPPY
-		{
-			pa::ScopedEnvJNI jni;
-			SwappyGL_init(jni.get(), state->activity->clazz);
-		}
+        // Should never happen
+        if (Swappy_version() != SWAPPY_PACKED_VERSION)
+        {
+            pa::Log::info("Inconsistent Swappy versions");
+        }
+		if (!SwappyGL_init(env, state->activity->clazz))
+        {
+		    pa::Log::info("Swappy failed to initialize");
+        }
 #endif
 
 		auto arguments = std::make_unique<pa::AndroidArguments>(state);
@@ -59,10 +67,9 @@ extern "C"
 #endif
 
 		pa::Log::info("FinishMe");
-		pa::ScopedEnvJNI jni;
-		jclass activityClass = jni.get()->GetObjectClass(state->activity->clazz);
-		jmethodID FinishHim = jni.get()->GetMethodID(activityClass, "FinishMe", "()V");
-		jni.get()->CallVoidMethod(state->activity->clazz, FinishHim);
+		jclass activityClass = env->GetObjectClass(state->activity->clazz);
+		jmethodID FinishHim = env->GetMethodID(activityClass, "FinishMe", "()V");
+		env->CallVoidMethod(state->activity->clazz, FinishHim);
 	}
 }
 

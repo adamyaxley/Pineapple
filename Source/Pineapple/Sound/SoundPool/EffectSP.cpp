@@ -1,6 +1,6 @@
 #include <Pineapple/Sound/SoundPool/EffectSP.h>
 #include <Pineapple/Engine/Sound/Sound.h>
-#include <Pineapple/Platform/Android/ScopedEnvJNI.h>
+#include <Pineapple/Platform/Android/AndroidJNI.h>
 #include <Pineapple/Engine/Platform/Log.h>
 #include <Pineapple/Engine/Util/Macro.h>
 
@@ -15,12 +15,12 @@ pa::EffectSP::~EffectSP()
 
 bool pa::EffectSP::onLoad()
 {
-	pa::ScopedEnvJNI env;
+	auto env = pa::AndroidJNI::attachCurrentThreadIfNeeded();
 
-	jstring string = env.get()->NewStringUTF(getPath().asString().c_str());
-	m_soundId = env.get()->CallStaticIntMethod(m_binding.classObject, m_binding.load, string);
-	env.handleExceptions();
-	env.get()->DeleteLocalRef(string);
+	jstring string = env->NewStringUTF(getPath().asString().c_str());
+	m_soundId = env->CallStaticIntMethod(m_binding.classObject, m_binding.load, string);
+	pa::AndroidJNI::handleExceptions();
+	env->DeleteLocalRef(string);
 
 	if (m_soundId <= 0)
 	{
@@ -37,10 +37,10 @@ bool pa::EffectSP::onLoad()
 
 bool pa::EffectSP::onUnload()
 {
-	pa::ScopedEnvJNI env;
+	auto env = pa::AndroidJNI::attachCurrentThreadIfNeeded();
 
-	env.get()->CallStaticVoidMethod(m_binding.classObject, m_binding.unload);
-	env.handleExceptions();
+	env->CallStaticVoidMethod(m_binding.classObject, m_binding.unload);
+	pa::AndroidJNI::handleExceptions();
 	m_soundId = -1;
 
 	return true;
@@ -50,11 +50,11 @@ void pa::EffectSP::play()
 {
 	PA_ASSERTF(isLoaded(), "Sound is not loaded");
 	pa::Log::info("paEffectSP::play()");
-	pa::ScopedEnvJNI env;
+	auto env = pa::AndroidJNI::attachCurrentThreadIfNeeded();
 
 	// Unused return pa::rameter stream
-	env.get()->CallStaticIntMethod(m_binding.classObject, m_binding.play, m_soundId);
-	env.handleExceptions();
+	env->CallStaticIntMethod(m_binding.classObject, m_binding.play, m_soundId);
+	pa::AndroidJNI::handleExceptions();
 }
 
 void pa::EffectSP::loop()

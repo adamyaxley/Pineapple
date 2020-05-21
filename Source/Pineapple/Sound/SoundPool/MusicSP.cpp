@@ -1,6 +1,6 @@
 #include <Pineapple/Sound/SoundPool/MusicSP.h>
 #include <Pineapple/Engine/Sound/Sound.h>
-#include <Pineapple/Platform/Android/ScopedEnvJNI.h>
+#include <Pineapple/Platform/Android/AndroidJNI.h>
 
 pa::MusicSP::MusicSP(const FilePath& path, const pa::BindingMusicSP& binding)
 	: pa::Music(path)
@@ -13,12 +13,12 @@ pa::MusicSP::~MusicSP()
 
 bool pa::MusicSP::onLoad()
 {
-	pa::ScopedEnvJNI env;
+	auto env = pa::AndroidJNI::attachCurrentThreadIfNeeded();
 
-	jstring string = env.get()->NewStringUTF(getPath().asString().c_str());
-	m_soundId = env.get()->CallStaticIntMethod(m_binding.classObject, m_binding.load, string);
-	env.handleExceptions();
-	env.get()->DeleteLocalRef(string);
+	jstring string = env->NewStringUTF(getPath().asString().c_str());
+	m_soundId = env->CallStaticIntMethod(m_binding.classObject, m_binding.load, string);
+	pa::AndroidJNI::handleExceptions();
+	env->DeleteLocalRef(string);
 
 	if (m_soundId <= 0)
 	{
@@ -35,10 +35,10 @@ bool pa::MusicSP::onLoad()
 
 bool pa::MusicSP::onUnload()
 {
-	pa::ScopedEnvJNI env;
+	auto env = pa::AndroidJNI::attachCurrentThreadIfNeeded();
 
-	env.get()->CallStaticVoidMethod(m_binding.classObject, m_binding.unload, m_soundId);
-	env.handleExceptions();
+	env->CallStaticVoidMethod(m_binding.classObject, m_binding.unload, m_soundId);
+	pa::AndroidJNI::handleExceptions();
 	m_soundId = -1;
 
 	return true;
@@ -46,40 +46,40 @@ bool pa::MusicSP::onUnload()
 
 void pa::MusicSP::play()
 {
-	pa::ScopedEnvJNI env;
+	auto env = pa::AndroidJNI::attachCurrentThreadIfNeeded();
 
-	env.get()->CallStaticVoidMethod(m_binding.classObject, m_binding.play, m_soundId);
-	env.handleExceptions();
+	env->CallStaticVoidMethod(m_binding.classObject, m_binding.play, m_soundId);
+	pa::AndroidJNI::handleExceptions();
 }
 
 void pa::MusicSP::loop()
 {
-	pa::ScopedEnvJNI env;
+	auto env = pa::AndroidJNI::attachCurrentThreadIfNeeded();
 
-	env.get()->CallStaticVoidMethod(m_binding.classObject, m_binding.loop, m_soundId);
-	env.handleExceptions();
+	env->CallStaticVoidMethod(m_binding.classObject, m_binding.loop, m_soundId);
+	pa::AndroidJNI::handleExceptions();
 }
 
 void pa::MusicSP::stop()
 {
-	pa::ScopedEnvJNI env;
+	auto env = pa::AndroidJNI::attachCurrentThreadIfNeeded();
 
-	env.get()->CallStaticVoidMethod(m_binding.classObject, m_binding.stop, m_soundId);
-	env.handleExceptions();
+	env->CallStaticVoidMethod(m_binding.classObject, m_binding.stop, m_soundId);
+	pa::AndroidJNI::handleExceptions();
 }
 
 void pa::MusicSP::pause()
 {
-	pa::ScopedEnvJNI env;
+	auto env = pa::AndroidJNI::attachCurrentThreadIfNeeded();
 
-	env.get()->CallStaticVoidMethod(m_binding.classObject, m_binding.pause, m_soundId);
-	env.handleExceptions();
+	env->CallStaticVoidMethod(m_binding.classObject, m_binding.pause, m_soundId);
+	pa::AndroidJNI::handleExceptions();
 }
 
 void pa::MusicSP::resume()
 {
-	pa::ScopedEnvJNI env;
+	auto env = pa::AndroidJNI::attachCurrentThreadIfNeeded();
 
-	env.get()->CallStaticVoidMethod(m_binding.classObject, m_binding.resume, m_soundId);
-	env.handleExceptions();
+	env->CallStaticVoidMethod(m_binding.classObject, m_binding.resume, m_soundId);
+	pa::AndroidJNI::handleExceptions();
 }
