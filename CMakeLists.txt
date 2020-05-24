@@ -6,6 +6,7 @@ option(GENERATE_TESTS "GENERATE_TESTS" ON)
 option(GENERATE_DEMOS "GENERATE_DEMOS" ON)
 option(GENERATE_PLUGINS "GENERATE_PLUGINS" ON)
 set(ANDROID_GAME_SDK "${ANDROID_GAME_SDK}" CACHE PATH "The absolute path to the Android Game SDK")
+set(FMOD_SDK "${FMOD_SDK}" CACHE PATH "The absolute path to the FMOD SDK")
 
 if (GENERATE_DEMOS AND NOT GENERATE_PLUGINS)
     message(STATUS "GENERATE_DEMOS is ON (forcing GENERATE_PLUGINS to be ON too)")
@@ -39,6 +40,7 @@ if (GENERATE_TESTS)
                      ${UPDATE_DISCONNECTED_IF_AVAILABLE}
     )
 
+
     # Prevent GoogleTest from overriding our compiler/linker options
     # when building with Visual Studio
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
@@ -70,6 +72,12 @@ if (GENERATE_PLUGINS)
         find_library(ANDROID_LIB android)
         find_library(EGL_LIB egl)
         find_library(GLESV1_CM_LIB GLESv1_CM)
+
+        # FMOD SDK
+        if(NOT EXISTS ${FMOD_SDK})
+            message(FATAL_ERROR "FMOD_SDK is not set or doesn't exist. FMOD is required for Android builds")
+        endif()
+        include_directories("${FMOD_SDK}/api/core/inc")
 
         # Android Game SDK
         if(NOT EXISTS ${ANDROID_GAME_SDK})
@@ -127,9 +135,14 @@ function(add_pineapple_app _TARGET _SOURCES)
     endif()
     
     if(ANDROID)
+
+        add_library(fmod SHARED IMPORTED)
+        set_target_properties(fmod PROPERTIES IMPORTED_LOCATION "${FMOD_SDK}/api/core/lib/${ANDROID_ABI}/libfmod.so")
+        include_directories("${FMOD_SDK}/api/core/inc")
+
         set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
         add_library(${_TARGET} SHARED ${_SOURCES_LIST})
-        target_link_libraries(${_TARGET} -Wl,--whole-archive paAndroid -Wl,--no-whole-archive paOpenGLES1 paSoundPool paEngine ${ANDROID_LIB} ${LOG_LIB} ${EGL_LIB} ${GLESV1_CM_LIB})
+        target_link_libraries(${_TARGET} -Wl,--whole-archive paAndroid -Wl,--no-whole-archive paOpenGLES1 paFMOD paEngine fmod ${ANDROID_LIB} ${LOG_LIB} ${EGL_LIB} ${GLESV1_CM_LIB})
 
         if(DEFINED ANDROID_GAME_LIB)
             set_property(TARGET ${_TARGET} APPEND PROPERTY INCLUDE_DIRECTORIES ${ANDROID_GAME_INCLUDE_DIRS})
@@ -226,10 +239,10 @@ if (GENERATE_PLUGINS)
     if (ANDROID)
         add_subdirectory(Source/Pineapple/Platform/Android)
         add_subdirectory(Source/Pineapple/Graphics/OpenGL)
-        add_subdirectory(Source/Pineapple/Sound/SoundPool)
+        add_subdirectory(Source/Pineapple/Sound/FMOD)
         set_target_properties (paAndroid PROPERTIES FOLDER Plugins)
         set_target_properties (paOpenGLES1 PROPERTIES FOLDER Plugins)
-        set_target_properties (paSoundPool PROPERTIES FOLDER Plugins)
+        set_target_properties (paFMOD PROPERTIES FOLDER Plugins)
     endif()
 
     if (IOS)

@@ -20,8 +20,12 @@ pa::MusicFMOD::~MusicFMOD()
 
 bool pa::MusicFMOD::onLoad()
 {
+	std::string path = getPath().asString();
+#if defined (__ANDROID__)
+	path = "file:///android_asset/" + path;
+#endif
 	FMOD_RESULT result =
-		m_system->createStream(getPath().asString().c_str(), FMOD_DEFAULT, nullptr, &m_sound);
+		m_system->createStream(path.c_str(), FMOD_DEFAULT, nullptr, &m_sound);
 	return pa::UtilFMOD::checkResult(result);
 }
 
