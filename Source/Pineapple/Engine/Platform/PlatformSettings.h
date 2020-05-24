@@ -14,9 +14,9 @@ namespace pa
 
 		struct FileSystem
 		{
-			std::string engineAssetPath{ "Assets" };
-			std::string userAssetPath{ "Assets" };
-			std::string internalPath{ "Internal" };
+			std::string engineAssetPath;
+			std::string userAssetPath;
+			std::string internalPath;
 		} fileSystem;
 
 		struct Graphics

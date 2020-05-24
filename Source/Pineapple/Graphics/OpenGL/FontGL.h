@@ -35,8 +35,6 @@ namespace pa
 	private:
 		Graphics& m_graphics;
 
-		GLuint m_texture;
-
 		std::unique_ptr<unsigned char[]> m_buffer;
 
 		unsigned int m_faceSize;

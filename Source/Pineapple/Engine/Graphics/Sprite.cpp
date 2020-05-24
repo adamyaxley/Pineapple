@@ -41,8 +41,8 @@ namespace
 pa::Sprite::Sprite(pa::RenderSystem& renderSystem, std::vector<std::shared_ptr<Texture>>& frames, int priority)
 	: pa::Render(renderSystem, getRenderTypeFromFrames(frames), priority)
 	, pa::SpriteAttributes(getSizeFromFrames(frames))
-	, m_frames(frames)
 	, m_currentFrame(0)
+	, m_frames(frames)
 {
 	PA_ASSERTF(m_frames.size() > 0, "A sprite must have at least one frame");
 }

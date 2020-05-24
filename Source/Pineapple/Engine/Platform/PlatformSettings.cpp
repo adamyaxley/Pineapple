@@ -18,7 +18,7 @@ bool pa::PlatformSettings::loadFromFile(const char* filename /* = pineapple.json
 		fileSystemSettings.internalPath = "";
 		auto tempFileSystem = pa::MakeInternal::fileSystem(fileSystemSettings);
 		
-		pa::FilePath path(*tempFileSystem.get(), pa::FileStorage::Internal, filename);
+		pa::FilePath path(*tempFileSystem.get(), pa::FileStorage::UserAsset, filename);
 		pa::FileBuffer buffer;
 		auto result = path.read(buffer);
 

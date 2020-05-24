@@ -11,7 +11,7 @@ add_library(paOpenGL ${PA_OPENGL_SOURCES})
 
 set_property(TARGET paOpenGL APPEND PROPERTY INCLUDE_DIRECTORIES ${PA_ROOT}/Ext/glad/OpenGL4.1/include)
 
-if (ANDROID)
+if (ANDROID OR IOS)
     glob_source_files(PA_OPENGLES1_SOURCES)
     create_source_groups(${PA_OPENGLES1_SOURCES})
     

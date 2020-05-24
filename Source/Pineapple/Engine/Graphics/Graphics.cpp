@@ -54,6 +54,9 @@ void pa::Graphics::resize(pa::Graphics::ResizeMode mode, const pa::Vect2<int>& p
 				case ResizeMode::FillMax:
 					projectionPosition.x = u.x - projectionSize.x;
 					break;
+				case ResizeMode::Stretch:
+				case ResizeMode::Fit:
+					break;
 				}
 			}
 			else
@@ -72,6 +75,9 @@ void pa::Graphics::resize(pa::Graphics::ResizeMode mode, const pa::Vect2<int>& p
 					break;
 				case ResizeMode::FillMax:
 					projectionPosition.y = u.y - projectionSize.y;
+					break;
+				case ResizeMode::Stretch:
+				case ResizeMode::Fit:
 					break;
 				}
 			}
