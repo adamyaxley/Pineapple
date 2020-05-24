@@ -360,14 +360,14 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 		break;
 	case APP_CMD_RESUME:
 		pa::Log::info("APP_CMD_RESUME");
-		getSound()->resumeMusic();
+		getSound()->resume();
 		break;
 	case APP_CMD_SAVE_STATE:
 		pa::Log::info("APP_CMD_SAVE_STATE");
 		break;
 	case APP_CMD_PAUSE:
 		pa::Log::info("APP_CMD_PAUSE");
-		getSound()->pauseMusic();
+		getSound()->suspend();
 		break;
 	case APP_CMD_STOP:
 		pa::Log::info("APP_CMD_STOP");
@@ -375,6 +375,7 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 	case APP_CMD_DESTROY:
 		pa::Log::info("APP_CMD_DESTROY");
 		getGraphics()->getResourceManager().unloadAll();
+		getSound()->resume();
 		getSound()->getResourceManager().unloadAll();
 		m_engine.destroyContext();
 		m_engine.destroySurface();

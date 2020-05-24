@@ -36,39 +36,29 @@ std::shared_ptr<pa::Music> pa::Sound::createMusic(const char* path, pa::FileStor
 	return music;
 }
 
-void pa::Sound::pauseMusic()
-{
-	for (auto music : m_musicList)
-	{
-		if (music->isLoaded())
-		{
-			music->pause();
-		}
-	}
-}
-
-void pa::Sound::resumeMusic()
-{
-	for (auto music : m_musicList)
-	{
-		if (music->isLoaded())
-		{
-			music->resume();
-		}
-	}
-}
-
 void pa::Sound::setMusicEnabled(bool enabled)
 {
 	m_musicEnabled = enabled;
 
 	if (m_musicEnabled)
 	{
-		resumeMusic();
+		for (auto music : m_musicList)
+		{
+			if (music->isLoaded())
+			{
+				music->resume();
+			}
+		}
 	}
 	else
 	{
-		pauseMusic();
+		for (auto music : m_musicList)
+		{
+			if (music->isLoaded())
+			{
+				music->pause();
+			}
+		}
 	}
 }
 

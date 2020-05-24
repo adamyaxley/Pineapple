@@ -30,8 +30,8 @@ namespace pa
 		Sound(const FileSystem& fileSystem);
 		virtual ~Sound();
 
-		void pauseMusic();
-		void resumeMusic();
+		virtual void resume() = 0;
+		virtual void suspend() = 0;
 
 		void setMusicEnabled(bool enabled);
 		void setEffectEnabled(bool enabled);

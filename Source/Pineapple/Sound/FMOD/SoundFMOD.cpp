@@ -51,6 +51,16 @@ void pa::SoundFMOD::update()
 	m_system->update();
 }
 
+void pa::SoundFMOD::resume()
+{
+	m_system->mixerResume();
+}
+
+void pa::SoundFMOD::suspend()
+{
+	m_system->mixerSuspend();
+}
+
 std::shared_ptr<pa::Effect> pa::SoundFMOD::createNativeEffect(const pa::FilePath& path)
 {
 	return std::make_shared<pa::EffectFMOD>(m_system, path);
