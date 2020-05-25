@@ -361,6 +361,7 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 	case APP_CMD_RESUME:
 		pa::Log::info("APP_CMD_RESUME");
 		getSound()->resume();
+		m_pointer.setDown(false);
 		break;
 	case APP_CMD_SAVE_STATE:
 		pa::Log::info("APP_CMD_SAVE_STATE");
