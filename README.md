@@ -1,21 +1,19 @@
 # Pineapple [![License: Zlib](https://img.shields.io/badge/License-Zlib-brightgreen.svg)](https://opensource.org/licenses/Zlib)
 2D game engine utilizing modern C++ to provide an intuitive API and a decoupled plugin system.
 
-Note: this software is ALPHA, it is not stable, it's API can and will change.
+Note: this software is ALPHA, it is not stable, it's API can and will change. Please create an issue if you experience any problems (likely!)
 
 |              | Win64 | Win32 |
 |:------------:|:----: |:-----:|
 | Build & Test | [![Build](https://ci.appveyor.com/api/projects/status/77denkuux6smnk7j?svg=true)](https://ci.appveyor.com/project/Adam19855/pineapple-8gctu) | [![Build](https://ci.appveyor.com/api/projects/status/y9r29elqeg6hy7na?svg=true)](https://ci.appveyor.com/project/Adam19855/pineapple) |
 
-
-
 ## Goals
 The following are the primary goals for this project:
-* Cross-Platform
-* Realtime Resource Modification
+* Simple object system
+* Cross-platform
 * Modern C++
-* Intuitive and Concise API
-* Minimal Dependencies
+* Intuitive and concise API
+* Minimal dependencies
 
 ## Architecture
 ### Engine
@@ -58,14 +56,15 @@ Currently the following plugins are provided:
 * Platform
   * Windows - Win32 application 32/64bit (tested on Windows 10)
   * X11 - Unix with X Window System (tested on Ubuntu)
-  * Android - Native application with some java code (tested with NDK r18b)
+  * Android - Native application with some Java code (tested with NDK r18b)
+  * iOS - Native application with some Objective C code (tested on iOS 13)
 * Graphics
   * OpenGL - OpenGL rendering (uses [glad](https://github.com/Dav1dde/glad), [stb_image/stb_truetype](https://github.com/nothings/stb), [fontstash](https://github.com/memononen/fontstash) and [glm](https://github.com/g-truc/glm))
     * OpenGL 4.1 (Compatibility mode) on Windows and Unix
     * OpenGLES 1.0 on Android
 * Sound
-  * FMOD - FMOD wrapper (requires FMOD Studio API installation, tested on Windows 10, Ubuntu)
-  * SoundPool - Android SoundPool wrapper
+  * FMOD - FMOD wrapper (requires FMOD Studio API installation, tested on Windows 10, Ubuntu, iOS and Android)
+  * SoundPool - Android SoundPool wrapper (deprecated, use FMOD instead)
 
 ## Build
 To build the source, demos and tests you will need the following:
@@ -82,12 +81,11 @@ You can give a specific generator to cmake using the -G flag. The following gene
 * Win32 - "Visual Studio 15 2017"
 * Win64 - "Visual Studio 15 2017 Win64"
 * Unix - Use the default (not actively tested)
+* Xcode - Use DCMAKE_SYSTEM_NAME=iOS for iOS applications
 
 For Android use Android Studio to load the root Pineapple CMakeLists.txt file.
 
-Note: To run the tests within Visual Studio you will need to install the [Google Test Adapter](https://github.com/csoltenborn/GoogleTestAdapter), which can be installed via Tools -> Extensions and Updates. For Visual Studio 2017 there is an official [Test Adapter for Google Test](https://marketplace.visualstudio.com/items?itemName=VisualCPPTeam.TestAdapterforGoogleTest) that is maintained by the Visual C++ Team.
-
-Please create an issue if you experience any problems (likely!)
+See also the [cmake documentation](https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html) for additional information.
 
 ## Tutorial
 TODO
