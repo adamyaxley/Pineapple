@@ -107,8 +107,6 @@ static void glfons__renderDraw(void* userPtr, const float* verts, const float* t
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
-
-	PA_GL_CHECK_ERROR();
 }
 
 static void glfons__renderDelete(void* userPtr)

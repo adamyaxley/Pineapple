@@ -11,7 +11,11 @@
 #include <Pineapple/Engine/Util/Macro.h>
 #include <Pineapple/Graphics/OpenGL/IncludeGL.h>
 
-#define PA_GL_CHECK_ERROR() pa::UtilGL::checkGLError(PA_SOURCE_META)
+#ifdef PA_ENABLE_GL_CHECK_ERROR
+#	define PA_GL_CHECK_ERROR() pa::UtilGL::checkGLError(PA_SOURCE_META)
+#else
+#	define PA_GL_CHECK_ERROR()
+#endif
 
 namespace pa
 {
