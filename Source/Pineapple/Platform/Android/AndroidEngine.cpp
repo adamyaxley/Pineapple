@@ -140,6 +140,10 @@ bool pa::AndroidEngine::createSurface()
 		pa::Log::info("Creating surface");
 		m_surface = eglCreateWindowSurface(m_display, m_config, m_app->window, NULL);
 
+#ifdef PA_ANDROID_SWAPPY
+		SwappyGL_setWindow(m_app->window);
+#endif
+
 		if (eglQuerySurface(m_display, m_surface, EGL_WIDTH, &m_surfaceSize.x) == EGL_TRUE &&
 			eglQuerySurface(m_display, m_surface, EGL_HEIGHT, &m_surfaceSize.y) == EGL_TRUE)
 		{
@@ -222,6 +226,10 @@ bool pa::AndroidEngine::destroySurface()
 			pa::Log::info("Failed to destroy the surface");
 			return false;
 		}
+
+#ifdef PA_ANDROID_SWAPPY
+		SwappyGL_setWindow(nullptr);
+#endif
 	}
 
 	return true;
