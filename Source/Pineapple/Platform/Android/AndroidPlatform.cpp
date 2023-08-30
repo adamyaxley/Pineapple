@@ -50,6 +50,8 @@ extern "C"
         {
 		    pa::Log::info("Swappy failed to initialize");
         }
+
+		SwappyGL_setSwapIntervalNS(SWAPPY_SWAP_60FPS);
 #endif
 
 		auto arguments = std::make_unique<pa::AndroidArguments>(state);
