@@ -322,6 +322,7 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 			getGraphics()->getResourceManager().restoreState();
 
 			m_engine.setHasWindow(true); // Set that we have got the correct window
+			m_engine.setHasFocus(true);
 		}
 		break;
 	case APP_CMD_TERM_WINDOW:
