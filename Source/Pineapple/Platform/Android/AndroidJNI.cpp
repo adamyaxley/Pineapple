@@ -57,7 +57,6 @@ namespace pa
 
 		jint initGlobalJniVariables(JavaVM* jvm)
 		{
-			PA_ASSERTF(!g_jvm, "Error: initGlobalJniVariables() called twice");
 			g_jvm = jvm;
 			PA_ASSERTF(g_jvm, "Error: jvm is null");
 			if (pthread_once(&g_jni_ptr_once, &createJNIPtrKey))
