@@ -13,6 +13,18 @@ namespace pa
 {
 	struct Input
 	{
+		bool wantsQuit() const
+		{
+			for (const Event& event : events)
+			{
+				if (event.type == pa::Event::Type::Quit)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 		std::vector<Event> events;
 	};
 }
