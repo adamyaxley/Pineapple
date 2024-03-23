@@ -6,8 +6,15 @@
 #include <memory>
 
 #ifdef PA_ANDROID_SWAPPY
+#   include <swappy/swappy_common.h>
 #   include <swappy/swappyGL.h>
 #   include <swappy/swappyGL_extra.h>
+
+namespace pa
+{
+	SwappyTracer g_swappyTracer;
+}
+
 #endif
 
 std::shared_ptr<pa::Platform> pa::Make::platform(pa::Arguments* arguments, const pa::PlatformSettings& settings)
@@ -18,6 +25,8 @@ std::shared_ptr<pa::Platform> pa::Make::platform(pa::Arguments* arguments, const
 
 bool g_enteredAndroidMain = false;
 
+
+
 extern "C"
 {
 	void android_main(struct android_app* state)
@@ -25,9 +34,6 @@ extern "C"
 		pa::Log::info("Entered android_main");
 
 		pa::AndroidBridge::setAndroidApp(state);
-
-		// Make sure glue isn't stripped
-		app_dummy(); //No longer necessary https://github.com/android-ndk/ndk/issues/381
 
 		if (g_enteredAndroidMain)
 		{
@@ -51,7 +57,19 @@ extern "C"
 		    pa::Log::info("Swappy failed to initialize");
         }
 
+		SwappyGL_setAutoSwapInterval(false);
+		SwappyGL_setAutoPipelineMode(false);
 		SwappyGL_setSwapIntervalNS(SWAPPY_SWAP_60FPS);
+
+		memset(&pa::g_swappyTracer, 0, sizeof(pa::g_swappyTracer));
+		pa::g_swappyTracer.swapIntervalChanged = [](void* userData) {
+			const float ns = SwappyGL_getSwapIntervalNS();
+			const float ms = ns/1000000.0f;
+			const float fps = 1000.f/ms;
+			pa::Log::info("Swappy interval changed: {}ms ({} FPS)", ms, fps);
+		};
+
+		SwappyGL_injectTracer(&pa::g_swappyTracer);
 #endif
 
 		auto arguments = std::make_unique<pa::AndroidArguments>(state);
@@ -65,13 +83,14 @@ extern "C"
 		g_enteredAndroidMain = false;
 
 #ifdef PA_ANDROID_SWAPPY
+		SwappyGL_uninjectTracer(&pa::g_swappyTracer);
 		SwappyGL_destroy();
 #endif
 
 		pa::Log::info("FinishMe");
-		jclass activityClass = env->GetObjectClass(state->activity->clazz);
-		jmethodID FinishHim = env->GetMethodID(activityClass, "FinishMe", "()V");
-		env->CallVoidMethod(state->activity->clazz, FinishHim);
+		//jclass activityClass = env->GetObjectClass(state->activity->clazz);
+		//jmethodID FinishHim = env->GetMethodID(activityClass, "FinishMe", "()V");
+		//env->CallVoidMethod(state->activity->clazz, FinishHim);
 	}
 }
 
@@ -116,16 +135,13 @@ pa::AndroidPlatform::AndroidPlatform(pa::AndroidArguments* arguments, const pa::
 	// Wait until the display has been initialised
 	pollEvents();
 
-	//getGraphics()->resizeKeepAspectRatio(width, height);
-
-	//m_engine.setPlatformSize(settings.graphics.size);
 	m_engine.initialise();
 }
 
 pa::AndroidPlatform::~AndroidPlatform()
 {
 	m_engine.setHasFocus(false);
-	ANativeActivity_finish(m_engine.getApp()->activity);
+	//ANativeActivity_finish(m_engine.getApp()->activity);
 
 	/*m_sound.reset();
 	m_graphics.reset();
@@ -172,12 +188,7 @@ void pa::AndroidPlatform::pollEvents()
 		int events;
 		struct android_poll_source* source;
 
-		/*int id = */ALooper_pollAll(timeout, NULL, &events, (void**)&source);
-
-		/*if (id < 0)
-		{
-		// Handle error?
-		}*/
+		ALooper_pollAll(timeout, NULL, &events, (void**)&source);
 
 		// Process this event.
 		if (source != NULL)
@@ -198,21 +209,6 @@ void pa::AndroidPlatform::pollEvents()
 		// Wait until the app has focus again
 		waitingForEvents = !m_engine.isAnimating();
 		timeout = -1;
-
-		// If a sensor has data, process it now.
-		/*if (ident == LOOPER_ID_USER)
-		{
-		if (engine.accelerometerSensor != NULL)
-		{
-		ASensorEvent event;
-		while (ASensorEventQueue_getEvents(engine.sensorEventQueue,
-		&event, 1) > 0) {
-		LOGI("accelerometer: x=%f y=%f z=%f",
-		event.acceleration.x, event.acceleration.y,
-		event.acceleration.z);
-		}
-		}
-		}*/
 	}
 
 	std::copy(m_otherEvents.begin(), m_otherEvents.end(), std::back_inserter(m_input.events));
@@ -235,33 +231,29 @@ int32_t pa::AndroidPlatform::handleInputEvent(android_app* app, AInputEvent* inp
 		switch (action)
 		{
 			//case AMOTION_EVENT_ACTION_POINTER_DOWN:
-		case AMOTION_EVENT_ACTION_DOWN:
-		{
-			m_pointer.setDown(true);
-			pa::Log::info("Touch detected");
-			// Fall through to next case below to get co-ordinates
-		}
-		case AMOTION_EVENT_ACTION_MOVE:
-		{
-			float x = AMotionEvent_getX(inputEvent, 0);
-			float y = AMotionEvent_getY(inputEvent, 0);
+            case AMOTION_EVENT_ACTION_DOWN:
+            {
+                m_pointer.setDown(true);
+                pa::Log::info("Touch detected");
+                // Fall through to next case below to get co-ordinates
+            }
+            case AMOTION_EVENT_ACTION_MOVE:
+            {
+                float x = AMotionEvent_getX(inputEvent, 0);
+                float y = AMotionEvent_getY(inputEvent, 0);
 
-			// Scale values in case we have a window which is smaller than the platform resolution
-			x *= (float)m_graphics->getSize().x / (float)m_engine.getSurfaceSize().x;
-			y *= (float)m_graphics->getSize().y / (float)m_engine.getSurfaceSize().y;
+                // Scale values in case we have a window which is smaller than the platform resolution
+                x *= (float)m_graphics->getSize().x / (float)m_engine.getSurfaceSize().x;
+                y *= (float)m_graphics->getSize().y / (float)m_engine.getSurfaceSize().y;
 
-			m_pointer.setPosition(x, y);
-			break;
-		}
-		//case AMOTION_EVENT_ACTION_POINTER_UP:
-		case AMOTION_EVENT_ACTION_UP:
-		{
-			m_setPointerUpOnNextStep = true;
-			//int index = (actionFlags & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT; 
-			//int pid = AMotionEvent_getPointerId(inputEvent, index); 
-
-			break;
-		}
+                m_pointer.setPosition(x, y);
+                break;
+            }
+            case AMOTION_EVENT_ACTION_UP:
+            {
+                m_setPointerUpOnNextStep = true;
+                break;
+            }
 		}
 
 		return 1;
@@ -293,7 +285,7 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 	{
 	case APP_CMD_INIT_WINDOW:
 		pa::Log::info("APP_CMD_INIT_WINDOW");
-		while (!m_engine.getHasWindow())
+		if (!m_engine.getHasWindow())
 		{
 			if (!m_engine.createDisplay())
 			{
@@ -303,7 +295,6 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 			{
 				pa::Log::info("Failed to create the surface");
 			}
-
 			if (!m_engine.createContext())
 			{
 				pa::Log::info("Failed to create the context");
@@ -323,7 +314,6 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 			getGraphics()->resize(pa::Graphics::ResizeMode::FillMin, m_engine.getSurfaceSize()); // TODO set this from graphics setting
 			getGraphics()->getResourceManager().restoreState();
 
-			m_engine.setHasWindow(true); // Set that we have got the correct window
 			m_engine.setHasFocus(true);
 		}
 		break;
@@ -341,7 +331,6 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 			m_engine.destroyContext();
 			m_engine.destroySurface();
 			m_engine.destroyDisplay();
-			m_engine.setHasWindow(false);
 		}
 		m_engine.setHasFocus(false);
 		break;
@@ -373,12 +362,19 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 		break;
 	case APP_CMD_DESTROY:
 		pa::Log::info("APP_CMD_DESTROY");
-		getGraphics()->getResourceManager().unloadAll();
-		getSound()->resume();
-		getSound()->getResourceManager().unloadAll();
+		if (getGraphics())
+		{
+			getGraphics()->getResourceManager().unloadAll();
+		}
+		if (getSound())
+		{
+			getSound()->resume();
+			getSound()->getResourceManager().unloadAll();
+		}
 		m_engine.destroyContext();
 		m_engine.destroySurface();
 		m_engine.destroyDisplay();
+		m_engine.setHasFocus(false);
 		break;
 	case APP_CMD_CONFIG_CHANGED:
 		pa::Log::info("APP_CMD_CONFIG_CHANGED");
@@ -388,7 +384,7 @@ void pa::AndroidPlatform::handleAppCommand(struct android_app* app, int32_t cmd)
 	case APP_CMD_WINDOW_REDRAW_NEEDED:
 		pa::Log::info("APP_CMD_WINDOW_REDRAW_NEEDED");
 		// Android is asking us to redraw
-		recreateWindow();
+		//recreateWindow();
 		break;
 	case APP_CMD_CONTENT_RECT_CHANGED:
 		pa::Log::info("APP_CMD_CONTENT_RECT_CHANGED");

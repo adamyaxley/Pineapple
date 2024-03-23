@@ -277,14 +277,9 @@ void pa::AndroidEngine::swapBuffers()
 	}
 }
 
-void pa::AndroidEngine::setHasWindow(bool state)
-{
-	m_hasWindow = state;
-}
-
 bool pa::AndroidEngine::getHasWindow() const
 {
-	return m_hasWindow;
+	return (EGL_NO_DISPLAY != m_display);
 }
 
 void pa::AndroidEngine::setHasFocus(bool state)

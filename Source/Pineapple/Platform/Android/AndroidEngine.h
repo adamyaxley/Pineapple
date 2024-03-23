@@ -38,7 +38,6 @@ namespace pa
 
 		const Vect2<int>& getSurfaceSize() { return m_surfaceSize; }
 
-		void setHasWindow(bool state);
 		bool getHasWindow() const;
 		void setHasFocus(bool state);
 		bool isAnimating();
