@@ -15,91 +15,56 @@ IF (FMOD_LIBRARIES AND FMOD_INCLUDE_DIRS)
 	SET(FMOD_FIND_QUIETLY TRUE)
 ENDIF (FMOD_LIBRARIES AND FMOD_INCLUDE_DIRS)
 
-#UNSET(FMOD_INCLUDE_SEARCH_DIRS CACHE)
-#UNSET(FMOD_LIBRARY_SEARCH_DIRS CACHE)
-#UNSET(FMOD_LIBRARY_DIRS CACHE)
-#UNSET(FMOD_LIBRARIES CACHE)
-#UNSET(FMOD_INCLUDE_DIRS CACHE)
+set(_FMOD_ROOTS
+	"${FMOD_SDK}"
+	"$ENV{FMOD_SDK}"
+	"$ENV{HOME}/FMOD Programmers API"
+	"C:/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows"
+	"$ENV{ProgramFiles}/FMOD SoundSystem/FMOD Studio API Windows"
+	"/opt/fmodex")
 
-SET(FMOD_INCLUDE_SEARCH_DIRS
-	${INCLUDE_SEARCH_DIRS}
-	${CMAKE_INCLUDE_PATH}
-	/usr/include
-	/usr/local/include
-	/usr/include/fmodex
-	/usr/local/include/fmodex
-	/opt/include/fmodex
-	/opt/fmodex/include
-	"C:\\Program Files (x86)\\FMOD SoundSystem\\FMOD Studio API Windows\\api\\lowlevel\\inc"
-	"~/FMOD\ Programmers\ API/api/core/inc"
-	"~/FMOD\ Programmers\ API/api/lowlevel/inc"
-	CACHE STRING ""
-)
+find_path(FMOD_INCLUDE_DIRS
+	NAMES fmod.hpp
+	HINTS ${FMOD_INCLUDE_SEARCH_DIRS} ${INCLUDE_SEARCH_DIRS} ${_FMOD_ROOTS}
+	PATH_SUFFIXES api/core/inc api/lowlevel/inc include/fmodex include fmodex
+	NO_CMAKE_FIND_ROOT_PATH)
 
-SET(FMOD_LIBRARY_SEARCH_DIRS
-	${LIBRARY_SEARCH_DIRS}
-	${CMAKE_LIBRARY_PATH}
-	/usr/lib
-	/usr/lib64
-	/usr/local/lib
-	/usr/local/lib64
-	/opt/lib
-	/opt/lib64
-	/opt/fmodex/lib
-	/opt/fmodex/lib64
-	"C:\\Program Files (x86)\\FMOD SoundSystem\\FMOD Studio API Windows\\api\\lowlevel\\lib"
-	"~/FMOD\ Programmers\ API/api/core/lib"
-	"~/FMOD\ Programmers\ API/api/lowlevel/lib"
-	CACHE STRING ""
-)
+set(_FMOD_LIBRARY_SUFFIXES api/core/lib api/lowlevel/lib lib lib64)
+if(WIN32)
+	if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+		set(_FMOD_LIBRARY_NAMES fmod_vc fmodL_vc)
+		list(INSERT _FMOD_LIBRARY_SUFFIXES 0 api/core/lib/x86 api/lowlevel/lib/x86)
+	else()
+		set(_FMOD_LIBRARY_NAMES fmod_vc fmodL_vc fmod64_vc fmodL64_vc)
+		list(INSERT _FMOD_LIBRARY_SUFFIXES 0 api/core/lib/x64 api/lowlevel/lib/x64)
+	endif()
+elseif(IOS OR CMAKE_SYSTEM_NAME STREQUAL "iOS")
+	string(TOLOWER "${CMAKE_OSX_SYSROOT}" _FMOD_SYSROOT)
+	if(_FMOD_SYSROOT MATCHES "iphonesimulator" OR
+		(NOT CMAKE_OSX_SYSROOT AND CMAKE_OSX_ARCHITECTURES MATCHES "i386|x86_64"))
+		set(_FMOD_LIBRARY_NAMES fmod_iphonesimulator fmodL_iphonesimulator)
+	else()
+		set(_FMOD_LIBRARY_NAMES fmod_iphoneos fmodL_iphoneos)
+	endif()
+else()
+	set(_FMOD_LIBRARY_NAMES fmod fmodL)
+	list(INSERT _FMOD_LIBRARY_SUFFIXES 0 "api/core/lib/${CMAKE_SYSTEM_PROCESSOR}")
+endif()
 
-IF (NOT FMOD_FIND_QUIETLY)
-	MESSAGE(STATUS "Looking for FMOD")
-ENDIF (NOT FMOD_FIND_QUIETLY)
-FIND_PATH(FMOD_INCLUDE_DIRS fmod.hpp ${FMOD_INCLUDE_SEARCH_DIRS})
-MESSAGE(STATUS "FMOD_INCLUDE_DIRS: " ${FMOD_INCLUDE_DIRS})
-IF(WIN32)
-	IF(CMAKE_SIZEOF_VOID_P EQUAL 4)
-		# 32 bit
-		MESSAGE(STATUS "Looking for Win32 libs")
-		FIND_LIBRARY(FMOD_LIBRARIES fmod_vc fmodL_vc ${FMOD_LIBRARY_SEARCH_DIRS})
-	ELSE()
-		# 64 bit
-		MESSAGE(STATUS "Looking for X64 libs")
-		FIND_LIBRARY(FMOD_LIBRARIES fmod64_vc fmodL64_vc ${FMOD_LIBRARY_SEARCH_DIRS})
-	ENDIF()
-ELSEIF(IOS AND CMAKE_OSX_ARCHITECTURES MATCHES "x86_64")
-	MESSAGE(STATUS "Looking for IPhoneOS Simulator libs")
-	FIND_LIBRARY(FMOD_LIBRARIES fmod_iphonesimulator fmodL_iphonesimulator ${FMOD_LIBRARY_SEARCH_DIRS})
-ELSEIF(IOS)
-	MESSAGE(STATUS "Looking for IPhoneOS libs")
-	FIND_LIBRARY(FMOD_LIBRARIES fmod_iphoneos fmodL_iphoneos ${FMOD_LIBRARY_SEARCH_DIRS})
-ELSEIF(UNIX)
-	MESSAGE(STATUS "Looking for Unix libs")
-	FIND_LIBRARY(FMOD_LIBRARIES fmod fmodL ${FMOD_LIBRARY_SEARCH_DIRS})
-ENDIF()
-SET(FMOD_LIBRARIES ${FMOD_LIBRARY})
+if(FMOD_LIBRARY AND NOT FMOD_LIBRARIES)
+	set(FMOD_LIBRARIES "${FMOD_LIBRARY}")
+endif()
 
-#Do some preparation
+find_library(FMOD_LIBRARIES
+	NAMES ${_FMOD_LIBRARY_NAMES}
+	NAMES_PER_DIR
+	HINTS ${FMOD_LIBRARY_SEARCH_DIRS} ${LIBRARY_SEARCH_DIRS} ${_FMOD_ROOTS}
+	PATH_SUFFIXES ${_FMOD_LIBRARY_SUFFIXES}
+	NO_CMAKE_FIND_ROOT_PATH)
 
-SET(FMOD_INCLUDE_DIRS ${FMOD_INCLUDE_DIRS})
-SET(FMOD_LIBRARIES ${FMOD_LIBRARIES})
-SET(FMOD_LIBRARY_DIRS ${FMOD_LIBRARY_DIRS})
-
-MARK_AS_ADVANCED(FMOD_INCLUDE_DIRS FMOD_LIBRARIES FMOD_LIBRARY_DIRS)
-
-IF (FMOD_INCLUDE_DIRS AND FMOD_LIBRARIES)
-	SET(FMOD_FOUND TRUE)
-ENDIF (FMOD_INCLUDE_DIRS AND FMOD_LIBRARIES)
-
-IF (FMOD_FOUND)
-	IF (NOT FMOD_FIND_QUIETLY)
-		MESSAGE(STATUS "  libraries : ${FMOD_LIBRARIES} from ${FMOD_LIBRARY_DIRS}")
-		MESSAGE(STATUS "  includes  : ${FMOD_INCLUDE_DIRS}")
-	ENDIF (NOT FMOD_FIND_QUIETLY)
-ELSE (FMOD_FOUND)
-	MESSAGE(STATUS "fmod not found!")
-	IF (FMOD_FIND_REQUIRED)
-		MESSAGE(FATAL_ERROR "Could not find FMOD. Make sure you have the FMOD development headers are installed. Otherwise, try setting LIBRARY_SEARCH_DIRS and INCLUDE_SEARCH_DIRS to the place FMOD was installed with -DLIBRARY_SEARCH_DIRS=<path/to/lib> -DINCLUDE_SEARCH_DIRS=<path/to/include>")
-	ENDIF (FMOD_FIND_REQUIRED)
-ENDIF (FMOD_FOUND)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(FMOD DEFAULT_MSG FMOD_LIBRARIES FMOD_INCLUDE_DIRS)
+if(FMOD_FOUND)
+	get_filename_component(FMOD_LIBRARY_DIRS "${FMOD_LIBRARIES}" DIRECTORY)
+endif()
+mark_as_advanced(FMOD_INCLUDE_DIRS FMOD_LIBRARIES)
