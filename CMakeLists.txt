@@ -70,7 +70,7 @@ if (GENERATE_PLUGINS)
     if(ANDROID)
         find_library(LOG_LIB log)
         find_library(ANDROID_LIB android)
-        find_library(EGL_LIB egl)
+        find_library(EGL_LIB EGL)
         find_library(GLESV1_CM_LIB GLESv1_CM)
 
         # FMOD SDK
@@ -163,6 +163,30 @@ function(add_pineapple_app _TARGET _SOURCES)
         set(PA_SETTINGS_ENGINE_ASSETS_PATH ${PA_ROOT}/Assets)
         # Configure the settings file
         configure_file(${CMAKE_CURRENT_LIST_DIR}/pineapple.json ${CMAKE_CURRENT_BINARY_DIR}/pineapple.json)
+
+        if(IOS)
+            set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/pineapple.json"
+                PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+            target_sources(${_TARGET} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/pineapple.json")
+
+            file(GLOB_RECURSE _user_assets RELATIVE "${PA_SETTINGS_USER_ASSETS_PATH}"
+                "${PA_SETTINGS_USER_ASSETS_PATH}/*")
+            file(GLOB_RECURSE _engine_assets RELATIVE "${PA_SETTINGS_ENGINE_ASSETS_PATH}"
+                "${PA_SETTINGS_ENGINE_ASSETS_PATH}/*")
+            set(_assets ${_user_assets} ${_engine_assets})
+            list(REMOVE_DUPLICATES _assets)
+            foreach(_asset IN LISTS _assets)
+                if(EXISTS "${PA_SETTINGS_ENGINE_ASSETS_PATH}/${_asset}")
+                    set(_source "${PA_SETTINGS_ENGINE_ASSETS_PATH}/${_asset}")
+                else()
+                    set(_source "${PA_SETTINGS_USER_ASSETS_PATH}/${_asset}")
+                endif()
+                get_filename_component(_directory "${_asset}" DIRECTORY)
+                set_source_files_properties("${_source}"
+                    PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/Assets/${_directory}")
+                target_sources(${_TARGET} PRIVATE "${_source}")
+            endforeach()
+        endif()
     endif()
     
     if(WIN32)

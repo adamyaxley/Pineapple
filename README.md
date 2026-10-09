@@ -103,6 +103,11 @@ with `add_pineapple_app` are generated as app bundles. Set the deployment
 target to a version supported by both your Xcode installation and FMOD SDK.
 Unsigned CI builds can set `-DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO`.
 
+For apps with a `pineapple.json` template, iOS bundles include the generated
+settings and both the app and engine assets. Subdirectories are preserved in
+the shared `Assets` directory; engine assets take precedence on matching paths.
+Native bundle resources track asset changes without post-build copy scripts.
+
 FMOD discovery can be checked without a compiler or SDK by running
 `cmake -P <pineapple-root>/Test/Build/FindFMOD.cmake` from a temporary build
 directory. This covers modern and legacy Windows layouts, device and
