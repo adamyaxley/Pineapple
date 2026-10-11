@@ -86,6 +86,33 @@ For Android use Android Studio to load the root Pineapple CMakeLists.txt file.
 
 See also the [cmake documentation](https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html) for additional information.
 
+### FMOD and iOS
+
+Pass `-DFMOD_SDK=<sdk-root>` to locate a separately installed FMOD SDK.
+The root should contain `api/core/inc` and `api/core/lib`; legacy
+`api/lowlevel` layouts are also supported. The finder selects the Windows
+architecture or iOS device/simulator library without clearing user-supplied
+`FMOD_INCLUDE_DIRS` and `FMOD_LIBRARIES` overrides. Keep SDK headers and
+binaries from the same release. FMOD SDKs are not distributed with Pineapple.
+
+For an iOS device build, use CMake's Xcode generator with
+`-DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_SYSROOT=iphoneos
+-DCMAKE_OSX_ARCHITECTURES=arm64`. For an iOS simulator, select
+`iphonesimulator` explicitly, including on ARM64 hosts. Applications created
+with `add_pineapple_app` are generated as app bundles. Set the deployment
+target to a version supported by both your Xcode installation and FMOD SDK.
+Unsigned CI builds can set `-DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO`.
+
+For apps with a `pineapple.json` template, iOS bundles include the generated
+settings and both the app and engine assets. Subdirectories are preserved in
+the shared `Assets` directory; engine assets take precedence on matching paths.
+Native bundle resources track asset changes without post-build copy scripts.
+
+FMOD discovery can be checked without a compiler or SDK by running
+`cmake -P <pineapple-root>/Test/Build/FindFMOD.cmake` from a temporary build
+directory. This covers modern and legacy Windows layouts, device and
+simulator selection, Linux, explicit overrides, and a missing library.
+
 ## Tutorial
 TODO
 
