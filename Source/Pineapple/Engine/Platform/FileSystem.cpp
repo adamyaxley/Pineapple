@@ -2,7 +2,15 @@
 #include <Pineapple/Engine/Platform/Memory.h>
 #include <Pineapple/Engine/Util/Macro.h>
 #include <cstdio>
+#include <mutex>
 #include <sys/stat.h>
+#ifdef _WIN32
+#define NOMINMAX
+#include <Windows.h>
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
 
 namespace
 {
@@ -136,6 +144,11 @@ pa::FileResult pa::FilePath::write(const FileBuffer& buffer) const
 	return m_fileSystem.write(*this, buffer);
 }
 
+pa::FileResult pa::FilePath::writeAtomically(const FileBuffer& buffer) const
+{
+	return m_fileSystem.writeAtomically(*this, buffer);
+}
+
 pa::FileResult pa::FilePath::getModificationTime(std::chrono::system_clock::time_point& modificationTime) const
 {
 	return m_fileSystem.getModificationTime(*this, modificationTime);
@@ -241,4 +254,72 @@ pa::FileResult pa::FileSystem::getModificationTime(const pa::FilePath& path, std
 		modificationTime = std::chrono::system_clock::from_time_t(st.st_mtime);
 		return pa::FileResult::Success;
 	}
+}
+
+pa::FileResult pa::FileSystem::writeAtomically(const FilePath& path, const FileBuffer& buffer) const
+{
+	static std::mutex writeMutex;
+	std::lock_guard<std::mutex> lock(writeMutex);
+	const std::string temporaryPath = path.asString() + ".tmp";
+	FILE* file = nullptr;
+	const auto openResult = openFile(&file, temporaryPath.c_str(), "wb");
+	if (openResult != FileResult::Success)
+	{
+		return openResult;
+	}
+
+	bool success = fwrite(buffer.getBuffer().get(), 1, buffer.getSize(), file) == buffer.getSize();
+	if (fflush(file) != 0)
+	{
+		success = false;
+	}
+#ifdef _WIN32
+	if (_commit(_fileno(file)) != 0)
+#else
+	if (fsync(fileno(file)) != 0)
+#endif
+	{
+		success = false;
+	}
+	if (fclose(file) != 0)
+	{
+		success = false;
+	}
+	if (success)
+	{
+#ifdef _WIN32
+		DWORD error = ERROR_SUCCESS;
+		for (unsigned int attempt = 0; attempt < 7; ++attempt)
+		{
+			success = MoveFileExA(temporaryPath.c_str(), path.asString().c_str(),
+				MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH) != 0;
+			error = success ? ERROR_SUCCESS : GetLastError();
+			if (success || (error != ERROR_ACCESS_DENIED && error != ERROR_SHARING_VIOLATION) || attempt == 6)
+			{
+				break;
+			}
+			// Windows scanners can briefly hold a just-closed file without delete sharing.
+			Sleep(1u << attempt);
+		}
+		if (!success)
+		{
+			pa::Log::info("Failed to replace {}: Windows error {}", path.asString(), error);
+		}
+#else
+		success = std::rename(temporaryPath.c_str(), path.asString().c_str()) == 0;
+		if (!success)
+		{
+			pa::Log::info("Failed to replace {}: errno {}", path.asString(), errno);
+		}
+#endif
+	}
+	if (!success)
+	{
+		if (std::remove(temporaryPath.c_str()) != 0)
+		{
+			pa::Log::info("Failed to remove temporary file: {}", temporaryPath);
+		}
+		return FileResult::WriteError;
+	}
+	return FileResult::Success;
 }

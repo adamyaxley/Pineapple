@@ -57,6 +57,8 @@ namespace pa
 
 		FileResult write(const FileBuffer& buffer) const;
 
+		FileResult writeAtomically(const FileBuffer& buffer) const;
+
 		FileResult getModificationTime(std::chrono::system_clock::time_point& modificationTime) const;
 
 		FileStorage getStorage() const;
@@ -84,6 +86,8 @@ namespace pa
 		virtual FileResult read(const FilePath& path, FileBuffer& buffer) const;
 
 		virtual FileResult write(const FilePath& path, const FileBuffer& buffer) const;
+
+		virtual FileResult writeAtomically(const FilePath& path, const FileBuffer& buffer) const;
 
 		virtual FileResult getModificationTime(const FilePath& path, std::chrono::system_clock::time_point& modificationTime) const;
 

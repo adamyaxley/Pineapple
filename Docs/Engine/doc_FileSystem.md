@@ -19,3 +19,9 @@
 }</code></pre>
 
 -----
+
+`FilePath::writeAtomically` writes and flushes a sibling temporary file before
+replacing the destination. Failed writes or replacements leave the previous
+destination intact and return a `FileResult` error. Atomic writes are serialized
+within the process. Callers must separately serialize an entire read/modify/write
+transaction; atomic replacement alone does not prevent lost updates.
