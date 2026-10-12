@@ -15,6 +15,7 @@
 #include <Pineapple/Engine/Graphics/Graphics.h>
 #include <Pineapple/Engine/Sound/Sound.h>
 #include <memory>
+#include <functional>
 
 namespace pa
 {
@@ -62,6 +63,9 @@ namespace pa
 
 		// Idle
 		virtual void idle() = 0;
+
+		// Poll, update, and idle within the platform's per-frame lifetime scope.
+		virtual bool runFrame(const std::function<bool()>& update);
 
 		// Set full screen mode
 		virtual void setFullScreen(bool fullScren) = 0;

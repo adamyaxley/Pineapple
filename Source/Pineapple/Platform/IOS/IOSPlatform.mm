@@ -1,5 +1,6 @@
 #include <Pineapple/Platform/IOS/AppDelegate.h>
 #include <Pineapple/Platform/IOS/IOSBridge.h>
+#include <Pineapple/Platform/IOS/AutoreleasePool.h>
 
 #include <cstdlib>
 #include <sys/time.h>
@@ -21,7 +22,9 @@ namespace
 	
 	void* applicationThreadFunc(void*)
 	{
-		pa::Main(nullptr);
+		pa::IOS::withAutoreleasePool([] {
+			pa::Main(nullptr);
+		});
 		
 		return nullptr;
 	}
@@ -83,6 +86,13 @@ pa::IOSPlatform::~IOSPlatform()
     // issue exit TODO
     
     // join app thread
+}
+
+bool pa::IOSPlatform::runFrame(const std::function<bool()>& update)
+{
+	return pa::IOS::withAutoreleasePool([&] {
+		return Platform::runFrame(update);
+	});
 }
 
 // Idle

@@ -14,6 +14,8 @@ namespace pa
 		// Idle
 		virtual void idle() override;
 
+		virtual bool runFrame(const std::function<bool()>& update) override;
+
 		// Set full screen mode
 		virtual void setFullScreen(bool fullScren) override {}
 

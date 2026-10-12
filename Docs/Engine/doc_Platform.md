@@ -15,3 +15,13 @@
 }</code></pre>
 
 -----
+
+`Platform::runFrame(update)` polls input, calls `update`, and idles only if the
+callback returns `true`. A `false` result ends the loop without another render
+barrier. Applications should use this entry point for each frame rather than
+calling `pollEvents` and `idle` separately.
+
+On iOS, the worker entry point covers startup and shutdown with an autorelease
+pool, and `runFrame` adds a nested pool for each frame. It drains after rendering
+finishes, or immediately on the final `false` result. Objects retained for later
+callbacks remain alive; only autoreleased temporary ownership is released.
