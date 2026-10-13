@@ -104,10 +104,21 @@ void pa::IOSPlatform::pollEvents()
 // Intent
 void pa::IOSPlatform::openUrl(const char* url)
 {
-	NSString* string = [NSString stringWithUTF8String:url];
+	NSString* string = url ? [NSString stringWithUTF8String:url] : nil;
+	NSURL* destination = string ? [NSURL URLWithString:string] : nil;
+	if (destination == nil || destination.scheme.length == 0)
+	{
+		pa::Log::info("Cannot open an invalid URL");
+		return;
+	}
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:string]];
+		[[UIApplication sharedApplication] openURL:destination options:@{} completionHandler:^(BOOL success) {
+			if (!success)
+			{
+				pa::Log::info("Failed to open the requested URL");
+			}
+		}];
 	});
 }
 
