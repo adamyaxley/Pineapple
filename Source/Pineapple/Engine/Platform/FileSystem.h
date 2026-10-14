@@ -55,9 +55,8 @@ namespace pa
 
 		FileResult read(FileBuffer& buffer) const;
 
+		// Replace the whole file atomically; a failed write leaves the destination intact.
 		FileResult write(const FileBuffer& buffer) const;
-
-		FileResult writeAtomically(const FileBuffer& buffer) const;
 
 		FileResult getModificationTime(std::chrono::system_clock::time_point& modificationTime) const;
 
@@ -85,9 +84,8 @@ namespace pa
 
 		virtual FileResult read(const FilePath& path, FileBuffer& buffer) const;
 
+		// Writable filesystem implementations must preserve atomic replacement semantics.
 		virtual FileResult write(const FilePath& path, const FileBuffer& buffer) const;
-
-		virtual FileResult writeAtomically(const FilePath& path, const FileBuffer& buffer) const;
 
 		virtual FileResult getModificationTime(const FilePath& path, std::chrono::system_clock::time_point& modificationTime) const;
 

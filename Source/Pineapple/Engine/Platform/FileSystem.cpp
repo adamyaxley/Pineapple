@@ -1,6 +1,7 @@
 #include <Pineapple/Engine/Platform/FileSystem.h>
 #include <Pineapple/Engine/Platform/Memory.h>
 #include <Pineapple/Engine/Util/Macro.h>
+#include <cerrno>
 #include <cstdio>
 #include <mutex>
 #include <sys/stat.h>
@@ -144,11 +145,6 @@ pa::FileResult pa::FilePath::write(const FileBuffer& buffer) const
 	return m_fileSystem.write(*this, buffer);
 }
 
-pa::FileResult pa::FilePath::writeAtomically(const FileBuffer& buffer) const
-{
-	return m_fileSystem.writeAtomically(*this, buffer);
-}
-
 pa::FileResult pa::FilePath::getModificationTime(std::chrono::system_clock::time_point& modificationTime) const
 {
 	return m_fileSystem.getModificationTime(*this, modificationTime);
@@ -218,57 +214,28 @@ pa::FileResult pa::FileSystem::read(const pa::FilePath& path, pa::FileBuffer& bu
 
 pa::FileResult pa::FileSystem::write(const pa::FilePath& path, const pa::FileBuffer& buffer) const
 {
-	FILE* file;
-	{
-		pa::FileResult result = openFile(&file, path.asString().c_str(), "wb");
-
-		if (result != pa::FileResult::Success)
-		{
-			// Cannot open the file so return error code
-			return result;
-		}
-	}
-
-	auto result = pa::FileResult::Success;
-	auto count = fwrite(buffer.getBuffer().get(), sizeof(unsigned char), buffer.getSize(), file);
-	if (count != buffer.getSize())
-	{
-		result = pa::FileResult::WriteError;
-	}
-
-	fclose(file);
-	return result;
-}
-
-pa::FileResult pa::FileSystem::getModificationTime(const pa::FilePath& path, std::chrono::system_clock::time_point& modificationTime) const
-{
-	struct stat st;
-	int ret = stat(path.asString().c_str(), &st);
-
-	if (ret == -1)
-	{
-		return pa::FileResult::ReadError;
-	}
-	else
-	{
-		modificationTime = std::chrono::system_clock::from_time_t(st.st_mtime);
-		return pa::FileResult::Success;
-	}
-}
-
-pa::FileResult pa::FileSystem::writeAtomically(const FilePath& path, const FileBuffer& buffer) const
-{
 	static std::mutex writeMutex;
 	std::lock_guard<std::mutex> lock(writeMutex);
-	const std::string temporaryPath = path.asString() + ".tmp";
+	std::string temporaryPath = path.asString() + ".tmp";
 	FILE* file = nullptr;
-	const auto openResult = openFile(&file, temporaryPath.c_str(), "wb");
-	if (openResult != FileResult::Success)
+	for (unsigned int suffix = 0; ; ++suffix)
 	{
-		return openResult;
+		const auto openResult = openFile(&file, temporaryPath.c_str(), "wbx");
+		if (openResult == FileResult::Success)
+		{
+			break;
+		}
+		if (errno != EEXIST)
+		{
+			pa::Log::info("Failed to create temporary file {}: errno {}", temporaryPath, errno);
+			return openResult;
+		}
+		// Never truncate a pre-existing sibling or another writer's temporary file.
+		temporaryPath = path.asString() + ".tmp." + std::to_string(suffix);
 	}
 
-	bool success = fwrite(buffer.getBuffer().get(), 1, buffer.getSize(), file) == buffer.getSize();
+	bool success = buffer.getSize() == 0 ||
+		fwrite(buffer.getBuffer().get(), 1, buffer.getSize(), file) == buffer.getSize();
 	if (fflush(file) != 0)
 	{
 		success = false;
@@ -322,4 +289,20 @@ pa::FileResult pa::FileSystem::writeAtomically(const FilePath& path, const FileB
 		return FileResult::WriteError;
 	}
 	return FileResult::Success;
+}
+
+pa::FileResult pa::FileSystem::getModificationTime(const pa::FilePath& path, std::chrono::system_clock::time_point& modificationTime) const
+{
+	struct stat st;
+	int ret = stat(path.asString().c_str(), &st);
+
+	if (ret == -1)
+	{
+		return pa::FileResult::ReadError;
+	}
+	else
+	{
+		modificationTime = std::chrono::system_clock::from_time_t(st.st_mtime);
+		return pa::FileResult::Success;
+	}
 }
