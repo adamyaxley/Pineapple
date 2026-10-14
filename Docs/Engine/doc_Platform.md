@@ -16,12 +16,13 @@
 
 -----
 
-`Platform::runFrame(update)` polls input, calls `update`, and idles only if the
-callback returns `true`. A `false` result ends the loop without another render
-barrier. Applications should use this entry point for each frame rather than
-calling `pollEvents` and `idle` separately.
+Applications control the frame loop using `Platform::pollEvents`, their game
+update, and `Platform::idle`. Skip `idle` when the update ends the loop so the
+worker does not enter another render barrier.
 
 On iOS, the worker entry point covers startup and shutdown with an autorelease
-pool, and `runFrame` adds a nested pool for each frame. It drains after rendering
-finishes, or immediately on the final `false` result. Objects retained for later
-callbacks remain alive; only autoreleased temporary ownership is released.
+pool. Applications should compile their loop as Objective-C++ on iOS and wrap
+each iteration in a nested `@autoreleasepool`, including `pollEvents`, the game
+update, and `idle`. This drains temporary ownership after rendering finishes
+and on the final iteration's `break`. Objects retained for later callbacks
+remain alive.

@@ -10,17 +10,6 @@ pa::Platform::Platform(const pa::PlatformSettings& settings)
 {
 }
 
-bool pa::Platform::runFrame(const std::function<bool()>& update)
-{
-	pollEvents();
-	if (!update())
-	{
-		return false;
-	}
-	idle();
-	return true;
-}
-
 const pa::Vect2<int>& pa::Platform::getSize() const
 {
 	return m_size;
