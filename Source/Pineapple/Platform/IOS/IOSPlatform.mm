@@ -21,7 +21,10 @@ namespace
 	
 	void* applicationThreadFunc(void*)
 	{
-		pa::Main(nullptr);
+		@autoreleasepool
+		{
+			pa::Main(nullptr);
+		}
 		
 		return nullptr;
 	}

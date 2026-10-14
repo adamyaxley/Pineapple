@@ -1,8 +1,17 @@
 #include <Pineapple/Engine/Platform/FileSystem.h>
 #include <Pineapple/Engine/Platform/Memory.h>
 #include <Pineapple/Engine/Util/Macro.h>
+#include <cerrno>
 #include <cstdio>
+#include <mutex>
 #include <sys/stat.h>
+#ifdef _WIN32
+#define NOMINMAX
+#include <Windows.h>
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
 
 namespace
 {
@@ -205,26 +214,81 @@ pa::FileResult pa::FileSystem::read(const pa::FilePath& path, pa::FileBuffer& bu
 
 pa::FileResult pa::FileSystem::write(const pa::FilePath& path, const pa::FileBuffer& buffer) const
 {
-	FILE* file;
+	static std::mutex writeMutex;
+	std::lock_guard<std::mutex> lock(writeMutex);
+	std::string temporaryPath = path.asString() + ".tmp";
+	FILE* file = nullptr;
+	for (unsigned int suffix = 0; ; ++suffix)
 	{
-		pa::FileResult result = openFile(&file, path.asString().c_str(), "wb");
-
-		if (result != pa::FileResult::Success)
+		const auto openResult = openFile(&file, temporaryPath.c_str(), "wbx");
+		if (openResult == FileResult::Success)
 		{
-			// Cannot open the file so return error code
-			return result;
+			break;
 		}
+		if (errno != EEXIST)
+		{
+			pa::Log::info("Failed to create temporary file {}: errno {}", temporaryPath, errno);
+			return openResult;
+		}
+		// Never truncate a pre-existing sibling or another writer's temporary file.
+		temporaryPath = path.asString() + ".tmp." + std::to_string(suffix);
 	}
 
-	auto result = pa::FileResult::Success;
-	auto count = fwrite(buffer.getBuffer().get(), sizeof(unsigned char), buffer.getSize(), file);
-	if (count != buffer.getSize())
+	bool success = buffer.getSize() == 0 ||
+		fwrite(buffer.getBuffer().get(), 1, buffer.getSize(), file) == buffer.getSize();
+	if (fflush(file) != 0)
 	{
-		result = pa::FileResult::WriteError;
+		success = false;
 	}
-
-	fclose(file);
-	return result;
+#ifdef _WIN32
+	if (_commit(_fileno(file)) != 0)
+#else
+	if (fsync(fileno(file)) != 0)
+#endif
+	{
+		success = false;
+	}
+	if (fclose(file) != 0)
+	{
+		success = false;
+	}
+	if (success)
+	{
+#ifdef _WIN32
+		DWORD error = ERROR_SUCCESS;
+		for (unsigned int attempt = 0; attempt < 7; ++attempt)
+		{
+			success = MoveFileExA(temporaryPath.c_str(), path.asString().c_str(),
+				MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH) != 0;
+			error = success ? ERROR_SUCCESS : GetLastError();
+			if (success || (error != ERROR_ACCESS_DENIED && error != ERROR_SHARING_VIOLATION) || attempt == 6)
+			{
+				break;
+			}
+			// Windows scanners can briefly hold a just-closed file without delete sharing.
+			Sleep(1u << attempt);
+		}
+		if (!success)
+		{
+			pa::Log::info("Failed to replace {}: Windows error {}", path.asString(), error);
+		}
+#else
+		success = std::rename(temporaryPath.c_str(), path.asString().c_str()) == 0;
+		if (!success)
+		{
+			pa::Log::info("Failed to replace {}: errno {}", path.asString(), errno);
+		}
+#endif
+	}
+	if (!success)
+	{
+		if (std::remove(temporaryPath.c_str()) != 0)
+		{
+			pa::Log::info("Failed to remove temporary file: {}", temporaryPath);
+		}
+		return FileResult::WriteError;
+	}
+	return FileResult::Success;
 }
 
 pa::FileResult pa::FileSystem::getModificationTime(const pa::FilePath& path, std::chrono::system_clock::time_point& modificationTime) const
